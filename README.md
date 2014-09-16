@@ -1,6 +1,3 @@
-Script Collection
-=================
-
 # Python
 
 CodeTrimmer.py
