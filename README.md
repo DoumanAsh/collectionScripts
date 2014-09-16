@@ -1,7 +1,7 @@
 Script Collection
 =================
 
-## Python
+# Python
 
 CodeTrimmer.py
 - remove tailing spaces in provided dir/file
