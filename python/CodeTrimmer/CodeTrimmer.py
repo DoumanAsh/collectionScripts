@@ -2,7 +2,6 @@
 #open() allows to specify encoding only in py3
 #remove tailing spaces in provided dir/file
 #Usage: CodeTrimmer path [-l/--language language] [-e/--extension extension]
-import sys
 import os
 import argparse
 convertLan = { 'c'          : ['.c', '.cc', '.h', '.hh'],
@@ -20,10 +19,10 @@ def trimmFile(filename):
     os.rename(dest, source)
     try:
         #utf-8 is enforced
-        with open(source, 'r', encoding='utf-8') as input, open(dest, 'w', encoding='utf-8') as output:
-            for line in input:
+        with open(source, 'r', encoding='utf-8') as inp, open(dest, 'w', encoding='utf-8') as outp:
+            for line in inp:
                 #\n is interpreted according to platform in text mode
-                output.write(line.rstrip() + '\n')
+                outp.write(line.rstrip() + '\n')
         os.remove(source)
     except Exception as e:
         print(">>>Exception: " + str(e))

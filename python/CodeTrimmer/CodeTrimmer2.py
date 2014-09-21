@@ -1,7 +1,6 @@
 #!/usr/bin/python
 #remove tailing spaces in provided dir/file
 #Usage: CodeTrimmer path [-l/--language language] [-e/--extension extension]
-import sys
 import os
 import argparse
 convertLan = { 'c'          : ['.c', '.cc', '.h', '.hh'],
@@ -19,10 +18,10 @@ def trimmFile(filename):
     os.rename(dest, source)
     try:
         #utf-8 is enforced
-        with open(source, 'r') as input, open(dest, 'w') as output:
+        with open(source, 'r') as inp, open(dest, 'w') as outp:
             for line in input:
                 #\n is interpreted according to platform in text mode
-                output.write(line.rstrip() + '\n')
+                outp.write(line.rstrip() + '\n')
         os.remove(source)
     except Exception as e:
         print(">>>Exception: " + str(e))
