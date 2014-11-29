@@ -1,6 +1,6 @@
 """Parser of Baka-Tsuki ePUB generator page"""
 #python3
-import requests, re
+import urllib.request, re
 from bs4 import BeautifulSoup
 
 class bte_gen(BeautifulSoup):
@@ -9,9 +9,8 @@ class bte_gen(BeautifulSoup):
         self.query = query
         self.result = dict()
         self.bte_url = "http://ln.m-chan.org/v3/"
-        self.bte_gen_head = requests.get(self.bte_url)
-        self.bte_gen_head.raise_for_status()
-        super().__init__(self.bte_gen_head.text)
+        self.bte_gen_head = urllib.request.urlopen(self.bte_url)
+        super().__init__(self.bte_gen_head.read())
         self.matches = self.find_all("a", text=re.compile(query, re.IGNORECASE))
 
     def update_query(self, new_query):
@@ -32,8 +31,8 @@ class bte_gen(BeautifulSoup):
         """
         for match in self.matches:
             list_links = []
-            matched_content = requests.get(self.bte_url + match['href'])
-            books_soup = BeautifulSoup(matched_content.text)
+            matched_content = urllib.request.urlopen(self.bte_url + match['href'])
+            books_soup = BeautifulSoup(matched_content.read())
             list_books = books_soup.find_all("tr")
             list_books.pop(0) #pop header
             for book in list_books:
