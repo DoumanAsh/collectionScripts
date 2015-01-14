@@ -1,0 +1,29 @@
+:let g:netrw_dirhistmax = 0
+:set noswapfile
+:colorscheme vividchalk
+:set softtabstop=4 shiftwidth=4 expandtab
+:set shell=powershell
+:set shellcmdflag=-command
+:syntax on
+:set ignorecase
+:set smartcase
+:set nu
+:map <C-s> :w <Enter>
+:inoremap <c-s> <Esc>:update<CR>
+:vmap <c-s> <Esc><c-s>gv
+:autocmd BufWritePre *.* :%s/\s\+$//e
+:set laststatus=2
+:set statusline=%f%m%r%h%w\ %y\ enc:%{&enc}\ ff:%{&ff}\ fenc:%{&fenc}%=(ch:%3b\ hex:%2B)\ col:%2c\ line:%2l/%L\ [%2p%%]
+:set encoding=utf-8
+:set termencoding=utf-8
+:set fileencoding=utf-8
+:set fileencodings=utf8,latin1,koi8r,cp932,cp1251,cp866,ucs-2le
+if argc() == 0 && !exists("s:std_in")
+    autocmd vimenter * Explore 
+endif
+if has("gui_running")
+    set lines=999 columns=999
+    if has("gui_win32")
+        set guifont=Consolas:h12
+    endif
+endif
