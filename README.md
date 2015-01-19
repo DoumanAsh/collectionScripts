@@ -1,6 +1,1 @@
-# Python
-
-CodeTrimmer.py
-- remove tailing spaces in provided dir/file
-- Usage: CodeTrimmer path [-l/--language language] [-e/--extension extension]
-- python3 version has enforced encoding to utf-8
+Just to store some of my scripts and other things
