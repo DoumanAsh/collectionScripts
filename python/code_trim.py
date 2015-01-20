@@ -32,9 +32,11 @@ def trimm_file(filename):
     os.remove(backup)
     return
 
-def trimmer():
+def code_trimmer(args):
     """ Run through arguments to apply trimm_file() """
-    args = argv[1:]
+    if not args:
+        print("Usage: code_trimmer [file/dir]")
+
     for arg in args:
         if os.path.isfile(arg):
             trimm_file(arg)
@@ -48,4 +50,4 @@ def trimmer():
             print("".join((arg, " is not found")))
 
 if __name__ == "__main__":
-    trimmer()
+    code_trimmer(argv[1:])
