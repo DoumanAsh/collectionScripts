@@ -10,6 +10,7 @@ from shutil import copy2
 
 def trimm_file(filename):
     """ Trimms file of white spaces """
+    error = False
     backup = filename + ".old"
     try:
         copy2(filename, backup)
@@ -23,13 +24,17 @@ def trimm_file(filename):
     try:
         for line in ("".join((line.rstrip(), '\n')) for line in input_file):
             output_file.write(line)
-    except UnicodeDecodeError as e:
-        print("".join(("Encoding error: ", str(e))))
+        input_file.close()
+        output_file.close()
+        os.remove(backup)
+    except UnicodeDecodeError as errno:
+        print("".join(("Encoding error: ", str(errno))))
         print("".join(("Failed to trimm ", filename)))
+        input_file.close()
+        output_file.close()
+        os.remove(filename)
+        os.rename(backup, filename)
 
-    input_file.close()
-    output_file.close()
-    os.remove(backup)
     return
 
 def code_trimmer(args):
