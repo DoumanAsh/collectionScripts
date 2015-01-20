@@ -18,6 +18,7 @@
 :set termencoding=utf-8
 :set fileencoding=utf-8
 :set fileencodings=utf8,latin1,koi8r,cp932,cp1251,cp866,ucs-2le
+:set omnifunc=syntaxcomplete#Complete
 if argc() == 0 && !exists("s:std_in")
     autocmd vimenter * Explore 
 endif
@@ -25,5 +26,7 @@ if has("gui_running")
     set lines=999 columns=999
     if has("gui_win32")
         set guifont=Consolas:h12
+    else
+        set guifont=Inconsolas\ 12
     endif
 endif
