@@ -10,7 +10,6 @@ from shutil import copy2
 
 def trimm_file(filename):
     """ Trimms file of white spaces """
-    error = False
     backup = filename + ".old"
     try:
         copy2(filename, backup)
