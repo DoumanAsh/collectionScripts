@@ -3,6 +3,8 @@
 #!/usr/bin/python
 
 import os
+#use io variant of open(). It has encoding in py2
+from io import open
 from sys import argv
 from shutil import copy2
 
@@ -11,16 +13,20 @@ def trimm_file(filename):
     backup = filename + ".old"
     try:
         copy2(filename, backup)
-        input_file = open(backup, 'r')
-        output_file = open(filename, 'w')
+        input_file = open(backup, 'r', encoding='utf-8')
+        output_file = open(filename, 'w', encoding='utf-8')
     except IOError:
         print("Permission denied")
         print("".join((filename, " will be ignored")))
         return
 
-    for line in input_file:
-        #\n is interpreted according to platform in text mode
-        output_file.write(line.rstrip() + '\n')
+    try:
+        for line in ("".join((line.rstrip(), '\n')) for line in input_file):
+            output_file.write(line)
+    except UnicodeDecodeError as e:
+        print("".join(("Encoding error: ", str(e))))
+        print("".join(("Failed to trimm ", filename)))
+
     input_file.close()
     output_file.close()
     os.remove(backup)
@@ -36,7 +42,7 @@ def trimmer():
             for path, _, files in os.walk(arg):
                 for proc_file in files:
                     _, file_extension = os.path.splitext(proc_file)
-                    if not file_extension == '':
+                    if not file_extension == '' and not file_extension == ".old":
                         trimm_file(os.path.join(path, proc_file))
         else:
             print("".join((arg, " is not found")))
