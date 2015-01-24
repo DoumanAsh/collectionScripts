@@ -26,10 +26,9 @@ class EventTracer():
         trace_to = ""
 
         #timestamp
-        try:
-            timestamp = str(self.time()) + " "
-        except TypeError:
-            timestamp = ""
+        timestamp = ""
+        if self.time:
+            timestamp = " ".join((str(self.time()), timestamp))
         #function name and line of caller
         frame = currentframe().f_back
         func_line = ":".join(("".join((frame.f_code.co_name, "()")), str(frame.f_lineno)))
