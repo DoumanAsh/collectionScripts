@@ -1,6 +1,7 @@
 """ Trace module """
 
 from datetime import datetime
+from inspect import currentframe
 
 class EventTracer():
     """ Event Tracer """
@@ -21,6 +22,10 @@ class EventTracer():
         event = event.upper()
         trace_to = ""
 
+        #function name and line of caller
+        frame = currentframe().f_back
+        func_line = ":".join(("".join((frame.f_code.co_name, "()")), str(frame.f_lineno)))
+
         try:
             if self.events[event] and argv:
                 #header: date and time + {EVENT}
@@ -28,11 +33,12 @@ class EventTracer():
                 if self.time:
                     trace_to = self.sep.join((str(self.time()), trace_to))
                 #add list of arguments to trace
-                trace_to = self.sep.join((trace_to, " ".join(str(arg) for arg in argv)))
+                trace_to = self.sep.join((trace_to, "-", func_line, "-",
+                                          " ".join(str(arg) for arg in argv)))
 
         except KeyError:
-            trace_to = self.sep.join((str(self.time()), "{ERROR}", "Unexpected event:", event))
-            trace_to = self.sep.join((trace_to, "| Args:", str(argv)))
+            trace_to = self.sep.join((str(self.time()), "{ERROR}", "-", func_line, "-",
+                                      "Unexpected event:", event, trace_to, "| Args:", str(argv)))
 
         if trace_to:
             print(trace_to)
