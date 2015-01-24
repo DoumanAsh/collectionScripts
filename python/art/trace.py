@@ -5,9 +5,12 @@ from inspect import currentframe
 
 class EventTracer():
     """ Event Tracer """
-    def __init__(self, delimiter=" "):
+    def __init__(self, delimiter=" ", timestamp=False):
         self.sep = delimiter
-        self.time = datetime.now
+        if timestamp:
+            self.time = datetime.now
+        else:
+            self.time = None
         self.events = {"ERROR"   : True,
                        "WARNING" : True,
                        "INFO"    : False,
@@ -32,13 +35,15 @@ class EventTracer():
                 trace_to = "".join(("{", event, "}"))
                 if self.time:
                     trace_to = self.sep.join((str(self.time()), trace_to))
-                #add list of arguments to trace
+                #compose trace
                 trace_to = self.sep.join((trace_to, "-", func_line, "-",
                                           " ".join(str(arg) for arg in argv)))
 
         except KeyError:
-            trace_to = self.sep.join((str(self.time()), "{ERROR}", "-", func_line, "-",
+            trace_to = self.sep.join(("{ERROR}", "-", func_line, "-",
                                       "Unexpected event:", event, trace_to, "| Args:", str(argv)))
+            if self.time:
+                self.sep.join((str(self.time()), trace_to))
 
         if trace_to:
             print(trace_to)
