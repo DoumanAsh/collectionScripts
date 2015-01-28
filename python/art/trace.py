@@ -21,27 +21,35 @@ class EventTracer():
         self.__init__()
 
     def trace(self, event, *argv):
-        """ Prints trace. """
+        """ Prints trace.
+
+            Format: [timestamp] {event} - func():line - trace
+        """
         event = event.upper()
         trace_to = ""
 
-        #timestamp
-        timestamp = ""
-        if self.time:
-            timestamp = " ".join((str(self.time()), timestamp))
-        #function name and line of caller
-        frame = currentframe().f_back
-        func_line = ":".join(("".join((frame.f_code.co_name, "()")), str(frame.f_lineno)))
-
         try:
             if self.events[event] and argv:
-                #header: date and time + {EVENT}
-                trace_to = "".join((timestamp, "{", event, "}"))
-                #compose trace
-                trace_to = self.sep.join((trace_to, "-", func_line, "-",
+                #timestamp
+                timestamp = ""
+                if self.time:
+                    timestamp = " ".join((str(self.time()), timestamp))
+                #function name and line of caller
+                frame = currentframe().f_back
+                func_line = ":".join(("".join((frame.f_code.co_name, "()")), str(frame.f_lineno)))
+
+                trace_to = self.sep.join(("".join((timestamp, "{", event, "}")), "-", func_line, "-",
                                           " ".join(str(arg) for arg in argv)))
 
         except KeyError:
+            #timestamp
+            timestamp = ""
+            if self.time:
+                timestamp = " ".join((str(self.time()), timestamp))
+            #function name and line of caller
+            frame = currentframe().f_back
+            func_line = ":".join(("".join((frame.f_code.co_name, "()")), str(frame.f_lineno)))
+
             trace_to = self.sep.join(("".join((timestamp, "{ERROR}")), "-", func_line, "-",
                                       "Unexpected event:", event, trace_to, "| Args:", str(argv)))
 
