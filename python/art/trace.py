@@ -2,7 +2,6 @@
 
 from datetime import datetime
 from inspect import currentframe
-from os.path import basename, normpath
 
 class EventTracer():
     """ Event Tracer """
@@ -23,7 +22,7 @@ class EventTracer():
     def trace(self, event, *argv):
         """ Prints trace.
 
-            Format: [timestamp] {event} - filename:line - func() trace
+            Format: [timestamp] {event} - filename:line - trace
         """
         event = event.upper()
         trace_to = ""
@@ -36,12 +35,12 @@ class EventTracer():
                     timestamp = " ".join((str(self.time()), timestamp))
                 #filename + line
                 frame = currentframe().f_back
-                file_name = basename(normpath(frame.f_code.co_filename))
+                file_name = frame.f_code.co_filename
                 file_line = ":".join((file_name, str(frame.f_lineno)))
-                func_name = frame.f_code.co_name
+                func_name = "".join((frame.f_code.co_name, "()"))
 
                 trace_to = self.sep.join(("".join((timestamp, "{", event, "}")),
-                                          "-", file_line, "-", "".join((func_name, "()")),
+                                          "-", file_line, "-", func_name,
                                           " ".join(str(arg) for arg in argv)))
 
         except KeyError:
@@ -51,12 +50,12 @@ class EventTracer():
                 timestamp = " ".join((str(self.time()), timestamp))
             #filename + line
             frame = currentframe().f_back
-            file_name = basename(normpath(frame.f_code.co_filename))
+            file_name = frame.f_code.co_filename
             file_line = ":".join((file_name, str(frame.f_lineno)))
-            func_name = frame.f_code.co_name
+            func_name = "".join((frame.f_code.co_name, "()"))
 
             trace_to = self.sep.join(("".join((timestamp, "{ERROR}")),
-                                      "-", file_line, "-", "".join((func_name, "()")),
+                                      "-", file_line, "-", func_name,
                                       "Unexpected event:", event, trace_to, "| Args:", str(argv)))
 
         if trace_to:
