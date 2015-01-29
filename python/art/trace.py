@@ -22,7 +22,7 @@ class EventTracer():
     def trace(self, event, *argv):
         """ Prints trace.
 
-            Format: [timestamp] {event} - filename:line - trace
+            Format: [timestamp] {event} - filename:line - func(): trace
         """
         event = event.upper()
         trace_to = ""
@@ -33,14 +33,14 @@ class EventTracer():
                 timestamp = ""
                 if self.time:
                     timestamp = " ".join((str(self.time()), timestamp))
+                event = "".join((timestamp, "{", event, "}"))
                 #filename + line
                 frame = currentframe().f_back
                 file_name = frame.f_code.co_filename
                 file_line = ":".join((file_name, str(frame.f_lineno)))
-                func_name = "".join((frame.f_code.co_name, "()"))
+                func_name = "".join((frame.f_code.co_name, "():"))
 
-                trace_to = self.sep.join(("".join((timestamp, "{", event, "}")),
-                                          "-", file_line, "-", func_name,
+                trace_to = self.sep.join((event, "-", file_line, "-", func_name,
                                           " ".join(str(arg) for arg in argv)))
 
         except KeyError:
@@ -52,7 +52,7 @@ class EventTracer():
             frame = currentframe().f_back
             file_name = frame.f_code.co_filename
             file_line = ":".join((file_name, str(frame.f_lineno)))
-            func_name = "".join((frame.f_code.co_name, "()"))
+            func_name = "".join((frame.f_code.co_name, "():"))
 
             trace_to = self.sep.join(("".join((timestamp, "{ERROR}")),
                                       "-", file_line, "-", func_name,
