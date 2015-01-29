@@ -2,15 +2,15 @@
 
 from datetime import datetime
 from inspect import currentframe
+from os.path import basename, normpath
 
 class EventTracer():
     """ Event Tracer """
-    def __init__(self, delimiter=" ", timestamp=False):
+    def __init__(self, delimiter=" ", time=False):
         self.sep = delimiter
-        if timestamp:
+        self.time = None
+        if time:
             self.time = datetime.now
-        else:
-            self.time = None
         self.events = {"ERROR"   : True,
                        "WARNING" : True,
                        "INFO"    : False,
@@ -23,7 +23,7 @@ class EventTracer():
     def trace(self, event, *argv):
         """ Prints trace.
 
-            Format: [timestamp] {event} - func():line - trace
+            Format: [timestamp] {event} - filename:line - func() trace
         """
         event = event.upper()
         trace_to = ""
@@ -34,11 +34,14 @@ class EventTracer():
                 timestamp = ""
                 if self.time:
                     timestamp = " ".join((str(self.time()), timestamp))
-                #function name and line of caller
+                #filename + line
                 frame = currentframe().f_back
-                func_line = ":".join(("".join((frame.f_code.co_name, "()")), str(frame.f_lineno)))
+                file_name = basename(normpath(frame.f_code.co_filename))
+                file_line = ":".join((file_name, str(frame.f_lineno)))
+                func_name = frame.f_code.co_name
 
-                trace_to = self.sep.join(("".join((timestamp, "{", event, "}")), "-", func_line, "-",
+                trace_to = self.sep.join(("".join((timestamp, "{", event, "}")),
+                                          "-", file_line, "-", "".join((func_name, "()")),
                                           " ".join(str(arg) for arg in argv)))
 
         except KeyError:
@@ -46,11 +49,14 @@ class EventTracer():
             timestamp = ""
             if self.time:
                 timestamp = " ".join((str(self.time()), timestamp))
-            #function name and line of caller
+            #filename + line
             frame = currentframe().f_back
-            func_line = ":".join(("".join((frame.f_code.co_name, "()")), str(frame.f_lineno)))
+            file_name = basename(normpath(frame.f_code.co_filename))
+            file_line = ":".join((file_name, str(frame.f_lineno)))
+            func_name = frame.f_code.co_name
 
-            trace_to = self.sep.join(("".join((timestamp, "{ERROR}")), "-", func_line, "-",
+            trace_to = self.sep.join(("".join((timestamp, "{ERROR}")),
+                                      "-", file_line, "-", "".join((func_name, "()")),
                                       "Unexpected event:", event, trace_to, "| Args:", str(argv)))
 
         if trace_to:
