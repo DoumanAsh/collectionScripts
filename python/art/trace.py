@@ -87,11 +87,8 @@ class EventTracer3():
         self.time = None
         if time:
             self.time = datetime.now
-        self.events = {"ERROR"   : True,
-                       "WARNING" : True,
-                       "INFO"    : False,
-                       "DEBUG"   : False}
-        for name, value in self.events.items():
+        self.events = dict()
+        for name, value in (("ERROR", True), ("WARNING", True), ("INFO", False), ("DEBUG", False)):
             self.set_event(name, value)
 
     def reset(self):
@@ -151,6 +148,7 @@ class EventTracer3():
         #add shortcut for new event
         if not hasattr(self, name):
             def __trace(self, *argv):
+                """ simple implementation of shortcuts """
                 self.trace(name, *argv, frame=currentframe())
             setattr(self.__class__, name, __trace)
 
