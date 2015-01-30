@@ -87,6 +87,7 @@ class EventTracer3():
         self.time = None
         if time:
             self.time = datetime.now
+        self.frame = None
         self.events = dict()
         for name, value in (("ERROR", True), ("WARNING", True), ("INFO", False), ("DEBUG", False)):
             self.set_event(name, value)
@@ -95,7 +96,7 @@ class EventTracer3():
         """ Reset events to initial state. """
         self.__init__()
 
-    def trace(self, event, *argv, frame=None):
+    def trace(self, event, *argv):
         """ Prints trace.
 
             Format: [timestamp] {event} - filename:line - func(): trace
@@ -111,9 +112,9 @@ class EventTracer3():
                     timestamp = " ".join((str(self.time()), timestamp))
                 event = "".join((timestamp, "{", event, "}"))
                 #filename + line
-                if not frame:
-                    frame = currentframe()
-                frame = frame.f_back
+                if not self.frame:
+                    self.frame = currentframe()
+                frame = self.frame.f_back
                 file_name = frame.f_code.co_filename
                 file_line = ":".join((file_name, str(frame.f_lineno)))
                 func_name = "".join((frame.f_code.co_name, "():"))
@@ -127,7 +128,9 @@ class EventTracer3():
             if self.time:
                 timestamp = " ".join((str(self.time()), timestamp))
             #filename + line
-            frame = frame.f_back
+            if not self.frame:
+                self.frame = currentframe()
+            frame = self.frame.f_back
             file_name = frame.f_code.co_filename
             file_line = ":".join((file_name, str(frame.f_lineno)))
             func_name = "".join((frame.f_code.co_name, "():"))
@@ -149,7 +152,9 @@ class EventTracer3():
         if not hasattr(self, name):
             def __trace(self, *argv):
                 """ simple implementation of shortcuts """
-                self.trace(name, *argv, frame=currentframe())
+                self.frame = currentframe()
+                self.trace(name, *argv)
+                self.frame = None
             setattr(self.__class__, name, __trace)
 
     def set_time(self, enable=True):
