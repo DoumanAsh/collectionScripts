@@ -38,10 +38,10 @@ class EventTracer():
                 frame = currentframe().f_back
                 file_name = frame.f_code.co_filename
                 file_line = ":".join((file_name, str(frame.f_lineno)))
-                func_name = "".join((frame.f_code.co_name, "():"))
+                func_name = "".join((frame.f_code.co_name, "()"))
 
-                trace_to = self.sep.join((event, "-", file_line, "-", func_name,
-                                          " ".join(str(arg) for arg in argv)))
+                trace_to = self.sep.join((event, "-", " ".join(str(arg) for arg in argv),
+                                          "[", func_name, "-", file_line, "]"))
 
         except KeyError:
             #timestamp
@@ -52,11 +52,11 @@ class EventTracer():
             frame = currentframe().f_back
             file_name = frame.f_code.co_filename
             file_line = ":".join((file_name, str(frame.f_lineno)))
-            func_name = "".join((frame.f_code.co_name, "():"))
+            func_name = "".join((frame.f_code.co_name, "()"))
 
-            trace_to = self.sep.join(("".join((timestamp, "{ERROR}")),
-                                      "-", file_line, "-", func_name,
-                                      "Unexpected event:", event, trace_to, "| Args:", str(argv)))
+            trace_to = self.sep.join(("".join((timestamp, "{ERROR}")), "-",
+                                      "Unexpected event:", event, trace_to, "| Args:", str(argv),
+                                      "[", func_name, "-", file_line, "]"))
 
         if trace_to:
             print(trace_to)
@@ -117,10 +117,10 @@ class EventTracer3():
                 frame = self.frame.f_back
                 file_name = frame.f_code.co_filename
                 file_line = ":".join((file_name, str(frame.f_lineno)))
-                func_name = "".join((frame.f_code.co_name, "():"))
+                func_name = "".join((frame.f_code.co_name, "()"))
 
-                trace_to = self.sep.join((event, "-", file_line, "-", func_name,
-                                          " ".join(str(arg) for arg in argv)))
+                trace_to = self.sep.join((event, "-", " ".join(str(arg) for arg in argv),
+                                          "[", func_name, "-", file_line, "]"))
 
         except KeyError:
             #timestamp
@@ -133,11 +133,11 @@ class EventTracer3():
             frame = self.frame.f_back
             file_name = frame.f_code.co_filename
             file_line = ":".join((file_name, str(frame.f_lineno)))
-            func_name = "".join((frame.f_code.co_name, "():"))
+            func_name = "".join((frame.f_code.co_name, "()"))
 
-            trace_to = self.sep.join(("".join((timestamp, "{ERROR}")),
-                                      "-", file_line, "-", func_name,
-                                      "Unexpected event:", event, trace_to, "| Args:", str(argv)))
+            trace_to = self.sep.join(("".join((timestamp, "{ERROR}")), "-",
+                                      "Unexpected event:", event, trace_to, "| Args:", str(argv),
+                                      "[", func_name, "-", file_line, "]"))
 
         if trace_to:
             print(trace_to)
