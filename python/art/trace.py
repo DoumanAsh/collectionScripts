@@ -44,6 +44,7 @@ class EventTracer():
             self.log_fd.write("=============================================\n")
             self.log_fd.write("=== End time: {} ===\n".format(datetime.now()))
             self.log_fd.close()
+            self.log_fd = None
 
     def trace(self, event, *argv):
         """ Prints trace.
