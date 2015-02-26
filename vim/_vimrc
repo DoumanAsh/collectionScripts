@@ -1,7 +1,8 @@
 :let g:netrw_dirhistmax = 0
 :set noswapfile
 :colorscheme vividchalk
-:set softtabstop=4 shiftwidth=4 expandtab
+:filetype plugin indent on
+:set tabstop=4 softtabstop=4 shiftwidth=4 expandtab
 :set shell=powershell
 :set shellcmdflag=-command
 :syntax on
