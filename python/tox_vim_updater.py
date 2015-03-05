@@ -24,7 +24,7 @@ def read_config():
     global CONFIG_FILE
 
     app_data = path.dirname(path.realpath(argv[0]))
-    CONFIG_FILE = "\\".join((app_data, CONFIG_FILE))
+    CONFIG_FILE = path.join(app_data, CONFIG_FILE)
 
     try:
         with open(CONFIG_FILE) as config_file:
@@ -33,7 +33,7 @@ def read_config():
         pass
 
     app_data = getenv("APPDATA")
-    CONFIG_FILE = "\\".join((app_data, "tox_vim_updater.cfg"))
+    CONFIG_FILE = path.join(app_data, "tox_vim_updater.cfg")
 
     try:
         with open(CONFIG_FILE) as config_file:
@@ -42,11 +42,9 @@ def read_config():
         print("No config file")
         exit(0)
 
+
 def tox_vim_updater():
     """ Main function """
-    print("Source: https://tuxproject.de/projects/vim/")
-    print("Visit site to give thanks(donate button at bottom)")
-
     old_date = tuple(int(number) for number in read_config())
 
     connection = https("tuxproject.de")
@@ -78,9 +76,6 @@ def tox_vim_updater():
     print(" ".join(("Version:", version)))
     print(" ".join(("Build date:", result_date)))
 
-    with open(CONFIG_FILE, "w") as config_file:
-        config_file.write("".join((result_date, "\n")))
-
     #64bit
     connection.request("GET", "/projects/vim/complete-x64.7z")
     response = connection.getresponse()
@@ -109,5 +104,11 @@ def tox_vim_updater():
 
     print("Succesfully downloaded vim-x86.7z")
 
+    with open(CONFIG_FILE, "w") as config_file:
+        config_file.write("".join((result_date, "\n")))
+
 if __name__ == "__main__":
+    print("Source: https://tuxproject.de/projects/vim/")
+    print("Visit site to give thanks(donate button at bottom)")
+    print("#"*50)
     tox_vim_updater()
