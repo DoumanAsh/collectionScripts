@@ -16,7 +16,7 @@ class EventTracer():
             self.time = datetime.now
         self.frame = None
         self.events = dict()
-        for name, value in (("ERROR", True), ("WARNING", True), ("INFO", False), ("DEBUG", False)):
+        for name, value in (("ENTER", True), ("ERROR", True), ("WARNING", True), ("INFO", False), ("DEBUG", False)):
             self.set_event(name, value)
         self.log_fd = None
         if file_name:
@@ -93,6 +93,24 @@ class EventTracer():
             print(trace_to)
             if self.log_fd:
                 self.log_fd.write("".join((trace_to, '\n')))
+
+    def enter(self, function):
+        """ ENTER trace-decorator
+
+            Prints function with arguments.
+
+            Usage:
+            @[object].enter
+            def function_to_wrap()
+        """
+        def wrapper(*argv):
+            """ Function wrapper to print ENTER trace """
+            self.frame = currentframe()
+            self.trace("ENTER", "".join((function.__name__,
+                                         "(", ",".join(str(arg) for arg in argv), ")")))
+            self.frame = None
+            function(*argv)
+        return wrapper
 
     def set_event(self, name, enabled=True):
         """ Add event to table if there is no such event.
