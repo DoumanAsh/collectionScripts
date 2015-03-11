@@ -8,23 +8,25 @@ class EventTracer():
 
         Provides shortcuts for trace events:
         self.[event]()
+
+        @delimiter String with separator for all traces. Default white space.
+        @time Bool which determines whatever timestamps should be added.
+        @file_name String with a absolute path to existing file.
+        @set_events Iterable with tuples (event_name: str, state: Bool).
     """
-    def __init__(self, delimiter=" ", time=False, file_name=None):
+    def __init__(self, delimiter=" ", time=False, file_name=None,
+                 set_events=(("ENTER", False), ("ERROR", True), ("WARNING", True), ("INFO", False), ("DEBUG", False))):
         self.sep = delimiter
         self.time = None
         if time:
             self.time = datetime.now
         self.frame = None
         self.events = dict()
-        for name, value in (("ENTER", True), ("ERROR", True), ("WARNING", True), ("INFO", False), ("DEBUG", False)):
+        for name, value in set_events:
             self.set_event(name, value)
         self.log_fd = None
         if file_name:
-            try:
-                self.log_fd = open(file_name, 'a')
-                self.__init_log_fd__()
-            except IOError as errno:
-                self.trace("ERROR", "Not possible to use log file:", file_name, "| Error:", errno)
+            self.set_log_file(file_name)
 
     def reset(self):
         """ Reset events to initial state. """
@@ -65,8 +67,7 @@ class EventTracer():
                 if not self.frame:
                     self.frame = currentframe()
                 frame = self.frame.f_back
-                file_name = frame.f_code.co_filename
-                file_line = ":".join((file_name, str(frame.f_lineno)))
+                file_line = ":".join((frame.f_code.co_filename, str(frame.f_lineno)))
                 func_name = "".join((frame.f_code.co_name, "()"))
 
                 trace_to = self.sep.join((event, "-", " ".join(str(arg) for arg in argv),
@@ -81,8 +82,7 @@ class EventTracer():
             if not self.frame:
                 self.frame = currentframe()
             frame = self.frame.f_back
-            file_name = frame.f_code.co_filename
-            file_line = ":".join((file_name, str(frame.f_lineno)))
+            file_line = ":".join((frame.f_code.co_filename, str(frame.f_lineno)))
             func_name = "".join((frame.f_code.co_name, "()"))
 
             trace_to = self.sep.join(("".join((timestamp, "{ERROR}")), "-",
