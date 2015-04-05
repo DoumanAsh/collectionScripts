@@ -72,7 +72,7 @@ def tox_vim_updater():
     result_version = check_version.search(data)
     version = result_version.group(0)
 
-    print("New version is found:")
+    print("New build is found:")
     print(" ".join(("Version:", version)))
     print(" ".join(("Build date:", result_date)))
 
