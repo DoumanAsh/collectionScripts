@@ -158,23 +158,22 @@ class GameMonitor(object):
         print("Shields")
         self.update(0x00289f10, 99)
 
+    def update_tokens_from_sword(self, addr_sw):
+        """ Take address of sword's token and update other by shifting by 4 """
+        self.update(addr_sw, 99) #sword
+        self.update(addr_sw+4, 99) #blue question mark?
+        self.update(addr_sw+8, 99) #some green shit?
+        self.update(addr_sw+12, 99) #some yellow triangle?
+
     def tokens(self, _):
-        #Erudo tokens
         print("Erbalard tokens:")
-        self.update(0x002929f0, 99) #sword
-        self.update(0x002929f4, 99) #blue question mark?
-        self.update(0x002929f8, 99) #some green shit?
-        self.update(0x002929fc, 99) #some yellow triangle?
+        self.update_tokens_from_sword(0x002929f0)
         print("Lavirie tokens:")
-        self.update(0x00292a00, 99) #sword
-        self.update(0x00292a04, 99) #blue question mark?
-        self.update(0x00292a08, 99) #some green shit?
-        self.update(0x00292a0c, 99) #some yellow triangle?
+        self.update_tokens_from_sword(0x00292a00)
         print("Mistoria tokens:")
-        self.update(0x00292a10, 99) #sword
-        self.update(0x00292a14, 99) #blue question mark?
-        self.update(0x00292a18, 99) #some green shit?
-        self.update(0x00292a1c, 99) #some yellow triangle?
+        self.update_tokens_from_sword(0x00292a10)
+        print("Nekoru tokens:")
+        self.update_tokens_from_sword(0x00292a90)
 
     def all(self, _):
         self.shield(_)
