@@ -176,6 +176,14 @@ class GameMonitor(object):
         self.update_tokens_from_sword(0x00292a90)
         print("Forunisugein tokens:")
         self.update_tokens_from_sword(0x00292aa0)
+        print("Rishe tokens:")
+        self.update_tokens_from_sword(0x00292ab0)
+        print("Patra tokens:")
+        self.update_tokens_from_sword(0x00292ac0)
+        print("Gu Rundio tokens:")
+        self.update_tokens_from_sword(0x00292ad0)
+        print("Karema tokens:")
+        self.update_tokens_from_sword(0x00292ae0)
 
     def all(self, _):
         self.shield(_)
