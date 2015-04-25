@@ -133,7 +133,7 @@ class GameMonitor(object):
     @staticmethod
     def help():
         print("Options:")
-        print("    > shield - sets C001 to 99")
+        print("    > items - sets many itmes to 99")
         print("    > tokens - set all tokens of characters to 99")
         print("    > all - above options are included")
         print("    > find - look for address")
@@ -150,13 +150,145 @@ class GameMonitor(object):
         print(">>>ITH Hooks:")
         print("HS18@70D30:AGE.EXE - dialogues")
         print("/HS8@54970:AGE.EXE - interface text")
+
+    @staticmethod
+    def generate_items_addrs():
+        #C001
+        yield 0x00289f10 #Shield c001
+        yield 0x00289f14
+        yield 0x00289f18
+        yield 0x00289f1c
+        yield 0x00289f20
+        yield 0x00289f24
+        yield 0x00289f3c
+        yield 0x00289f40 #dragon's scales
+        yield 0x0028a0a0
+        yield 0x0028a0f0
+        yield 0x0028a140
+        yield 0x0028a144
+        yield 0x0028a168
+        yield 0x0028a16c
+        yield 0x0028a190
+        yield 0x0028a208
+        yield 0x0028a230
+        yield 0x0028a280
+        yield 0x0028a284
+        yield 0x0028a294
+        yield 0x0028a298
+        #P001
+        yield 0x0028a708
+        yield 0x0028a758
+        yield 0x0028a760
+        yield 0x0028a764
+        yield 0x0028a780
+        yield 0x0028a7a8 #Boots of double action P019
+        yield 0x0028a7d0
+        yield 0x0028a7f8
+        yield 0x0028a848
+        yield 0x0028a84c
+        yield 0x0028a870
+        yield 0x0028a884
+        yield 0x0028a898
+        yield 0x0028a89c
+        yield 0x0028a8a0
+        yield 0x0028a8b0
+        yield 0x0028a8c0
+        yield 0x0028a8c8
+        yield 0x0028ab90
+        yield 0x0028ab94
+        yield 0x0028ab98
+        yield 0x0028ab9c
+        yield 0x0028aba0
+        yield 0x0028aba4
+        yield 0x0028a8a8
+        yield 0x0028abb8
+        yield 0x0028abbc
+        yield 0x0028abe0
+        yield 0x0028abe4
+        yield 0x0028ac08
+        yield 0x0028ac0c
+        yield 0x0028ac30 #HP+10
+        yield 0x0028ac34 #HP+20
+        yield 0x0028ac38 #HP+30
+        yield 0x0028ac3c #HP+50
+        yield 0x0028ac40 #HP+100
+        yield 0x0028ac58 #Hit+2
+        yield 0x0028ac5c #Hit+4
+        yield 0x0028ac60
+        yield 0x0028ac64
+        yield 0x0028ac80
+        yield 0x0028ac84
+        yield 0x0028ac88
+        yield 0x0028acac
+        yield 0x0028acb0
+        yield 0x0028acb8
+        yield 0x0028acd0
+        yield 0x0028acd4
+        yield 0x0028acd8
+        yield 0x0028acf8
+        yield 0x0028ad70
+        yield 0x0028ad74
+        yield 0x0028ad78
+        yield 0x0028ad84
+        yield 0x0028a820
+        #A001
+        yield 0x0028aeb0 #Wooden chest's lock-pick
+        yield 0x0028aeb4 #Silver chest's lock-pick
+        yield 0x0028aebc #Door's lock-pick
+        yield 0x0028aec4 #Hammer
+        yield 0x0028aed8 #Skew
+        yield 0x0028aedc #Axe
+        yield 0x0028af78 #Buff phys
+        yield 0x0028afc8 #Shout
+        yield 0x0028afcc #Charge
+        yield 0x0028b158 #Shooting
+        yield 0x0028b1d0 #Potion +20hp
+        yield 0x0028b1d4 #Potion +50hp
+        yield 0x0028b1d8 #Potion +100hp
+        yield 0x0028b1dc #Potion +150hp
+        yield 0x0028b1f8 #Wing of small recovery +20hp
+        yield 0x0028b1fc #Wing of small recovery +50hp
+        yield 0x0028b200
+        yield 0x0028b220 #Healing Pill +10hp
+        yield 0x0028b224 #Healing Pill +25hp
+        yield 0x0028b228 #Healing Pill +50hp
+        yield 0x0028b22c #Healing Pill +150hp
+
+    @staticmethod
+    def generate_char_token_sword_addr():
+        """ Generates character's token address
+
+            FORMAT: [Character name, address]
+        """
+        yield ["Erbalard", 0x002929f0]
+        yield ["Lavirie", 0x00292a00]
+        yield ["Mistoria", 0x00292a10]
+        yield ["Nekoru", 0x00292a90]
+        yield ["Forunisugein", 0x00292aa0]
+        yield ["Rishe", 0x00292ab0]
+        yield ["Patra", 0x00292ac0]
+        yield ["Gu Rundio", 0x00292ad0]
+        yield ["Karema", 0x00292ae0]
+        yield ["Tsumugi", 0x00292af0]
+        yield ["Gurarissa", 0x00292b00]
+        yield ["Addotorquefell", 0x00292b10]
+        yield ["Puricheno", 0x00292b20]
+        yield ["Ararugando", 0x00292b30]
+        yield ["Noelia", 0x00292b40]
+
     ##################################
     # Options
     ##################################
-    def shield(self, _):
-        #self.FindValue(7220)
-        print("Shields")
-        self.update(0x00289f10, 99)
+    def test(self, _):
+        self.update(0x002649cc, 1)
+
+    def items(self, _):
+        """ Set items to 99
+            NOTE: To have effect you need to get actual item
+        """
+        print("Add items")
+        for item_addr in self.generate_items_addrs():
+            self.update(item_addr, 99)
 
     def update_tokens_from_sword(self, addr_sw):
         """ Take address of sword's token and update other by shifting by 4 """
@@ -166,27 +298,12 @@ class GameMonitor(object):
         self.update(addr_sw+12, 99) #some yellow triangle?
 
     def tokens(self, _):
-        print("Erbalard tokens:")
-        self.update_tokens_from_sword(0x002929f0)
-        print("Lavirie tokens:")
-        self.update_tokens_from_sword(0x00292a00)
-        print("Mistoria tokens:")
-        self.update_tokens_from_sword(0x00292a10)
-        print("Nekoru tokens:")
-        self.update_tokens_from_sword(0x00292a90)
-        print("Forunisugein tokens:")
-        self.update_tokens_from_sword(0x00292aa0)
-        print("Rishe tokens:")
-        self.update_tokens_from_sword(0x00292ab0)
-        print("Patra tokens:")
-        self.update_tokens_from_sword(0x00292ac0)
-        print("Gu Rundio tokens:")
-        self.update_tokens_from_sword(0x00292ad0)
-        print("Karema tokens:")
-        self.update_tokens_from_sword(0x00292ae0)
+        for list_char_token in self.generate_char_token_sword_addr():
+            print(" ".join((list_char_token[0], "tokens:")))
+            self.update_tokens_from_sword(list_char_token[1])
 
     def all(self, _):
-        self.shield(_)
+        self.items(_)
         self.tokens(_)
 
     def find(self, _):
