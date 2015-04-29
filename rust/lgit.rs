@@ -8,6 +8,11 @@ macro_rules! exec_git_cmd {
     ($($arg:expr),*) => { Command::new("git")$(.arg($arg))*.status().unwrap(); }
 }
 
+///Print with prefix >>>
+macro_rules! trace {
+    ($($arg:expr),*) => { println!(">>>{}", [$(format!("{}", $arg),)*].connect(" ")); }
+}
+
 #[inline(always)]
 fn usage() {
     println!("lgit [option]\n");
@@ -16,6 +21,7 @@ fn usage() {
     println!("  add - add all changes");
     println!("  clean - undo all changes");
     println!("  push [force] - push current branch");
+    println!("  commit [message] - commit with message");
     println!("  fetch - get updates from upstream\n");
 }
 
@@ -50,19 +56,29 @@ fn git_clean() {
     exec_git_cmd!("clean", "-fdq");
 }
 
+///Commit with message
+fn git_commit(args: &[String]) {
+    if args.len() == 0 {
+        trace!("Empty commit message");
+    }
+    else {
+        exec_git_cmd!("commit", "-m", args.connect(" "));
+    }
+}
+
 ///Unexpected argument handler
 fn unexpected(arg: &str) {
-    println!("Unexpected argument: {}", arg);
+    trace!("Unexpected argument:", arg);
     usage();
 }
 
 fn main() {
     let args: Vec<String> = cmd_args().collect();
-    //exclude file name
-    let is_repo = Command::new("git").arg("rev-parse").arg("-q").output().unwrap();
+    //To check if git repo present
+    let is_repo = exec_git_cmd!("rev-parse", "-q");
 
-    if is_repo.status.code().unwrap() != 0 {
-        println!("Not a git repository");
+    if !is_repo.success() {
+        trace!("Not a git repository");
         return;
     }
     else if args.len() == 1 {
@@ -71,11 +87,12 @@ fn main() {
     }
 
     match args[1].as_ref() {
-        "amend" => git_amend(&args[2..]),
-        "fetch" => git_fetch(),
-        "push"  => git_push(&args[2..]),
-        "add"   => git_add(),
-        "clean" => git_clean(),
-        _       => unexpected(&args[1]),
+        "amend"  => git_amend(&args[2..]),
+        "fetch"  => git_fetch(),
+        "push"   => git_push(&args[2..]),
+        "add"    => git_add(),
+        "clean"  => git_clean(),
+        "commit" => git_commit(&args[2..]),
+        _        => unexpected(&args[1]),
     }
 }
