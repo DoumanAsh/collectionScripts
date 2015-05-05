@@ -1,11 +1,15 @@
 ///Lazy git tool
 use std::env::args as cmd_args;
-use std::process::Command;
+use std::process::{Command, Stdio};
 
 ///Executes git command with arguments
 ///Building sequence of arguments like .arg(@arg)
 macro_rules! exec_git_cmd {
-    ($($arg:expr),*) => { Command::new("git")$(.arg($arg))*.status().unwrap(); }
+    (all_fd=>$fd:expr, $($arg:expr),*) => { Command::new("git")$(.arg($arg))*.stdout($fd).stderr($fd).status().unwrap(); };
+    (stdout=>$stdout:expr, stderr=>$stderr:expr, $($arg:expr),*) => { Command::new("git")$(.arg($arg))*.stdout($stdout).stderr($stderr).status().unwrap(); };
+    (stdout=>$stdout:expr, $($arg:expr),*) => { Command::new("git")$(.arg($arg))*.stdout($stdout).status().unwrap(); };
+    (stderr=>$stderr:expr, $($arg:expr),*) => { Command::new("git")$(.arg($arg))*.stderr($stderr).status().unwrap(); };
+    ($($arg:expr),*) => { Command::new("git")$(.arg($arg))*.status().unwrap(); };
 }
 
 ///Print with prefix >>>
@@ -75,7 +79,7 @@ fn unexpected(arg: &str) {
 fn main() {
     let args: Vec<String> = cmd_args().collect();
     //To check if git repo present
-    let is_repo = exec_git_cmd!("rev-parse", "-q");
+    let is_repo = exec_git_cmd!(stderr=>Stdio::null(), "rev-parse", "-q");
 
     if !is_repo.success() {
         trace!("Not a git repository");
