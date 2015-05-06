@@ -30,8 +30,9 @@ fn usage() {
 }
 
 ///Amend changes
-fn git_amend(args: &[String]) {
+fn git_amend() {
     git_add();
+    let args: Vec<String> = cmd_args().skip(2).collect();
     if args.len() != 0 && args[0] == "edit" { exec_git_cmd!("commit", "--amend"); }
     else { exec_git_cmd!("commit", "--amend", "--no-edit"); }
 }
@@ -44,7 +45,8 @@ fn git_fetch() {
 }
 
 ///Push the current branch
-fn git_push(args: &[String]) {
+fn git_push() {
+    let args: Vec<String> = cmd_args().skip(2).collect();
     if args.len() != 0 && args[0] =="force" { exec_git_cmd!("push", "--force", "origin", "HEAD"); }
     else { exec_git_cmd!("push", "origin", "HEAD"); }
 }
@@ -61,11 +63,12 @@ fn git_clean() {
 }
 
 ///Commit with message
-fn git_commit(args: &[String]) {
-    if args.len() == 0 {
+fn git_commit() {
+    if cmd_args().skip(2).len() == 0 {
         trace!("Empty commit message");
     }
     else {
+        let args: Vec<String> = cmd_args().skip(2).collect();
         exec_git_cmd!("commit", "-m", args.connect(" "));
     }
 }
@@ -77,26 +80,23 @@ fn unexpected(arg: &str) {
 }
 
 fn main() {
-    let args: Vec<String> = cmd_args().collect();
     //To check if git repo present
-    let is_repo = exec_git_cmd!(stderr=>Stdio::null(), "rev-parse", "-q");
-
-    if !is_repo.success() {
+    if !exec_git_cmd!(stderr=>Stdio::null(), "rev-parse", "-q").success() {
         trace!("Not a git repository");
         return;
     }
-    else if args.len() == 1 {
+    else if cmd_args().len() == 1 {
         usage();
         return;
     }
 
-    match args[1].as_ref() {
-        "amend"  => git_amend(&args[2..]),
+    match cmd_args().skip(1).next().unwrap().as_ref() {
+        "amend"  => git_amend(),
         "fetch"  => git_fetch(),
-        "push"   => git_push(&args[2..]),
+        "push"   => git_push(),
         "add"    => git_add(),
         "clean"  => git_clean(),
-        "commit" => git_commit(&args[2..]),
-        _        => unexpected(&args[1]),
+        "commit" => git_commit(),
+        arg @ _  => unexpected(&arg),
     }
 }
