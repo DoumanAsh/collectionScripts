@@ -1,7 +1,8 @@
 use std::env::args as cmd_args;
 use std::fs::{read_dir, metadata};
 use std::collections::HashSet;
-use std::path::{PathBuf, Path};
+use std::path::Path;
+use std::ffi::OsString;
 
 #[inline(always)]
 fn usage() {
@@ -35,14 +36,20 @@ fn main() {
         return;
     }
 
-    let dest_files: HashSet<PathBuf> = read_dir(&dest_dir).unwrap()
-                                                          .map(|elem| elem.unwrap().path())
-                                                          .filter(|elem| metadata(elem).unwrap().is_file())
-                                                          .collect();
-    let source_files: HashSet<PathBuf> = read_dir(&source_dir).unwrap()
-                                                             .map(|elem| elem.unwrap().path())
-                                                             .filter(|elem| metadata(elem).unwrap().is_file())
-                                                             .collect();
-    drop(source_files);
-    println!("{:?}", dest_files);
+    let dest_files: HashSet<OsString> = read_dir(&dest_dir).unwrap()
+                                                           .map(|elem| elem.unwrap().path())
+                                                           .filter(|elem| metadata(&elem).unwrap().is_file())
+                                                           .map(|elem| elem.file_name().unwrap().to_os_string())
+                                                           .collect();
+    let source_files = read_dir(&source_dir).unwrap()
+                                            .map(|elem| elem.unwrap().path())
+                                            .filter(|elem| metadata(&elem).unwrap().is_file() && dest_files.contains(elem.file_name().unwrap()));
+    let dest_path = Path::new(&dest_dir);
+    for src_file in source_files {
+        let dest_file = dest_path.join(src_file.file_name().unwrap());
+        println!("Copy {} into {}", &src_file.display(), &dest_file.display());
+        if std::fs::copy(&src_file, &dest_file).is_err() {
+            println!(">>>Failed to copy file: {}", src_file.display());
+        }
+    }
 }
