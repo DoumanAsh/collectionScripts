@@ -31,3 +31,11 @@ if has("gui_running")
         set guifont=Inconsolas\ 12
     endif
 endif
+
+" Convert tab to spaces
+function! Convert_tab(space_number)
+    let l:white_space = repeat(" ", a:space_number)
+    execute ":%s/\t/" . l:white_space . "/g"
+endfunction
+
+:command NoTab call Convert_tab("4")
