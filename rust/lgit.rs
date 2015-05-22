@@ -32,8 +32,10 @@ fn usage() {
 ///Amend changes
 fn git_amend() {
     git_add();
-    let args: Vec<String> = cmd_args().skip(2).collect();
-    if args.len() != 0 && args[0] == "edit" { exec_git_cmd!("commit", "--amend"); }
+    if let Some(arg3) = cmd_args().skip(2).next() {
+        if arg3 == "edit" { exec_git_cmd!("commit", "--amend"); }
+        else { trace!("Incorrect amend argument:", arg3); }
+    }
     else { exec_git_cmd!("commit", "--amend", "--no-edit"); }
 }
 
@@ -46,8 +48,10 @@ fn git_fetch() {
 
 ///Push the current branch
 fn git_push() {
-    let args: Vec<String> = cmd_args().skip(2).collect();
-    if args.len() != 0 && args[0] =="force" { exec_git_cmd!("push", "--force", "origin", "HEAD"); }
+    if let Some(arg3) = cmd_args().skip(2).next() {
+        if arg3 =="force" { exec_git_cmd!("push", "--force", "origin", "HEAD"); }
+        else { trace!("Incorrect push argument:", arg3); }
+    }
     else { exec_git_cmd!("push", "origin", "HEAD"); }
 }
 
@@ -85,7 +89,7 @@ fn main() {
         trace!("Not a git repository");
         return;
     }
-    else if cmd_args().len() == 1 {
+    else if cmd_args().len() < 2 {
         usage();
         return;
     }
