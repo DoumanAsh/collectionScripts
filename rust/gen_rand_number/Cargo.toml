@@ -1,0 +1,7 @@
+[package]
+name = "gen_rand_number"
+version = "1.0.0"
+authors = ["DoumanAsh <custparasite@gmx.se>"]
+
+[dependencies]
+rand = "*"
