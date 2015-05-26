@@ -5,3 +5,10 @@ authors = ["DoumanAsh <custparasite@gmx.se>"]
 
 [dependencies]
 rand = "*"
+
+[profile.release]
+opt-level = 3
+debug = false
+rpath = false
+lto = false
+debug-assertions = false
