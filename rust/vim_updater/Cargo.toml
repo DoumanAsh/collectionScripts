@@ -1,0 +1,16 @@
+[package]
+name = "vim_updater"
+version = "1.0.0"
+authors = ["DoumanAsh <custparasite@gmx.se>"]
+
+[dependencies]
+hyper = "*"
+rusty-cute-macros = "*"
+regex = "*"
+
+[profile.release]
+opt-level = 3
+debug = false
+rpath = false
+lto = false
+codegen-units = 1
