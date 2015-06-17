@@ -96,34 +96,45 @@ fn main() {
 
     drop(vim_cur_date);
     //download new builds
-    let mut download_res = http_client.get("https://tuxproject.de/projects/vim/complete-x64.7z").send().unwrap();
-    if download_res.status != hyper::Ok {
-        RETURN!(msg_type=>trace, "Failed to download vim build. Response status={}", download_res.status);
-    }
-
-    if let Ok(mut file) = std::fs::File::create("vim-x64.7z") {
-        if std::io::copy(&mut download_res, &mut file).is_err() {
-            RETURN!(msg_type=>trace, "Unable to save file");
+    let handler64 = std::thread::spawn(move || {
+        println!(">>>Download vim-x64.7z");
+        let mut download_res = http_client.get("https://tuxproject.de/projects/vim/complete-x64.7z").send().unwrap();
+        if download_res.status != hyper::Ok {
+            RETURN!(msg_type=>trace, "Failed to download vim build. Response status={}", download_res.status);
         }
-    }
-    else {
-        RETURN!(msg_type=>trace, "Unable to create file");
-    }
 
-    println!("Succesfully downloaded vim-x64.7z");
-    let mut download_res = http_client.get("https://tuxproject.de/projects/vim/complete-x86.7z").send().unwrap();
-    if download_res.status != hyper::Ok {
-        RETURN!(msg_type=>trace, "Failed to download vim build. Response status={}", download_res.status);
-    }
-
-    if let Ok(mut file) = std::fs::File::create("vim-x86.7z") {
-        if std::io::copy(&mut download_res, &mut file).is_err() {
-            RETURN!(msg_type=>trace, "Unable to save file");
+        if let Ok(mut file) = std::fs::File::create("vim-x64.7z") {
+            if std::io::copy(&mut download_res, &mut file).is_err() {
+                RETURN!(msg_type=>trace, "Unable to save file");
+            }
         }
-    }
-    else {
-        RETURN!(msg_type=>trace, "Unable to create file");
-    }
+        else {
+            RETURN!(msg_type=>trace, "Unable to create file");
+        }
+        println!("Succesfully downloaded vim-x64.7z");
+    });
 
-    RETURN!("Succesfully downloaded vim-x86.7z");
+    let handler32 = std::thread::spawn(|| {
+        println!(">>>Download vim-x86.7z");
+        let mut http_client = hyper::client::Client::new();
+        let mut download_res = http_client.get("https://tuxproject.de/projects/vim/complete-x86.7z").send().unwrap();
+        if download_res.status != hyper::Ok {
+            RETURN!(msg_type=>trace, "Failed to download vim build. Response status={}", download_res.status);
+        }
+
+        if let Ok(mut file) = std::fs::File::create("vim-x86.7z") {
+            if std::io::copy(&mut download_res, &mut file).is_err() {
+                RETURN!(msg_type=>trace, "Unable to save file");
+            }
+        }
+        else {
+            RETURN!(msg_type=>trace, "Unable to create file");
+        }
+
+        println!("Succesfully downloaded vim-x86.7z");
+    });
+
+    handler64.join().unwrap();
+    handler32.join().unwrap();
+    RETURN!(">>>Done");
 }
