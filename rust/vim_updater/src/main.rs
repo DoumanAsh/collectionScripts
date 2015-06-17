@@ -3,7 +3,7 @@ extern crate hyper;
 extern crate rusty_cute_macros;
 extern crate regex;
 
-use std::io::{Read, Write};
+use std::io::{Read, Write, Seek};
 use std::borrow::Borrow;
 
 /// RETURN macro.
@@ -37,7 +37,7 @@ fn main() {
     println!("#Visit site to give thanks(donate button at bottom)");
     println!("###################################################\n");
 
-    let mut http_client = hyper::client::Client::new();
+    let http_client = hyper::client::Client::new();
     let mut tux_data: String = String::with_capacity(6200);
     let mut result = http_client.get("https://tuxproject.de/projects/vim").send().unwrap();
 
@@ -62,10 +62,7 @@ fn main() {
     drop(result);
     drop(re_get_date);
     //Get config file
-    let mut config_file = match is_file!("vim_updater.cfg") {
-        true => std::fs::File::open("vim_updater.cfg").unwrap(),
-        false => std::fs::File::create("vim_updater.cfg").unwrap(),
-    };
+    let mut config_file = std::fs::OpenOptions::new().read(true).write(true).create(true).open("vim_updater.cfg").unwrap();
     let mut build_date: String = String::with_capacity(10);
     let to_update: bool;
 
@@ -78,27 +75,29 @@ fn main() {
     if !to_update {
         RETURN!("Vim is up-to-date");
     }
-    drop(build_date);
-    drop(config_file);
 
     println!("Found new vim build:");
     println!("Date: {}-{}-{}", vim_cur_date.0, vim_cur_date.1, vim_cur_date.2);
 
     //Update config file
-    if let Ok(mut file) = std::fs::File::create("vim_updater.cfg") {
-        if file.write_fmt(format_args!("{}-{}-{}", vim_cur_date.0, vim_cur_date.1, vim_cur_date.2)).is_err() {
-            RETURN!(msg_type=>trace, "Failed to write new data into config file");
-        }
+    config_file.seek(std::io::SeekFrom::Start(0)).unwrap();
+    if config_file.set_len(0).is_err() {
+        RETURN!("Failed to trunctuate config file");
     }
-    else {
-        RETURN!(msg_type=>trace, "Unable to update config file");
+    if config_file.write_fmt(format_args!("{}-{}-{}", vim_cur_date.0, vim_cur_date.1, vim_cur_date.2)).is_err() {
+        RETURN!(msg_type=>trace, "Failed to write new data into config file");
     }
 
     drop(vim_cur_date);
+    drop(config_file);
+    drop(build_date);
     //download new builds
+    let client_arc = std::sync::Arc::new(http_client);
+    let client_64 = client_arc.clone();
+    let client_86 = client_arc.clone();
     let handler64 = std::thread::spawn(move || {
         println!(">>>Download vim-x64.7z");
-        let mut download_res = http_client.get("https://tuxproject.de/projects/vim/complete-x64.7z").send().unwrap();
+        let mut download_res = client_64.get("https://tuxproject.de/projects/vim/complete-x64.7z").send().unwrap();
         if download_res.status != hyper::Ok {
             RETURN!(msg_type=>trace, "Failed to download vim build. Response status={}", download_res.status);
         }
@@ -114,10 +113,9 @@ fn main() {
         println!("Succesfully downloaded vim-x64.7z");
     });
 
-    let handler32 = std::thread::spawn(|| {
+    let handler32 = std::thread::spawn(move || {
         println!(">>>Download vim-x86.7z");
-        let mut http_client = hyper::client::Client::new();
-        let mut download_res = http_client.get("https://tuxproject.de/projects/vim/complete-x86.7z").send().unwrap();
+        let mut download_res = client_86.get("https://tuxproject.de/projects/vim/complete-x86.7z").send().unwrap();
         if download_res.status != hyper::Ok {
             RETURN!(msg_type=>trace, "Failed to download vim build. Response status={}", download_res.status);
         }

@@ -3,8 +3,10 @@ name = "vim_updater"
 version = "1.0.0"
 authors = ["DoumanAsh <custparasite@gmx.se>"]
 
+[dependencies.hyper]
+git = "https://github.com/hyperium/hyper"
+
 [dependencies]
-hyper = "*"
 rusty-cute-macros = "*"
 regex = "*"
 
