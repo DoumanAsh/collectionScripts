@@ -6,13 +6,18 @@ extern crate regex;
 use std::io::{Read, Write};
 use std::borrow::Borrow;
 
-macro_rules! input {
-    ($msg:expr) => {{
-        use std::io::{Read, Write};
-        print!($msg);
+/// RETURN macro.
+///
+/// @msg_type - macro identfier which will be called to print
+macro_rules! RETURN {
+    (msg_type=>$msg_type:ident, $($arg:tt)+) => {{
+        $msg_type!($($arg)+);
+        print!("Press Enter to exit...");
         std::io::stdout().flush().unwrap();
         std::io::stdin().bytes().next();
-    }}
+        return;
+    }};
+    ($($arg:tt)+) => {{ RETURN!(msg_type=>println, $($arg)+); }};
 }
 
 /// Extract tuple from date's string in format [yyyy-mm-dd]
@@ -37,18 +42,21 @@ fn main() {
     let mut result = http_client.get("https://tuxproject.de/projects/vim").send().unwrap();
 
     if result.status != hyper::Ok {
-        trace!("Failed to connect to tuxproject.de with result={}", result.status);
-        return;
+        RETURN!(msg_type=>trace, "Failed to connect to tuxproject.de with result={}", result.status);
     }
 
-    if result.read_to_string(&mut tux_data).unwrap_or(0) == 0 { trace!("Failed to retrieve data"); return; }
+    if result.read_to_string(&mut tux_data).unwrap_or(0) == 0 {
+        RETURN!(msg_type=>trace, "Failed to retrieve data");
+    }
     let re_get_date = regex::Regex::new(r"(?m)\d{4}-\d{2}-\d{2}").unwrap();
     let vim_cur_date: (usize, usize, usize);
 
     if let Some(cap_date) = re_get_date.captures_iter(&tux_data).next() {
         vim_cur_date = get_date(cap_date.at(0).unwrap());
     }
-    else { trace!("Failed to find build's date"); return; }
+    else {
+        RETURN!(msg_type=>trace, "Failed to find build's date");
+    }
 
     drop(tux_data);
     drop(result);
@@ -68,9 +76,7 @@ fn main() {
     }
 
     if !to_update {
-        println!("Vim is up-to-date");
-        input!("Press Enter to exit...");
-        return;
+        RETURN!("Vim is up-to-date");
     }
     drop(build_date);
     drop(config_file);
@@ -81,31 +87,43 @@ fn main() {
     //Update config file
     if let Ok(mut file) = std::fs::File::create("vim_updater.cfg") {
         if file.write_fmt(format_args!("{}-{}-{}", vim_cur_date.0, vim_cur_date.1, vim_cur_date.2)).is_err() {
-            trace!("Failed to write new data into config file");
-            return;
+            RETURN!(msg_type=>trace, "Failed to write new data into config file");
         }
     }
-    else { trace!("Unable to update config file"); return; }
+    else {
+        RETURN!(msg_type=>trace, "Unable to update config file");
+    }
 
     drop(vim_cur_date);
     //download new builds
     let mut download_res = http_client.get("https://tuxproject.de/projects/vim/complete-x64.7z").send().unwrap();
-    if download_res.status != hyper::Ok { trace!("Failed to download vim build. Response status={}", download_res.status); return; }
+    if download_res.status != hyper::Ok {
+        RETURN!(msg_type=>trace, "Failed to download vim build. Response status={}", download_res.status);
+    }
 
     if let Ok(mut file) = std::fs::File::create("vim-x64.7z") {
-        if std::io::copy(&mut download_res, &mut file).is_err() { trace!("Unable to save file"); return; }
+        if std::io::copy(&mut download_res, &mut file).is_err() {
+            RETURN!(msg_type=>trace, "Unable to save file");
+        }
     }
-    else { trace!("Unable to create file"); return; }
+    else {
+        RETURN!(msg_type=>trace, "Unable to create file");
+    }
 
     println!("Succesfully downloaded vim-x64.7z");
     let mut download_res = http_client.get("https://tuxproject.de/projects/vim/complete-x86.7z").send().unwrap();
-    if download_res.status != hyper::Ok { trace!("Failed to download vim build. Response status={}", download_res.status); return; }
+    if download_res.status != hyper::Ok {
+        RETURN!(msg_type=>trace, "Failed to download vim build. Response status={}", download_res.status);
+    }
 
     if let Ok(mut file) = std::fs::File::create("vim-x86.7z") {
-        if std::io::copy(&mut download_res, &mut file).is_err() { trace!("Unable to save file"); return; }
+        if std::io::copy(&mut download_res, &mut file).is_err() {
+            RETURN!(msg_type=>trace, "Unable to save file");
+        }
     }
-    else { trace!("Unable to create file"); return; }
-    println!("Succesfully downloaded vim-x86.7z");
+    else {
+        RETURN!(msg_type=>trace, "Unable to create file");
+    }
 
-    input!("Press Enter to exit...");
+    RETURN!("Succesfully downloaded vim-x86.7z");
 }
