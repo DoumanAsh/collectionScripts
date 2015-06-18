@@ -1,5 +1,5 @@
 extern crate hyper;
-#[macro_use(trace, is_file)]
+#[macro_use(trace, is_file, drop)]
 extern crate rusty_cute_macros;
 extern crate regex;
 
@@ -58,9 +58,7 @@ fn main() {
         RETURN!(msg_type=>trace, "Failed to find build's date");
     }
 
-    drop(tux_data);
-    drop(result);
-    drop(re_get_date);
+    drop!(tux_data, result, re_get_date);
     //Get config file
     let mut config_file = std::fs::OpenOptions::new().read(true).write(true).create(true).open("vim_updater.cfg").unwrap();
     let mut build_date: String = String::with_capacity(10);
@@ -88,9 +86,7 @@ fn main() {
         RETURN!(msg_type=>trace, "Failed to write new data into config file");
     }
 
-    drop(vim_cur_date);
-    drop(config_file);
-    drop(build_date);
+    drop!(vim_cur_date, config_file, build_date);
     //download new builds
     let client_arc = std::sync::Arc::new(http_client);
     let client_64 = client_arc.clone();
