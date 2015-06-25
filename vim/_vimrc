@@ -14,7 +14,73 @@
 :vmap <c-s> <Esc><c-s>gv
 :autocmd BufWritePre *.* :%s/\s\+$//e
 :set laststatus=2
-:set statusline=%f%m%r%h%w\ %y\ enc:%{&enc}\ ff:%{&ff}\ fenc:%{&fenc}%=(ch:%3b\ hex:%2B)\ col:%2c\ line:%2l/%L\ [%2p%%]
+
+if has("gui_running")
+    set lines=999 columns=999
+    if has("gui_win32")
+        "set guifont=Consolas:h12
+        set guifont=DejaVu_Sans_Mono_for_Powerline:h12
+    else
+        set guifont=Inconsolas\ 12
+    endif
+endif
+
+":set statusline=%f%m%r%h%w\ %y\ enc:%{&enc}\ ff:%{&ff}\ fenc:%{&fenc}%=(ch:%3b\ hex:%2B)\ col:%2c\ line:%2l/%L\ [%2p%%]
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""" LightLine config
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""''
+let g:lightline = {
+      \ 'colorscheme': 'landscape',
+      \ 'active': {
+      \   'left': [ [ 'mode', 'paste' ],
+      \             [ 'fugitive', 'filename' ] ]
+      \ },
+      \ 'component_function': {
+      \   'fugitive': 'MyFugitive',
+      \   'readonly': 'MyReadonly',
+      \   'modified': 'MyModified',
+      \   'filename': 'MyFilename'
+      \ },
+      \ 'separator': { 'left': '', 'right': '' },
+      \ 'subseparator': { 'left': '', 'right': '' }
+      \ }
+
+function! MyModified()
+  if &filetype == "help"
+    return ""
+  elseif &modified
+    return "+"
+  elseif &modifiable
+    return ""
+  else
+    return "-"
+  endif
+endfunction
+
+function! MyReadonly()
+  if &filetype == "help"
+    return ""
+  elseif &readonly
+    return ""
+  else
+    return ""
+  endif
+endfunction
+
+function! MyFugitive()
+  if exists("*fugitive#head")
+    let _ = fugitive#head()
+    return strlen(_) ? _ : ''
+  endif
+  return ''
+endfunction
+
+function! MyFilename()
+  return ('' != MyReadonly() ? MyReadonly() . ' ' : '') .
+       \ ('' != expand('%:t') ? ( expand('%:t') . ':' . getpos('.')[1]) : '[No Name]') .
+       \ ('' != MyModified() ? ' ' . MyModified() : '')
+endfunction
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""''
 :set encoding=utf-8
 :set termencoding=utf-8
 :set fileencoding=utf-8
@@ -22,14 +88,6 @@
 :set omnifunc=syntaxcomplete#Complete
 if argc() == 0 && !exists("s:std_in")
     autocmd vimenter * Explore 
-endif
-if has("gui_running")
-    set lines=999 columns=999
-    if has("gui_win32")
-        set guifont=Consolas:h12
-    else
-        set guifont=Inconsolas\ 12
-    endif
 endif
 
 " Convert tab to spaces
