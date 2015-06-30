@@ -1,3 +1,6 @@
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""" General config
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 :let g:netrw_dirhistmax = 0
 :set noswapfile
 :colorscheme vividchalk
@@ -18,26 +21,40 @@
 if has("gui_running")
     set lines=999 columns=999
     if has("gui_win32")
-        "set guifont=Consolas:h12
         set guifont=DejaVu_Sans_Mono_for_Powerline:h12
-        set go+=a
+        set go+=a "make selection to save into clipboard. win only cuz unix already has it and i use only GVIM
     else
         set guifont=Inconsolas\ 12
     endif
 endif
 
+:set encoding=utf-8
+:set termencoding=utf-8
+:set fileencoding=utf-8
+:set fileencodings=utf8,latin1,koi8r,cp932,cp1251,cp866,ucs-2le
+:set omnifunc=syntaxcomplete#Complete
+"Execute Explore if no files are passed.
+if argc() == 0 && !exists("s:std_in")
+    autocmd vimenter * Explore 
+endif
+
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"""" Neocomplete config
+"""" Neocomplete config(plus general complete settings)
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Use neocomplete.
 :let g:neocomplete#enable_at_startup = 1
 " Use smartcase.
 :let g:neocomplete#enable_smart_case = 1
 :let g:acp_enableAtStartup = 0
+:let g:neocomplete#min_keyword_length = 3
+:let g:neocomplete#auto_completion_start_length = 3
 
 "Super tab config
 :let g:SuperTabDefaultCompletionType = "<c-n>"
+"Close popup window by space
 :inoremap <expr><Space> pumvisible() ? neocomplete#close_popup() : "\<Space>"
+"Make Enter to finish completion
+:inoremap <expr> <CR> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
 
 :autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
 :autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
@@ -48,6 +65,7 @@ endif
 :let g:neocomplete#data_directory = expand("$VIM/.cache")
 :let g:neocomplete#max_list = 15
 
+:set completeopt=longest,menuone
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 ":set statusline=%f%m%r%h%w\ %y\ enc:%{&enc}\ ff:%{&ff}\ fenc:%{&fenc}%=(ch:%3b\ hex:%2B)\ col:%2c\ line:%2l/%L\ [%2p%%]
@@ -105,15 +123,11 @@ function! MyFilename()
        \ ('' != expand('%:t') ? ( expand('%:t') . ':' . getpos('.')[1]) : '[No Name]')
 endfunction
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""''
-:set encoding=utf-8
-:set termencoding=utf-8
-:set fileencoding=utf-8
-:set fileencodings=utf8,latin1,koi8r,cp932,cp1251,cp866,ucs-2le
-:set omnifunc=syntaxcomplete#Complete
-if argc() == 0 && !exists("s:std_in")
-    autocmd vimenter * Explore 
-endif
 
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""" Function config
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""''
 " Convert tab to spaces
 function! Convert_tab(space_number)
     let l:white_space = repeat(" ", a:space_number)
