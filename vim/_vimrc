@@ -20,6 +20,7 @@ if has("gui_running")
     if has("gui_win32")
         "set guifont=Consolas:h12
         set guifont=DejaVu_Sans_Mono_for_Powerline:h12
+        set go+=a
     else
         set guifont=Inconsolas\ 12
     endif
