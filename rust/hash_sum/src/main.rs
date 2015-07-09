@@ -8,7 +8,10 @@ use crypto::sha2::{Sha256, Sha512};
 
 use std::env::args as cmd_args;
 use std::fs::{read_dir, metadata};
-use std::io::Read;
+use std::io::{Read, BufReader};
+
+//Buffer size 10kbs
+const BUFFER_SIZE: usize = 10000;
 
 macro_rules! is_file {
     ($path:expr) => { std::fs::metadata($path).unwrap().is_file() }
@@ -30,19 +33,26 @@ fn usage() {
 
 #[inline(always)]
 fn calc_checksum(path: &str) {
-    if let Ok(mut file) = std::fs::File::open(&path) {
-        let mut file_content: Vec<u8> = vec!();
+    if let Ok(file) = std::fs::File::open(&path) {
+        let mut file = BufReader::new(file);
         let mut md5_sum = Md5::new();
         let mut sha1_sum = Sha1::new();
         let mut sha256_sum = Sha256::new();
         let mut sha512_sum = Sha512::new();
 
         println!(">>>{}:", &path);
-        file.read_to_end(&mut file_content).unwrap();
-        md5_sum.input(&file_content);
-        sha1_sum.input(&file_content);
-        sha256_sum.input(&file_content);
-        sha512_sum.input(&file_content);
+        loop {
+            let mut file_content: [u8; BUFFER_SIZE] = [0; BUFFER_SIZE];
+            let read_bytes = file.read(&mut file_content).unwrap();
+            if read_bytes == 0 { break; }
+
+            //In case read is unable to fill buffer completely.
+            let slice_content = &file_content[..read_bytes];
+            md5_sum.input(slice_content);
+            sha1_sum.input(slice_content);
+            sha256_sum.input(slice_content);
+            sha512_sum.input(slice_content);
+        }
         println!("MD5:   {}", md5_sum.result_str());
         println!("SHA1:  {}", sha1_sum.result_str());
         println!("SHA256:{}", sha256_sum.result_str());
