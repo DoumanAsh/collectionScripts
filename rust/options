@@ -1,0 +1,1 @@
+-C opt-level=3 -C lto -C debuginfo=0 -C debug-assertions=no
