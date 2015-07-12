@@ -1,0 +1,17 @@
+[package]
+name = "clipboard_monitor"
+version = "0.1.0"
+authors = ["DoumanAsh <custparasite@gmx.se>"]
+
+[dependencies]
+winapi = "*"
+user32-sys = "*"
+clipboard-win = "*"
+
+[profile.release]
+opt-level = 3
+debug = false
+rpath = false
+lto = true
+debug-assertions = false
+codegen-units = 1
