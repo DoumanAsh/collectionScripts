@@ -1,11 +1,20 @@
-extern crate winapi;
-extern crate user32;
 extern crate clipboard_win;
 
-use user32::GetClipboardSequenceNumber;
-use clipboard_win::*;
+use clipboard_win::{set_clipboard, ClipboardManager};
+use std::process::Command;
 
 fn handler_clip_text(text: &String) {
+    if text.len() == 0 { return; }
+
+    if text.starts_with("wget") {
+        println!("wget download:");
+        let status = Command::new("powershell").arg("-Command").arg(format!("cd E:/Downloads; {}", &text)).status().unwrap();
+        if !status.success() {
+            println!("Failed to run wget.");
+        }
+        return;
+    }
+
     println!("Clipboard content: {}", &text);
     if !text.starts_with(' ') && !text.ends_with(' ') { return; }
     if set_clipboard(text.trim_matches(' ')).is_err() {
@@ -15,20 +24,5 @@ fn handler_clip_text(text: &String) {
 
 fn main() {
     println!("Clipboard monitor");
-    unsafe {
-        let mut clipboard_num = GetClipboardSequenceNumber();
-        loop {
-            let new_num = GetClipboardSequenceNumber();
-            if clipboard_num != new_num {
-                println!("Clipboard update: {}", clipboard_num);
-                clipboard_num = new_num;
-                match get_clipboard() {
-                    Ok(clip_text) => { handler_clip_text(&clip_text) },
-                    Err(err_text) => { println!("Failed to get clipboard. Reason:{}", err_text) },
-                }
-            println!(">>>");
-            }
-            std::thread::sleep_ms(100);
-        }
-    }
+    ClipboardManager::new().ok_callback(handler_clip_text).run();
 }
