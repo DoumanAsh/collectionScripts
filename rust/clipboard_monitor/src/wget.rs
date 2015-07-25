@@ -18,14 +18,15 @@ pub fn is_applicable(text: &String) -> Option<String> {
     find_file_name(text)
 }
 
+#[inline(always)]
 pub fn handler(text: &String, file_name: String) {
     println!(">>>wget {}", &file_name);
 
     let cmd = format!("cd E:/Downloads; {}", text);
     if std::thread::Builder::new().name(file_name).spawn(move || {
-        let output = std::process::Command::new("powershell").arg("-Command").arg(cmd).output().unwrap();
-        if !output.status.success() {
-            println!("[{}] Failed to wget:\n{}", std::thread::current().name().unwrap_or("UNKNOWN"), String::from_utf8_lossy(&output.stdout));
+        let status = std::process::Command::new("powershell").arg("-Command").arg(cmd).stdout(std::process::Stdio::null()).stderr(std::process::Stdio::null()).status().unwrap();
+        if !status.success() {
+            println!("[{}] Failed to wget", std::thread::current().name().unwrap_or("UNKNOWN"));
         }
         else {
             println!("[{}] Successfully downloaded", std::thread::current().name().unwrap_or("UNKNOWN"));
