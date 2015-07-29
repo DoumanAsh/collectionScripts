@@ -12,20 +12,23 @@ use std::io::{Read, Write, BufReader};
 
 #[inline(always)]
 fn usage() {
-println!("Usage: hash_sum [-c | -o | -p] [options] <input>...
+println!("Usage: hash_sum [-c | -o | -p] [algorithms] <input>...
 
-Options:
+Algorithms:
     --md5       Enables md5 calculation.
-    --sha1      Enables sha1 calculation.
-    --sha256    Enables sha256 calculation.
-    --sha512    Enables sha512 calculation.
+    --sha[num]  Enables sha calculation. num can be [1, 256, 512]
 
-Flags:
-    Flags are mutually exclusive.
-    -p/--print  Prints checksums to stdout. Default.
-    -c/--check  Verifies checksum from files.
-    -o/--output Write calculations into files with corresponding extension.
+Mode:
+    Mutually exclusive.
+    -c --check  Verifies checksum from files.
+    -o --output Write calculations into files with corresponding extension.
+    -p --print  Prints checksums to stdout. Default.
 ");
+}
+
+fn invalid_usage(text: &str) {
+    println!("{}", text);
+    usage();
 }
 
 //Buffer size 10kbs
@@ -95,6 +98,17 @@ impl HashSum {
         }
     }
 
+    fn sha_match(&mut self, arg: &str) -> bool {
+        match arg {
+            "1" => self.1.push(Checksum("SHA1:".to_string(), Box::new(Sha1::new()) as Box<Digest>)),
+            "256" => self.1.push(Checksum("SHA256:".to_string(), Box::new(Sha256::new()) as Box<Digest>)),
+            "512" => self.1.push(Checksum("SHA512:".to_string(), Box::new(Sha512::new()) as Box<Digest>)),
+            arg @ _ => { println!(">>>Invalid option --sha{}", arg); return false; },
+        }
+
+        true
+    }
+
     pub fn run_from_args() {
         let mut hash_sum = HashSum(Vec::new(), Vec::new(), FlagType::Print);
 
@@ -102,24 +116,22 @@ impl HashSum {
             if arg.starts_with("-") {
                 match arg.as_ref() {
                     "--md5" => hash_sum.1.push(Checksum("MD5:".to_string(), Box::new(Md5::new()) as Box<Digest>)),
-                    "--sha1" => hash_sum.1.push(Checksum("SHA1:".to_string(), Box::new(Sha1::new()) as Box<Digest>)),
-                    "--sha256" => hash_sum.1.push(Checksum("SHA256:".to_string(), Box::new(Sha256::new()) as Box<Digest>)),
-                    "--sha512" => hash_sum.1.push(Checksum("SHA512:".to_string(), Box::new(Sha512::new()) as Box<Digest>)),
+                    arg if arg.starts_with("--sha") => if !hash_sum.sha_match(&arg[5..]) { return usage(); },
                     "-o" | "--output" => hash_sum.2 = FlagType::Output,
                     "-c" | "--check" => hash_sum.2 = FlagType::Check,
                     "-p" | "--print" => hash_sum.2 = FlagType::Print,
-                    arg @ _ => println!(">>>Invalid flag {}", arg),
+                    arg @ _ => return invalid_usage(&format!(">>>Invalid option {}", arg)),
                 }
             }
             else { hash_sum.0.push(arg) }
         }
 
-        if hash_sum.1.len() == 0 { hash_sum.default_algos(); }
-
         if hash_sum.0.len() == 0 {
             println!(">>>No input is given!");
             return;
         }
+
+        if hash_sum.1.len() == 0 { hash_sum.default_algos(); }
 
         hash_sum.run()
     }
