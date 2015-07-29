@@ -8,17 +8,23 @@ use crypto::sha2::{Sha256, Sha512};
 
 use std::env::args as cmd_args;
 use std::fs::{read_dir, metadata};
-use std::io::{Read, BufReader};
+use std::io::{Read, Write, BufReader};
 
 #[inline(always)]
 fn usage() {
-println!("Usage: hash_sum [options] <input>...
+println!("Usage: hash_sum [-c | -o | -p] [options] <input>...
 
 Options:
     --md5       Enables md5 calculation.
     --sha1      Enables sha1 calculation.
     --sha256    Enables sha256 calculation.
     --sha512    Enables sha512 calculation.
+
+Flags:
+    Flags are mutually exclusive.
+    -p/--print  Prints checksums to stdout. Default.
+    -c/--check  Verifies checksum from files.
+    -o/--output Write calculations into files with corresponding extension.
 ");
 }
 
@@ -46,7 +52,13 @@ impl Checksum {
     #[inline(always)]
     pub fn result(&mut self) -> String { format!("{:8}{}", self.0, self.1.result_str()) }
     #[inline(always)]
+    pub fn get_checksum(&mut self) -> String { self.1.result_str() }
+    #[inline(always)]
     pub fn reset(&mut self) { self.1.reset(); }
+    #[inline(always)]
+    pub fn get_file_ext(&self) -> String { self.0[0..self.0.len()-1].chars().map(|elem| elem.to_lowercase().next().unwrap()).collect() }
+    #[inline(always)]
+    pub fn get_type_string(&self) -> String { format!("{:8}", self.0) }
 }
 
 impl PartialEq for Checksum {
@@ -59,7 +71,13 @@ impl PartialEq for Checksum {
     }
 }
 
-struct HashSum(Vec<String>, Vec<Checksum>);
+enum FlagType {
+    Print,
+    Output,
+    Check,
+}
+
+struct HashSum(Vec<String>, Vec<Checksum>, FlagType);
 
 impl HashSum {
     #[inline(always)]
@@ -78,7 +96,7 @@ impl HashSum {
     }
 
     pub fn run_from_args() {
-        let mut hash_sum = HashSum(Vec::new(), Vec::new());
+        let mut hash_sum = HashSum(Vec::new(), Vec::new(), FlagType::Print);
 
         for arg in cmd_args().skip(1) {
             if arg.starts_with("-") {
@@ -87,6 +105,9 @@ impl HashSum {
                     "--sha1" => hash_sum.1.push(Checksum("SHA1:".to_string(), Box::new(Sha1::new()) as Box<Digest>)),
                     "--sha256" => hash_sum.1.push(Checksum("SHA256:".to_string(), Box::new(Sha256::new()) as Box<Digest>)),
                     "--sha512" => hash_sum.1.push(Checksum("SHA512:".to_string(), Box::new(Sha512::new()) as Box<Digest>)),
+                    "-o" | "--output" => hash_sum.2 = FlagType::Output,
+                    "-c" | "--check" => hash_sum.2 = FlagType::Check,
+                    "-p" | "--print" => hash_sum.2 = FlagType::Print,
                     arg @ _ => println!(">>>Invalid flag {}", arg),
                 }
             }
@@ -94,6 +115,11 @@ impl HashSum {
         }
 
         if hash_sum.1.len() == 0 { hash_sum.default_algos(); }
+
+        if hash_sum.0.len() == 0 {
+            println!(">>>No input is given!");
+            return;
+        }
 
         hash_sum.run()
     }
@@ -139,7 +165,42 @@ impl HashSum {
             }
 
             for algo in self.1.iter_mut() {
-                println!("{}", algo.result());
+                match self.2 {
+                    FlagType::Output => {
+                        let file_name = format!("{}.{}", &path, algo.get_file_ext());
+                        if let Ok(mut file) = std::fs::File::create(&file_name) {
+                            file.write_fmt(format_args!("{}\n", algo.get_checksum())).unwrap();
+                            println!("{}{}", algo.get_type_string(), &file_name);
+                        }
+                        else {
+                            println!("{}Unable to create file with checksum!", algo.get_type_string());
+                        }
+                    },
+                    FlagType::Check => {
+                        let file_name = format!("{}.{}", &path, algo.get_file_ext());
+                        if let Ok(mut file) = std::fs::File::open(&file_name) {
+                            let mut expected_checksum = String::new();
+                            if file.read_to_string(&mut expected_checksum).is_ok() {
+                                if expected_checksum.trim() == algo.get_checksum() {
+                                    println!("{}OK", algo.get_type_string());
+                                }
+                                else {
+                                    println!("{}NOT_OK", algo.get_type_string());
+                                }
+                            }
+                            else {
+                                println!("{}Failed to get checksum from file!", algo.get_type_string());
+                            }
+                        }
+                        else {
+                            println!("{}No checksum file!", algo.get_type_string());
+                        }
+                    },
+                    FlagType::Print => {
+                        println!("{}", algo.result());
+                    },
+
+                }
             }
             println!("=======================================================\n");
         }
