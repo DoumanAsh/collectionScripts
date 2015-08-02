@@ -22,6 +22,17 @@ function set_alias() {
     }
 }
 
+function unzip() {
+    foreach ($arg in $args) {
+        if (Test-Path "$arg") {
+            7z x "$arg"
+        }
+        else {
+            echo (">>>{0}: no such file" -f $arg)
+        }
+    }
+}
+
 function Get-ClipboardText()
 {
 	Add-Type -AssemblyName System.Windows.Forms
