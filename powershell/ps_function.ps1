@@ -33,6 +33,24 @@ function unzip() {
     }
 }
 
+function unpack_msi() {
+    foreach ($arg in $args) {
+        if (Test-Path "$arg") {
+            $msi_dir = Split-Path "$arg"
+            $basename = (Get-Item "$arg").Basename
+            $result_dir = (Join-Path $msi_dir $basename)
+            if (-Not (Test-Path "$result_dir")) {
+                mkdir $result_dir
+            }
+            msiexec /a "$arg" TARGETDIR="$result_dir" /qn
+            echo (">>>{0} extracted into -> {1}" -f $arg,$result_dir)
+        }
+        else {
+            echo (">>>{0}: no such file" -f $arg)
+        }
+    }
+}
+
 function Get-ClipboardText()
 {
 	Add-Type -AssemblyName System.Windows.Forms
