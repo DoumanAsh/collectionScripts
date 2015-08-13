@@ -28,6 +28,14 @@ if has("gui_running")
     endif
 endif
 
+" Indent set on tab in normal and visual mode
+:nnoremap <Tab> >>
+:nnoremap <S-Tab> <<
+:vnoremap <Tab> >gv
+:vnoremap <S-Tab> <gv
+" For insert mode let's make only reverse indent
+:inoremap <S-Tab> <C-D>
+
 :set encoding=utf-8
 :set termencoding=utf-8
 :set fileencoding=utf-8
