@@ -1,0 +1,16 @@
+[package]
+name = "resolution_tool"
+version = "1.0.0"
+authors = ["Douman <douman@gmx.se>"]
+
+[dependencies]
+winapi = "*"
+user32-sys = "*"
+
+[profile.release]
+opt-level = 3
+debug = false
+rpath = false
+lto = true
+debug-assertions = false
+codegen-units = 1
