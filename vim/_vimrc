@@ -3,12 +3,10 @@
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 :let g:netrw_dirhistmax = 0
 :set noswapfile
-:colorscheme vividchalk
 :filetype plugin indent on
 :set tabstop=4 softtabstop=4 shiftwidth=4 expandtab
 :set shell=powershell
 :set shellcmdflag=-command
-:syntax on
 :set ignorecase
 :set smartcase
 :set nu
@@ -17,7 +15,6 @@
 :vmap <c-s> <Esc><c-s>gv
 :autocmd BufWritePre *.* :%s/\s\+$//e
 :set laststatus=2
-
 if has("gui_running")
     set lines=999 columns=999
     if has("gui_win32")
@@ -27,17 +24,16 @@ if has("gui_running")
         set guifont=Inconsolas\ 12
     endif
 endif
-
+:colorscheme dark
+:syntax on
 :set encoding=utf-8
 :set termencoding=utf-8
 :set fileencoding=utf-8
 :set fileencodings=utf8,latin1,koi8r,cp932,cp1251,cp866,ucs-2le
 :set omnifunc=syntaxcomplete#Complete
-"Execute Explore if no files are passed.
-if argc() == 0 && !exists("s:std_in")
-    autocmd vimenter * Explore 
-endif
+
 :set autochdir
+:set cursorline
 "store viminfo with vim dir
 :set viminfo+=n$VIM/_viminfo
 "auto-open vimrc in current dir
@@ -128,7 +124,6 @@ function! MyFilename()
 endfunction
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""''
 
-
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 """" Function config
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""''
@@ -147,3 +142,9 @@ endfunction
 :command EnSpellCheck call Spell_check("en_gb")
 :command RuSpellCheck call Spell_check("ru")
 :command Vimrc tabedit $MYVIMRC
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""''
+
+"Run Explore if no files are passed.
+if argc() == 0 && !exists("s:std_in")
+    autocmd vimenter * Explore 
+endif
