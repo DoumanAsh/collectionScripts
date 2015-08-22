@@ -37,7 +37,7 @@ endif
 if argc() == 0 && !exists("s:std_in")
     autocmd vimenter * Explore 
 endif
-
+:set autochdir
 "store viminfo with vim dir
 :set viminfo+=n$VIM/_viminfo
 "auto-open vimrc in current dir
@@ -51,8 +51,6 @@ endif
 :vnoremap <S-Tab> <gv
 " For insert mode let's make only reverse indent
 :inoremap <S-Tab> <C-D>
-
-:set autochdir
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 """" Complete settings
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
