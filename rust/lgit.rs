@@ -25,7 +25,7 @@ fn usage() {
     println!("  add - add all changes");
     println!("  clean - undo all changes");
     println!("  push [force] - push current branch");
-    println!("  commit [message] - commit with message");
+    println!("  commit [message] - commit with message(newline symbols can be used)");
     println!("  fetch - get updates from upstream\n");
 }
 
@@ -73,7 +73,7 @@ fn git_commit() {
     }
     else {
         let args: Vec<String> = cmd_args().skip(2).collect();
-        exec_git_cmd!("commit", "-m", args.connect(" "));
+        exec_git_cmd!("commit", "-m", args.connect(" ").replace("\\n", "\n"));
     }
 }
 
