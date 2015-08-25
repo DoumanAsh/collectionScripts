@@ -25,7 +25,7 @@ fn usage() {
     println!("  add - add all changes");
     println!("  clean - undo all changes");
     println!("  push [force] - push current branch");
-    println!("  commit [message] - commit with message(newline symbols can be used)");
+    println!("  commit [title] [--subj description] - commit with message(option subj place commit description)");
     println!("  fetch - get updates from upstream\n");
 }
 
@@ -73,7 +73,22 @@ fn git_commit() {
     }
     else {
         let args: Vec<String> = cmd_args().skip(2).collect();
-        exec_git_cmd!("commit", "-m", args.connect(" ").replace("\\n", "\n"));
+        let mut args_split = args.split(|elem| elem.to_lowercase() == "--subj");
+
+        //If no --subj split will have only one element.
+        //Consider this case as the whole message.
+        let title: String = args_split.next().unwrap().connect(" ");
+        if let Some(subj_array) = args_split.next() {
+            let mut subj: String = subj_array.connect(" ").replace("\\n", "\n").lines().fold(String::new(), |acc, line| acc + line.trim() + "\n");
+            subj.pop();
+            exec_git_cmd!("commit", "-m", format!("{}\n\n{}", title, subj));
+        }
+        else {
+            let mut title = title.replace("\\n", "\n").lines().fold(String::new(), |acc, line| acc + line.trim() + "\n");
+            title.pop();
+            exec_git_cmd!("commit", "-m", title);
+        }
+
     }
 }
 
