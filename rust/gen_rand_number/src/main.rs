@@ -1,5 +1,5 @@
 extern crate rand;
-use rand::{thread_rng, Rng};
+use rand::{thread_rng};
 use rand::distributions::{IndependentSample, Range};
 use std::env::args as cmd_args;
 
@@ -17,10 +17,6 @@ fn gen_random_number_string(number: usize) -> String {
         final_string.push_str(format!("{}", num_range.ind_sample(&mut rng)).as_ref());
     }
     final_string
-}
-
-fn gen_random_number(number: usize) -> usize {
-    thread_rng().gen_range((10 as usize).pow((number-1) as u32), (10 as usize).pow(number as u32) - 1)
 }
 
 fn main() {
