@@ -2,10 +2,10 @@
 " Dark and low contrast theme.
 set background=dark
 if version > 580
-	hi clear
-	if exists("syntax_on")
-		syntax reset
-	endif
+    hi clear
+    if exists("syntax_on")
+        syntax reset
+    endif
 endif
 
 let g:colors_name = "dark"
@@ -79,6 +79,7 @@ hi link CursorColumn CursorLine
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""
 hi Comment guifg=#65e000 guibg=NONE guisp=NONE gui=italic
 hi String guifg=#65e000 guibg=NONE guisp=NONE gui=NONE
+hi SpecialComment guifg=#009400 guibg=NONE guisp=NONE gui=NONE
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""
 "Constans
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -97,19 +98,18 @@ hi! link PreCondit Macro
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""
 "Special Characters group
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""
-hi SpecialComment guifg=#d98900 guibg=NONE guisp=NONE gui=NONE
-hi link SpecialChar SpecialComment
-hi link Debug SpecialComment
-hi link Delimiter SpecialComment
-hi link Tag SpecialComment
+hi SpecialChar guifg=#d98900 guibg=NONE guisp=NONE gui=NONE
+hi link Debug SpecialChar
+hi link Delimiter SpecialChar
+hi link Tag SpecialChar
 hi SpecialKey guifg=#61b100 guibg=NONE guisp=NONE gui=NONE
 hi link Character SpecialKey
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "Ident group
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""
-hi Identifier guifg=#e6e600 guibg=NONE guisp=NONE gui=NONE
+hi Identifier guifg=#ffd700 guibg=NONE guisp=NONE gui=NONE
 hi link Function Identifier
-hi link Directory Identifier
+hi! link Directory Identifier
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""
 "Statement group
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""
