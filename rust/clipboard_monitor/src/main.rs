@@ -8,6 +8,7 @@ extern crate clipboard_win;
 use clipboard_win::{set_clipboard, ClipboardManager};
 
 pub mod wget;
+pub mod magnet;
 
 ///Trimm all lines in string.
 ///Return None if string is not changed.
@@ -31,6 +32,10 @@ fn handler_clip_text(text: &String) {
         wget::handler(text, file_name);
         return;
     }
+    else if magnet::is_applicable(&text) {
+        magnet::handler(text);
+        return;
+    }
 
     //Default:
     println!("Clipboard content:\n{}", &text);
@@ -42,6 +47,8 @@ fn handler_clip_text(text: &String) {
 }
 
 fn main() {
-    println!("Clipboard monitor");
+    println!("###########################");
+    println!("#    Clipboard monitor    #");
+    println!("###########################");
     ClipboardManager::new().ok_callback(handler_clip_text).run();
 }
