@@ -19,14 +19,16 @@ macro_rules! trace {
 
 #[inline(always)]
 fn usage() {
-    println!("lgit [option]\n");
-    println!("options:");
-    println!("  amend [edit] - amend all changes into last commit");
-    println!("  add - add all changes");
-    println!("  clean - undo all changes");
-    println!("  push [force] - push current branch");
-    println!("  commit [title] [--subj description] - commit with message(option subj place commit description)");
-    println!("  fetch - get updates from upstream\n");
+println!("usage: lgit [option]
+
+options:
+    amend [edit]                        - amend all changes into last commit
+    add                                 - add all changes
+    clean                               - undo all changes
+    push [force]                        - push current branch
+    commit [title] [--subj description] - commit with message(option subj place commit description)
+    fetch                               - get updates from upstream
+");
 }
 
 ///Amend changes
