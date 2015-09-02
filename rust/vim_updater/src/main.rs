@@ -39,7 +39,7 @@ fn main() {
 
     let http_client = hyper::client::Client::new();
     let mut tux_data: String = String::with_capacity(6200);
-    print!(""); //print! is needed as with lto get().unwrap() will panick
+    print!("");
     let mut result = http_client.get("https://tuxproject.de/projects/vim").send().unwrap();
 
     if result.status != hyper::Ok {
