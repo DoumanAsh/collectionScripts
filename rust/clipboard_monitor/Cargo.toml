@@ -13,3 +13,12 @@ rpath = false
 lto = true
 debug-assertions = false
 codegen-units = 1
+
+[[bin]]
+name = "clipboard_monitor"
+path = "src/main.rs"
+
+[[bin]]
+name = "senkou_splitter"
+path = "src/senkou.rs"
+
