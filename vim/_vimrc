@@ -32,7 +32,6 @@ endif
 :set fileencodings=utf8,latin1,koi8r,cp932,cp1251,cp866,ucs-2le
 :set omnifunc=syntaxcomplete#Complete
 
-:set autochdir
 :set cursorline
 "store viminfo with vim dir
 :set viminfo+=n$VIM/_viminfo
