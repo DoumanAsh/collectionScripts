@@ -22,3 +22,6 @@ path = "src/main.rs"
 name = "senkou_splitter"
 path = "src/senkou.rs"
 
+[[bin]]
+name = "alpha_raid"
+path = "src/alpha_raid.rs"
