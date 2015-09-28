@@ -1,4 +1,4 @@
-//! Alpha Raid text corrector
+//! VN text corrector
 
 extern crate clipboard_win;
 use clipboard_win::{set_clipboard, ClipboardManager};
@@ -25,7 +25,7 @@ fn handler_clip_text(text: &String) {
 
 fn main() {
     println!("####################################");
-    println!("#  Alpha Ride ITH text corrector   #");
+    println!("#        VN text corrector         #");
     println!("####################################");
     ClipboardManager::new().delay(10).ok_callback(handler_clip_text).run();
 }
