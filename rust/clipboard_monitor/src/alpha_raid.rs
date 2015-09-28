@@ -2,8 +2,11 @@
 
 extern crate clipboard_win;
 use clipboard_win::{set_clipboard, ClipboardManager};
+pub mod utils;
 
 fn handler_clip_text(text: &String) {
+    if !utils::is_jp(text) { return; }
+
     const BEGIN: &'static[char] = &['「', '（'];
     const END: &'static[char] = &['」', '）'];
     if let (Some(begin_pos), Some(end_pos)) = (text.find(BEGIN), text.find(END)) {

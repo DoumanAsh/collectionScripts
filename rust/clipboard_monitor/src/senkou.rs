@@ -4,10 +4,11 @@
 
 extern crate clipboard_win;
 use clipboard_win::{set_clipboard, ClipboardManager};
+pub mod utils;
 
 fn handler_clip_text(text: &String) {
     let len = text.len();
-    if len == 0 || len % 2 == 1 { return; }
+    if len == 0 || !utils::is_jp(text) || len % 2 == 1 { return; }
 
     const BEGIN: &'static[char] = &['「', '（'];
     const END: &'static[char] = &['」', '）'];
