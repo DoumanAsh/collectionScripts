@@ -14,7 +14,7 @@ fn handler_clip_text(text: &String) {
         if end_pos == text.len() { return; }
 
         println!(">>>Action:");
-        if set_clipboard(&text[begin_pos..end_pos]).is_err() {
+        if set_clipboard(&text[begin_pos..end_pos].replace("\n", "")).is_err() {
             println!("Hmph... failed to update clipboard");
         }
         else {
