@@ -25,3 +25,7 @@ path = "src/senkou.rs"
 [[bin]]
 name = "vn_text_corrector"
 path = "src/vn.rs"
+
+[[bin]]
+name = "alpha_ride_corrector"
+path = "src/alpha_ride.rs"
