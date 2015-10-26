@@ -13,3 +13,15 @@ pub fn is_jp<T: AsRef<str>>(text: T) -> bool {
                                                    _  => false,
     })
 }
+
+pub fn remove_text_reps(text: &str) -> String {
+    let mut text = &text[..];
+    loop {
+        let chars: Vec<char> = text.chars().collect();
+        if !chars.starts_with(&chars[chars.len()/2..]) { break; }
+
+        text = &text[..text.len()/2];
+    }
+
+    text.to_string()
+}

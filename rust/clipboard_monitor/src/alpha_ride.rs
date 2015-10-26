@@ -39,9 +39,13 @@ fn handler_clip_text(text: &String) {
         }
 
         if first_sen_end == sen_end { return; }
+        else if text[..sen_start+3].ends_with(&text[sen_start+3..sen_end+3]) {
+            sen_end = sen_start;
+        }
 
+        let text = utils::remove_text_reps(&text[..sen_end+3]);
         println!(">>>Action:");
-        if set_clipboard(&text[..sen_end+3]).is_err() {
+        if set_clipboard(&text).is_err() {
             println!("Hmph... failed to update clipboard");
         }
         else {
