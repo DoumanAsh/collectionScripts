@@ -12,16 +12,23 @@ from re import compile as re_compile
 from os import getenv, path
 from sys import argv
 
-CONFIG_FILE = "tox_vim_updater.cfg"
+CONFIG_FILE = "vim_updater.cfg"
 
 def read_config():
     """ Read config and return list [year, month, day]
 
         Check order:
-        [script location]/tox_vim_updater.cfg
-        [APPDATA]/tox_vim_updater.cfg
+        [current dir]/CONFIG_FILE
+        [script location]/CONFIG_FILE
+        [APPDATA]/CONFIG_FILE
     """
     global CONFIG_FILE
+
+    try:
+        with open(CONFIG_FILE) as config_file:
+            return config_file.read().split("-")
+    except FileNotFoundError:
+        pass
 
     app_data = path.dirname(path.realpath(argv[0]))
     CONFIG_FILE = path.join(app_data, CONFIG_FILE)
@@ -52,8 +59,7 @@ def tox_vim_updater():
     response = connection.getresponse()
 
     if response.status != 200:
-        print("Failed to connect. Reason:")
-        print(response.reason)
+        print("Failed to connect. Reason:", response.reason)
         return
 
     data = response.read().decode('utf-8')
@@ -73,16 +79,19 @@ def tox_vim_updater():
     version = result_version.group(0)
 
     print("New build is found:")
-    print(" ".join(("Version:", version)))
-    print(" ".join(("Build date:", result_date)))
+    print("Version:", version)
+    print("Build date:", result_date)
+
+    #update config
+    with open(CONFIG_FILE, "w") as config:
+        config.write(result_date)
 
     #64bit
     connection.request("GET", "/projects/vim/complete-x64.7z")
     response = connection.getresponse()
 
     if response.status != 200:
-        print("Failed to connect. Reason:")
-        print(response.reason)
+        print("Failed to connect. Reason:", response.reason)
         return
 
     with open("vim-x64.7z", "wb") as vim_file:
@@ -90,24 +99,8 @@ def tox_vim_updater():
 
     print("Succesfully downloaded vim-x64.7z")
 
-    #32bit
-    connection.request("GET", "/projects/vim/complete-x86.7z")
-    response = connection.getresponse()
-
-    if response.status != 200:
-        print("Failed to connect. Reason:")
-        print(response.reason)
-        return
-
-    with open("vim-x86.7z", "wb") as vim_file:
-        vim_file.write(response.read())
-
-    print("Succesfully downloaded vim-x86.7z")
-
-    with open(CONFIG_FILE, "w") as config_file:
-        config_file.write("".join((result_date, "\n")))
-
 if __name__ == "__main__":
+    print("#"*50)
     print("Source: https://tuxproject.de/projects/vim/")
     print("Visit site to give thanks(donate button at bottom)")
     print("#"*50)
