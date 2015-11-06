@@ -18,6 +18,8 @@
 if has("gui_running")
     set lines=999 columns=999
     if has("gui_win32")
+        "store viminfo with vim dir
+        set viminfo+=n$VIM/_viminfo
         set guifont=DejaVu_Sans_Mono_for_Powerline:h12
         set go+=a "make selection to save into clipboard. win only cuz unix already has it and i use only GVIM
     else
@@ -33,11 +35,6 @@ endif
 :set omnifunc=syntaxcomplete#Complete
 
 :set cursorline
-"store viminfo with vim dir
-:set viminfo+=n$VIM/_viminfo
-"auto-open vimrc in current dir
-:set exrc
-:set secure
 " Indent set on tab in normal and visual mode
 " Do not remap TAB in normal or you'll need to remap C-I
 :nnoremap <C-Tab> >>
