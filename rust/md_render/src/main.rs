@@ -2,9 +2,13 @@ extern crate hoedown;
 use hoedown::renderer::Render;
 
 use std::env::args as cmd_args;
-use std::io::{Write, BufReader};
+use std::io::{Read, Write, BufReader};
 
-const USAGE: &'static str  = "Usage: md_render <files>...\n
+const USAGE: &'static str  = "Usage: md_render <files>... [options]
+
+Options:
+--css=<file_name> - specify name of css file to link with.
+--inline-css=<file_name> - specify the name of css file which style will be inlined.
 ";
 
 const EXT_TABLES: u32            = 1 << 0;
@@ -30,6 +34,53 @@ fn usage() {
 fn main() {
     if cmd_args().len() < 2 { return usage(); }
 
+    let mut css = String::new();
+    let mut md_files: Vec<String> = vec![];
+    for arg in cmd_args().skip(1) {
+        if arg.starts_with("--") {
+            let arg = &arg[2..];
+            let eq_pos = arg.find('=');
+
+            if arg.starts_with("css") {
+                if let Some(eq_pos) = eq_pos {
+                    std::fmt::Write::write_fmt(&mut css,
+                                               format_args!("<link rel=\"stylesheet\" href=\"{}\">\n", &arg[eq_pos+1..])).unwrap();
+                }
+                else {
+                    println!(">>>Invalid use of options. CSS File is not specified!");
+                }
+
+            }
+            else if arg.starts_with("inline-css") {
+                if let Some(eq_pos) = eq_pos {
+                    if let Ok(mut css_file) = std::fs::File::open(&arg[eq_pos+1..]) {
+                        css.push_str("<style>\n");
+                        css_file.read_to_string(&mut css).unwrap();
+                        css.push_str("</style>\n");
+                    }
+                    else {
+                        println!(">>>{}: no such CSS", &arg[eq_pos+1..]);
+                    }
+                }
+                else {
+                    println!(">>>Invalid use of options. CSS File is not specified!");
+                }
+            }
+        }
+        else if is_file!(&arg) {
+            md_files.push(arg);
+        }
+        else {
+            println!(">>>{}: No such file!\n", arg);
+        }
+    };
+
+    if md_files.len() == 0 {
+        println!(">>>No Markdown files are  specified!\n");
+        usage();
+        return;
+    }
+
     let md_ext = hoedown::Extension::from_bits_truncate(EXT_TABLES |
                                                         EXT_FENCED_CODE |
                                                         EXT_FOOTNOTES |
@@ -42,59 +93,24 @@ fn main() {
                                                         EXT_SPACE_HEADERS);
     let flags = hoedown::renderer::html::Flags::empty();
     let mut html_render = hoedown::renderer::html::Html::new(flags, 0);
-    for arg in cmd_args().skip(1) {
-        if is_file!(&arg) {
-            if !arg.ends_with(".md") { continue; }
+    for arg in md_files {
+        println!("Render - {}", &arg);
+        let html_path = std::path::Path::new(&arg).with_extension("html");
 
-            println!("Render - {}", &arg);
-            let html_path = std::path::Path::new(&arg).with_extension("html");
+        if let Ok(file) = std::fs::File::open(&arg) {
+            let mut html_file = std::fs::File::create(&html_path).unwrap();
 
-            if let Ok(file) = std::fs::File::open(&arg) {
-                let mut html_file = std::fs::File::create(&html_path).unwrap();
+            let file = BufReader::new(file);
+            let file = hoedown::Markdown::read_from(file).extensions(md_ext);
+            let render_result = html_render.render(&file);
 
-                let file = BufReader::new(file);
-                let file = hoedown::Markdown::read_from(file).extensions(md_ext);
-                let render_result = html_render.render(&file);
-
-                html_file.write_all(&render_result).unwrap();
-                println!(">>>Result: {}", &html_path.to_str().unwrap_or(""));
-            }
-            else {
-                println!(">>>{}: failed to open", &arg);
-            }
-            println!("");
-        }
-        else if let Ok(dir_content) = std::fs::read_dir(&arg) {
-            println!("Render in directory - {}\n", &arg);
-            for entry in dir_content.map(|elem| elem.unwrap())
-                                    .filter(|elem| elem.file_type().map(|elem| elem.is_file()).unwrap_or(false))
-                                    .map(|elem| elem.path())
-                                    .filter(|path| path.extension().map(|ext| ext == "md").unwrap_or(false)) {
-
-                println!("File: {}", entry.to_str().unwrap_or(""));
-                let html_path = std::path::Path::new(&entry).with_extension("html");
-
-                if let Ok(file) = std::fs::File::open(&entry) {
-                    let mut html_file = std::fs::File::create(&html_path).unwrap();
-
-                    let file = BufReader::new(file);
-                    let file = hoedown::Markdown::read_from(file).extensions(md_ext);
-                    let render_result = html_render.render(&file);
-
-                    html_file.write_all(&render_result).unwrap();
-                    println!(">>>Result: {}", &html_path.to_str().unwrap_or(""));
-                }
-                else {
-                    println!(">>>{}: failed to open", entry.to_str().unwrap_or(""));
-                }
-
-                println!("");
-            }
+            html_file.write_all(css.as_bytes()).unwrap();
+            html_file.write_all(&render_result).unwrap();
+            println!(">>>Result: {}", &html_path.to_str().unwrap_or(""));
         }
         else {
-            println!(">>>{}: cannot access\n", &arg);
-            continue;
+            println!(">>>{}: failed to open", &arg);
         }
-
+        println!("");
     }
 }
