@@ -9,6 +9,7 @@ const USAGE: &'static str  = "Usage: md_render <files>... [options]
 Options:
 --css=<file_name> - specify name of css file to link with.
 --inline-css=<file_name> - specify the name of css file which style will be inlined.
+--toc=<num> - specify the level of deepness for table of contents. Default 0.
 ";
 
 const EXT_TABLES: u32            = 1 << 0;
@@ -34,6 +35,7 @@ fn usage() {
 fn main() {
     if cmd_args().len() < 2 { return usage(); }
 
+    let mut toc: i32 = 0;
     let mut css = String::new();
     let mut md_files: Vec<String> = vec![];
     for arg in cmd_args().skip(1) {
@@ -50,6 +52,19 @@ fn main() {
                     println!(">>>Invalid use of options. CSS File is not specified!");
                 }
 
+            }
+            else if arg.starts_with("toc") {
+                if let Some(eq_pos) = eq_pos {
+                    if let Ok(eq_pos) = arg[eq_pos+1..].parse::<i32>() {
+                        toc = eq_pos;
+                    }
+                    else {
+                        println!(">>>Invalid use of options. ToC number is invalid!");
+                    }
+                }
+                else {
+                    println!(">>>Invalid use of options. ToC number is not specified!");
+                }
             }
             else if arg.starts_with("inline-css") {
                 if let Some(eq_pos) = eq_pos {
@@ -92,7 +107,8 @@ fn main() {
                                                         EXT_NO_INTRA_EMPHASIS |
                                                         EXT_SPACE_HEADERS);
     let flags = hoedown::renderer::html::Flags::empty();
-    let mut html_render = hoedown::renderer::html::Html::new(flags, 0);
+    let mut html_render = hoedown::renderer::html::Html::new(flags, toc);
+    let mut html_toc = hoedown::renderer::html::Html::toc(toc);
     for arg in md_files {
         println!("Render - {}", &arg);
         let html_path = std::path::Path::new(&arg).with_extension("html");
@@ -105,6 +121,11 @@ fn main() {
             let render_result = html_render.render(&file);
 
             html_file.write_all(css.as_bytes()).unwrap();
+            if toc > 0 {
+                let render_toc = html_toc.render(&file);
+                html_file.write_all(b"<h1>Table of Content</h1>").unwrap();
+                html_file.write_all(&render_toc).unwrap();
+            }
             html_file.write_all(&render_result).unwrap();
             println!(">>>Result: {}", &html_path.to_str().unwrap_or(""));
         }
