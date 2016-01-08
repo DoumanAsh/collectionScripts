@@ -38,10 +38,10 @@ fn handler_clip_text(text: &String) {
             sen_start = next_sen_start;
         }
 
-        if first_sen_end == sen_end { return; }
-        else if text[..sen_start+3].ends_with(&text[sen_start+3..sen_end+3]) {
+        if text[..sen_start+3].ends_with(&text[sen_start+3..sen_end+3]) {
             sen_end = sen_start;
         }
+        else if first_sen_end == sen_end { return; }
 
         let text = utils::remove_text_reps(&text[..sen_end+3]);
         println!(">>>Action:");
