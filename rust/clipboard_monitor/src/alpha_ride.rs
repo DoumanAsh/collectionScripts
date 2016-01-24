@@ -1,8 +1,9 @@
 //! VN text corrector
 
 extern crate clipboard_win;
-use clipboard_win::{set_clipboard, ClipboardManager};
+use clipboard_win::{set_clipboard};
 pub mod utils;
+pub mod manager;
 
 fn handler_clip_text(text: &String) {
     if !utils::is_jp(text) { return; }
@@ -58,5 +59,5 @@ fn main() {
     println!("####################################");
     println!("#    Alpha Ride text corrector     #");
     println!("####################################");
-    ClipboardManager::new().delay(10).ok_callback(handler_clip_text).run();
+    manager::ClipboardManager::new().delay(10).ok_callback(handler_clip_text).run();
 }

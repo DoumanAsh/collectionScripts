@@ -5,10 +5,11 @@
 
 extern crate clipboard_win;
 
-use clipboard_win::{set_clipboard, ClipboardManager};
+use clipboard_win::{set_clipboard};
 
 pub mod wget;
 pub mod magnet;
+pub mod manager;
 
 ///Trimm all lines in string.
 ///Return None if string is not changed.
@@ -50,5 +51,5 @@ fn main() {
     println!("###########################");
     println!("#    Clipboard monitor    #");
     println!("###########################");
-    ClipboardManager::new().ok_callback(handler_clip_text).run();
+    manager::ClipboardManager::new().ok_callback(handler_clip_text).run();
 }
