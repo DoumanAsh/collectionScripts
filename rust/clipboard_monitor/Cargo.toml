@@ -34,3 +34,6 @@ path = "src/alpha_ride.rs"
 name = "evolimit_corrector"
 path = "src/evolimit.rs"
 
+[[bin]]
+name = "izumo_corrector"
+path = "src/izumo.rs"

@@ -6,9 +6,10 @@ pub mod utils;
 pub mod manager;
 
 fn handler_clip_text(text: &String) {
+    if !utils::is_jp(&text) { return; }
+
     let mut update = false;
     let mut text = text.clone();
-    if !utils::is_jp(&text) { return; }
 
     const DOT: &'static str = "・";
     if let Some(_) = text.find(DOT) {

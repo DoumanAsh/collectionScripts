@@ -1,7 +1,7 @@
 //! Clipboard Manager implementation
 extern crate clipboard_win;
 use clipboard_win::{WindowsError, get_clipboard_string};
-use clipboard_win::wrapper::get_clipboard_seq_num;
+use clipboard_win::wrapper::{get_clipboard_seq_num, is_format_avail};
 use std;
 use std::time::Duration;
 
@@ -58,14 +58,17 @@ impl ClipboardManager {
     pub fn run(&self) -> () {
         let mut clip_num: u32 = get_clipboard_seq_num().expect("Lacks sufficient rights to access clipboard(WINSTA_ACCESSCLIPBOARD)");
         loop {
-            // It is very unlikely that we would suddenly start to lack access rights.
-            // So let's just skip this iteration. Maybe it is just Windows bug... ^_^
-            let new_num = get_clipboard_seq_num().unwrap_or(0);
-            if new_num != 0 && clip_num != new_num {
-                clip_num = new_num;
-                match get_clipboard_string() {
-                    Ok(clip_text) => (self.ok_fn)(&clip_text),
-                    Err(err_code) => (self.err_fn)(&err_code),
+            if is_format_avail(clipboard_win::clipboard_formats::CF_UNICODETEXT)
+            {
+                // It is very unlikely that we would suddenly start to lack access rights.
+                // So let's just skip this iteration. Maybe it is just Windows bug... ^_^
+                let new_num = get_clipboard_seq_num().unwrap_or(0);
+                if new_num != 0 && clip_num != new_num {
+                    clip_num = new_num;
+                    match get_clipboard_string() {
+                        Ok(clip_text) => (self.ok_fn)(&clip_text),
+                        Err(err_code) => (self.err_fn)(&err_code),
+                    }
                 }
             }
             std::thread::sleep(self.tmo);

@@ -1,4 +1,4 @@
-//! VN text corrector
+//! Alpha Ride text corrector
 
 extern crate clipboard_win;
 use clipboard_win::{set_clipboard};
