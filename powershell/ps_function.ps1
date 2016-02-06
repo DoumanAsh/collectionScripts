@@ -80,7 +80,6 @@ function Set-Compiler()
             $env:CC = $(which cl)
             $env:CXX = $(which cl)
         }
-        }
         default {
             echo "Unknown compiler: $name"
         }
