@@ -63,3 +63,27 @@ function Get-ClipboardText()
 	$tb.Paste()
 	$tb.Text
 }
+
+function Set-Compiler()
+{
+    $name = $args[0]
+    switch ($name) {
+        "gcc" {
+            $env:CC = $(which gcc)
+            $env:CXX = $(which g++)
+        }
+        "clang" {
+            $env:CC = $(which clang)
+            $env:CXX = $(which clang++)
+        }
+        "cl" {
+            $env:CC = $(which cl)
+            $env:CXX = $(which cl)
+        }
+        }
+        default {
+            echo "Unknown compiler: $name"
+        }
+    }
+
+}
