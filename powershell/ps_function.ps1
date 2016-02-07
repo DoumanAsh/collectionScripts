@@ -76,6 +76,10 @@ function Set-Compiler()
             $env:CC = $(which clang)
             $env:CXX = $(which clang++)
         }
+        "clang-cl" {
+            $env:CC = $(which clang-cl)
+            $env:CXX = $(which clang-cl)
+        }
         "cl" {
             $env:CC = $(which cl)
             $env:CXX = $(which cl)
