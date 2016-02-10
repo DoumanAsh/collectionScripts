@@ -6,7 +6,7 @@ function readlink($name) {Get-Item $name | select -ExpandProperty FullName }
 #unix like pwd.
 function pwd {Get-Location | select -ExpandProperty Path}
 #utils shortcuts
-function gitk {wish $(Join-Path $(Split-Path $(which git)) gitk) }
+function gitk {wish $(Join-Path $(Split-Path $(which git)) gitk) $args }
 function cxfreeze {python $(Join-Path $(Split-Path $(which python)) "Scripts\cxfreeze") $args}
 function ctags_rust {ctags --options="$(Join-Path $(Split-Path $(which rustc)) "etc\ctags.rust")" $args}
 #usage: ". set_alias <name, value[, scope]>..
