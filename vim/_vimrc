@@ -18,8 +18,6 @@
 if has("gui_running")
     set lines=999 columns=999
     if has("gui_win32")
-        "store viminfo with vim dir
-        set viminfo+=n$VIM/_viminfo
         set guifont=DejaVu_Sans_Mono_for_Powerline:h12
         set go+=a "make selection to save into clipboard. win only cuz unix already has it and i use only GVIM
     else
@@ -31,10 +29,16 @@ endif
 :set encoding=utf-8
 :set termencoding=utf-8
 :set fileencoding=utf-8
-:set fileencodings=utf8,latin1,koi8r,cp932,cp1251,cp866,ucs-2le
+:set fileencodings=utf8,latin1,koi8r,cp932,cp1251,cp866,ucs-2le,sjis
 :set omnifunc=syntaxcomplete#Complete
+:set autochdir
 
 :set cursorline
+"store viminfo with vim dir
+:set viminfo+=n$VIM/_viminfo
+"auto-open vimrc in current dir
+:set exrc
+:set secure
 " Indent set on tab in normal and visual mode
 " Do not remap TAB in normal or you'll need to remap C-I
 :nnoremap <C-Tab> >>
@@ -132,6 +136,9 @@ endfunction
 function! Spell_check(type)
     execute "setlocal spell! spelllang=" . a:type
 endfunction
+
+"use this command for when you need to write in russian.
+:command RuMode set langmap=ФИСВУАПРШОЛДЬТЩЗЙКЫЕГМЦЧНЯ;ABCDEFGHIJKLMNOPQRSTUVWXYZ,фисвуапршолдьтщзйкыегмцчня;abcdefghijklmnopqrstuvwxyz
 
 :command NoTab call Convert_tab("4")
 
