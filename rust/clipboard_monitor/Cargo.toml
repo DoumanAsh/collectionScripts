@@ -7,7 +7,7 @@ authors = ["DoumanAsh <custparasite@gmx.se>"]
 clipboard-win = "*"
 
 [profile.release]
-opt-level = 3
+opt-level = 2
 debug = false
 rpath = false
 lto = true
@@ -37,3 +37,7 @@ path = "src/evolimit.rs"
 [[bin]]
 name = "izumo_corrector"
 path = "src/izumo.rs"
+
+[[bin]]
+name = "genrin_corrector"
+path = "src/genrin2.rs"
