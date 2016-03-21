@@ -2,10 +2,9 @@
 
 extern crate clipboard_win;
 use clipboard_win::{set_clipboard};
-pub mod utils;
-pub mod manager;
+use utils;
 
-fn handler_clip_text(text: &String) {
+pub fn handler_clip_text(text: &String) {
     if !utils::is_jp(&text) { return; }
 
     let mut update = false;
@@ -26,11 +25,4 @@ fn handler_clip_text(text: &String) {
             println!("Text is cleaned");
         }
     }
-}
-
-fn main() {
-    println!("####################################");
-    println!("#     Evolimit text corrector      #");
-    println!("####################################");
-    manager::ClipboardManager::new().delay(10).ok_callback(handler_clip_text).run();
 }

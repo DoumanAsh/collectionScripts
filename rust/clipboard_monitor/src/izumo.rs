@@ -2,10 +2,9 @@
 
 extern crate clipboard_win;
 use clipboard_win::{set_clipboard};
-pub mod utils;
-pub mod manager;
+use utils;
 
-fn handler_clip_text(text: &String) {
+pub fn handler_clip_text(text: &String) {
     const BEG: char = '{';
     const END: char = '}';
     const SEP: char = '/';
@@ -55,13 +54,4 @@ fn handler_clip_text(text: &String) {
             println!("Text is corrected.");
         }
     }
-}
-
-fn main() {
-    println!("####################################");
-    println!("#      IZUMO4 text corrector       #");
-    println!("####################################");
-    manager::ClipboardManager::new().delay(10)
-                                    .ok_callback(handler_clip_text)
-                                    .run();
 }

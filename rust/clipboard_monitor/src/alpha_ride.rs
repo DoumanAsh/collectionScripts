@@ -2,10 +2,9 @@
 
 extern crate clipboard_win;
 use clipboard_win::{set_clipboard};
-pub mod utils;
-pub mod manager;
+use utils;
 
-fn handler_clip_text(text: &String) {
+pub fn handler_clip_text(text: &String) {
     if !utils::is_jp(text) { return; }
 
     const BEGIN: &'static[char] = &['「', '（'];
@@ -53,11 +52,4 @@ fn handler_clip_text(text: &String) {
             println!("Text is trimmed of repetitions");
         }
     }
-}
-
-fn main() {
-    println!("####################################");
-    println!("#    Alpha Ride text corrector     #");
-    println!("####################################");
-    manager::ClipboardManager::new().delay(10).ok_callback(handler_clip_text).run();
 }

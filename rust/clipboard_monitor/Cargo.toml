@@ -19,25 +19,5 @@ name = "clipboard_monitor"
 path = "src/main.rs"
 
 [[bin]]
-name = "senkou_splitter"
-path = "src/senkou.rs"
-
-[[bin]]
 name = "vn_text_corrector"
 path = "src/vn.rs"
-
-[[bin]]
-name = "alpha_ride_corrector"
-path = "src/alpha_ride.rs"
-
-[[bin]]
-name = "evolimit_corrector"
-path = "src/evolimit.rs"
-
-[[bin]]
-name = "izumo_corrector"
-path = "src/izumo.rs"
-
-[[bin]]
-name = "genrin_corrector"
-path = "src/genrin2.rs"
