@@ -123,37 +123,8 @@ class GameMonitor(object):
         if pairs:
             print("\n".join(res))
 
-    def get_tokens(self):
-        yield ["Erbalard", 0x002929f0]
-        yield ["Lavirie", 0x00292a00]
-        yield ["Mistoria", 0x00292a10]
-        yield ["Nekoru", 0x00292a90]
-        yield ["Forunisugein", 0x00292aa0]
-        yield ["Rishe", 0x00292ab0]
-        yield ["Patra", 0x00292ac0]
-        yield ["Gu Rundio", 0x00292ad0]
-        yield ["Karema", 0x00292ae0]
-        yield ["Tsumugi", 0x00292af0]
-        yield ["Gurarissa", 0x00292b00]
-        yield ["Addotorquefell", 0x00292b10]
-        yield ["Puricheno", 0x00292b20]
-        yield ["Ararugando", 0x00292b30]
-        yield ["Noelia", 0x00292b40]
-
-    def tokens_hack(self, state):
-        for name, addr_sw in self.get_tokens():
-            # old = state.setdefault(name, [0, 0, 0, 0])
-            new = [self.getValue(addr_sw+i*4) for i in range(4)]
-            if any(new):
-                for i in range(4):
-                    if new[i] < 99:
-                        self.update(addr_sw+i*4, 99, '%s[%d]' % (name, i))
-
     def main(self, state):
-        tokens_hack = state.get('tokens_hack', dict())
-        self.tokens_hack(tokens_hack)
-        state['tokens_hack'] = tokens_hack
-        self.updateH(0x0028aeb0, 99, 'A001')
+        self.dump()
 
     def dump(self):
         print('Ships actions:', self.getValue(0x00d01c94))
