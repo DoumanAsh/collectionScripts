@@ -1,0 +1,11 @@
+[package]
+name = "eushully"
+version = "0.1.0"
+authors = ["Douman <douman@gmx.se>"]
+
+[dependencies]
+windows-win = "0.2.0"
+
+[[bin]]
+path = "src/nocd.rs"
+name = "eushully_nocd"
