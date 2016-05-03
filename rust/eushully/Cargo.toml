@@ -4,7 +4,9 @@ version = "0.1.0"
 authors = ["Douman <douman@gmx.se>"]
 
 [dependencies]
-windows-win = "0.2.0"
+winapi = "*"
+windows-win = "^0.3.0"
+lazy-bytes-cast = "^0.1.0"
 
 [[bin]]
 path = "src/nocd.rs"
