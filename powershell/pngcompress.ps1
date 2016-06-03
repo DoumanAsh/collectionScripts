@@ -7,7 +7,7 @@ function pngcrush() {
 
 foreach ($arg in $args) {
     if ( Test-Path "$arg" -PathType Leaf ) {
-        if ($arg.split('.')[1] -eq "png") {
+        if ($arg.split('.')[-1] -eq "png") {
             echo "Compress file: $arg"
             pngcrush($arg)
         }
