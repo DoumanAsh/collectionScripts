@@ -1,6 +1,3 @@
-# Script requires 7z
-# It should be placed in directory with Rust
-
 $work_directory = $(Split-Path -parent $PSCommandPath)
 
 cd $work_directory
@@ -11,16 +8,15 @@ $channel = "channel-rust-stable"
 
 $version = iex ".\bin\rustc.exe --version"
 $version = $version.split()[1].split(".")
-$version = [System.Tuple]::Create($version[0], $version[1], $version[2])
+$version = [System.Tuple]::Create([convert]::ToInt32($version[0], 10), [convert]::ToInt32($version[1], 10), [convert]::ToInt32($version[2], 10))
 
 echo "Current Rust version: $version"
 
 $latest_version = Invoke-WebRequest "$rust_dist_link$channel"
 $latest_version = $latest_version.ToString().split('-')[1].split('.')
-$latest_version = [System.Tuple]::Create($latest_version[0], $latest_version[1], $latest_version[2])
+$latest_version = [System.Tuple]::Create([convert]::ToInt32($latest_version[0], 10), [convert]::ToInt32($latest_version[1], 10), [convert]::ToInt32($latest_version[2], 10))
 
 echo "Latest Rust version: $latest_version"
-
 if ($latest_version -gt $version) {
     echo ">>>Update Rust version:"
     $rust_name = ("rust-{0}.{1}.{2}-x86_64-pc-windows-gnu" -f $latest_version.Item1,$latest_version.Item2,$latest_version.Item3)
@@ -41,7 +37,11 @@ if ($latest_version -gt $version) {
 
     Remove-Item $rust_name -Force -Recurse
     Remove-Item "update.*" -Force -Recurse
+    Remove-Item temp -Force
 
     echo ""
     echo "Rust is updated!"
+
+    Read-Host ">>Press any key to exit..."
 }
+
