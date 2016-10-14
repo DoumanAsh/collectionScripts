@@ -51,7 +51,7 @@ hi Todo guifg=#000000 guibg=#fff700 guisp=#fff700 gui=NONE
 hi Special guifg=#087724 guibg=NONE guisp=NONE gui=NONE
 hi LineNr guifg=#828282 guibg=#121212 guisp=#121212 gui=NONE
 hi StatusLine guifg=#00a2c2 guibg=#2e2b2e guisp=#2e2b2e gui=NONE
-hi Search guifg=#e5e7e8 guibg=#827b82 guisp=#827b82 gui=NONE
+hi Search guifg=NONE guibg=#000fe8 guisp=NONE gui=NONE
 hi TabLineSel guifg=#5959e6 guibg=#242124 guisp=#242124 gui=NONE
 hi TabLineFill guifg=#000000 guibg=#240524 guisp=#240524 gui=NONE
 hi Visual guifg=#e5e7e8 guibg=#827b82 guisp=#827b82 gui=NONE

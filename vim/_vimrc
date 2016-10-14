@@ -1,4 +1,20 @@
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""" Runtime setup
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+:set runtimepath=$VIM/../vimfiles,$VIMRUNTIME
+:set packpath=$VIM/../vimfiles,$VIMRUNTIME
+
+:set viminfo+=n$VIM/../_viminfo
+"auto-open vimrc in current dir
+:set exrc
+:set secure
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""" Packages setup
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+:packadd! editexisting "If file is already being edited in another instance it will bring it to front.
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 """" General config
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 :let g:netrw_dirhistmax = 0
@@ -31,15 +47,9 @@ endif
 :set fileencoding=utf-8
 :set fileencodings=utf8,latin1,koi8r,cp932,cp1251,cp866,ucs-2le,sjis
 :set omnifunc=syntaxcomplete#Complete
-
-"highlight search terms
 :set hlsearch
+
 :set cursorline
-"store viminfo with vim dir
-:set viminfo+=n$VIM/_viminfo
-"auto-open vimrc in current dir
-:set exrc
-:set secure
 " Indent set on tab in normal and visual mode
 " Do not remap TAB in normal or you'll need to remap C-I
 :nnoremap <C-Tab> >>
@@ -48,6 +58,17 @@ endif
 :vnoremap <S-Tab> <gv
 " For insert mode let's make only reverse indent
 :inoremap <S-Tab> <C-D>
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""" Console color
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" IMPORTANT: Uncomment one of the following lines to force
+" using 256 colors (or 88 colors) if your terminal supports it,
+" but does not automatically use 256 colors by default.
+"set t_Co=256
+"set t_Co=88
+let g:CSApprox_attr_map = { 'bold' : 'bold', 'italic' : '', 'sp' : '' }
+
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 """" Complete settings
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
