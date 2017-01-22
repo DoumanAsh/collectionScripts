@@ -90,3 +90,12 @@ function Set-Compiler()
     }
 
 }
+
+function create_dir_if() {
+    foreach ($arg in $args) {
+        if (!(Test-Path "$arg")) {
+            mkdir "$arg" > $null
+        }
+    }
+}
+
