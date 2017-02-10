@@ -32,7 +32,13 @@ function cd([string]$path) {
             Set-Location ~
         }
         default {
-            Set-Location $path
+            try {
+                Set-Location $path
+            }
+            catch {
+                $global:OLDPWD = $old
+                throw
+            }
         }
     }
 
