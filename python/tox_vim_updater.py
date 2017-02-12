@@ -1,107 +1,68 @@
-""" Vim updater from tuxproject.de
-
-    Check build date and download new bulds, if any
-    Requires initial config file with build date [year]-[month]-[day]
-    Note: year is 4 digits
-"""
-
-#!/usr/bin/env python3
-
-from http.client import HTTPSConnection as https
+from subprocess import check_output, call
+from os import path, chdir
 from re import compile as re_compile
-from os import getenv, path
-from sys import argv
 
-CONFIG_FILE = "vim_updater.cfg"
-
-def read_config():
-    """ Read config and return list [year, month, day]
-
-        Check order:
-        [current dir]/CONFIG_FILE
-        [script location]/CONFIG_FILE
-        [APPDATA]/CONFIG_FILE
-    """
-    global CONFIG_FILE
-
-    try:
-        with open(CONFIG_FILE) as config_file:
-            return config_file.read().split("-")
-    except FileNotFoundError:
-        pass
-
-    app_data = path.dirname(path.realpath(argv[0]))
-    CONFIG_FILE = path.join(app_data, CONFIG_FILE)
-
-    try:
-        with open(CONFIG_FILE) as config_file:
-            return config_file.read().split("-")
-    except FileNotFoundError:
-        pass
-
-    app_data = getenv("APPDATA")
-    CONFIG_FILE = path.join(app_data, "tox_vim_updater.cfg")
-
-    try:
-        with open(CONFIG_FILE) as config_file:
-            return config_file.read().split("-")
-    except FileNotFoundError:
-        print("No config file")
-        exit(0)
+from requests import get as http_get
 
 
-def tox_vim_updater():
-    """ Main function """
-    old_date = tuple(int(number) for number in read_config())
+def get_exe_version():
+    vim_exe = path.join('vim', 'vim.exe')
 
-    connection = https("tuxproject.de")
-    connection.request("GET", "/projects/vim/")
-    response = connection.getresponse()
+    vim_version = check_output([vim_exe, '--version'])
+    vim_version_re = re_compile(b'Included patches: \d+-(\d+)\s')
+    vim_version = vim_version_re.search(vim_version)
+    return vim_version.group(1).decode()
 
-    if response.status != 200:
-        print("Failed to connect. Reason:", response.reason)
+
+def get_tox_version(tox_index):
+    vim_version_re = re_compile("<b>Vim version:</b> \d\.\d\.(\d+)*")
+
+    vim_version = vim_version_re.search(tox_index)
+    return vim_version.group(1)
+
+
+def download_tox_vim():
+    print("Downloading new vim version...")
+    vim_archive = "complete-x64.exe"
+    vim_download_link = "http://tuxproject.de/projects/vim/{}".format(vim_archive)
+
+    response = http_get(vim_download_link, stream=True)
+    with open(vim_archive, "wb") as vim_exe:
+        for chunk in response.iter_content(chunk_size=1024):
+            if chunk:
+                vim_exe.write(chunk)
+
+    return vim_archive
+
+
+def extract_tox_vim(path, to):
+    print("Extract new vim version...")
+    cmd = "{} -y -gm2 -o\"{}\"".format(path, to)
+    call(cmd, shell=True)
+
+
+def main():
+    current_dir = path.dirname(path.realpath(__file__))
+    chdir(current_dir)
+
+    vim_version = int(get_exe_version())
+
+    tox_vim_res = http_get("https://tuxproject.de/projects/vim/")
+
+    if tox_vim_res.status_code != 200:
+        print("Failed to access tuxproject.de :(")
         return
 
-    data = response.read().decode('utf-8')
-    check_date = re_compile("[0-9]{4,}(-[0-9]{2,}){2,}")
-    check_version = re_compile("[0-9]+.[0-9]+.[0-9]+")
+    tox_vim_res = tox_vim_res.text
+    tox_vim_version = int(get_tox_version(tox_vim_res))
 
-    result_date = check_date.search(data)
-    result_date = result_date.group(0)
-
-    date = tuple(int(number) for number in result_date.split("-"))
-
-    if not date > old_date:
+    if tox_vim_version <= vim_version:
         print("Vim is up-to-date")
         return
 
-    result_version = check_version.search(data)
-    version = result_version.group(0)
+    new_vim_path = download_tox_vim()
+    extract_tox_vim(path.join(current_dir, new_vim_path), path.join(current_dir, "vim"))
 
-    print("New build is found:")
-    print("Version:", version)
-    print("Build date:", result_date)
-
-    #update config
-    with open(CONFIG_FILE, "w") as config:
-        config.write(result_date)
-
-    #64bit
-    connection.request("GET", "/projects/vim/complete-x64.7z")
-    response = connection.getresponse()
-
-    if response.status != 200:
-        print("Failed to connect. Reason:", response.reason)
-        return
-
-    with open("vim-x64.7z", "wb") as vim_file:
-        vim_file.write(response.read())
-
-    print("Succesfully downloaded vim-x64.7z")
 
 if __name__ == "__main__":
-    print("#"*50)
-    print("Source: https://tuxproject.de/projects/vim/")
-    print("Visit site to give thanks(donate button at bottom)")
-    print("#"*50)
-    tox_vim_updater()
+    main()
