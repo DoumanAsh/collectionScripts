@@ -11,6 +11,7 @@ extract () {
             case $arg in
                 *.tar.bz2)  tar xjf $arg      ;;
                 *.tar.gz)   tar xzf $arg      ;;
+                *.tar.xz)   tar xz $arg      ;;
                 *.bz2)      bunzip2 $arg      ;;
                 *.gz)       gunzip $arg       ;;
                 *.tar)      tar xf $arg       ;;

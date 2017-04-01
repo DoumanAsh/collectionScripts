@@ -1,0 +1,18 @@
+## History search
+bind '"\e[A": history-search-backward'
+bind '"\e[B": history-search-forward'
+
+## Git prompt
+if [ -f ~/repos/bash-git-prompt/gitprompt.sh ]; then
+   source ~/repos/bash-git-prompt/gitprompt.sh
+fi
+
+alias extract="`readlink -f extract.sh`"
+
+## Rust
+if [ -f ~/.cargo/env ]; then
+    source ~/.cargo/env
+fi
+
+alias list_packages="dpkg --get-selections | grep -v deinstall"
+alias upgrade="sudo apt-get update && sudo apt-get upgrade"
