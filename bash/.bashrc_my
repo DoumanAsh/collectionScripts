@@ -7,7 +7,9 @@ if [ -f ~/repos/bash-git-prompt/gitprompt.sh ]; then
    source ~/repos/bash-git-prompt/gitprompt.sh
 fi
 
-alias extract="`readlink -f extract.sh`"
+SCRIPT_DIR="$(dirname ${BASH_SOURCE[0]})"
+
+alias extract="`readlink -f ${SCRIPT_DIR}/extract.sh`"
 
 ## Rust
 if [ -f ~/.cargo/env ]; then
