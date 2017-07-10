@@ -1,5 +1,5 @@
 from subprocess import check_output, call
-from os import path, chdir
+from os import path, chdir, remove
 from re import compile as re_compile
 
 from requests import get as http_get
@@ -63,6 +63,7 @@ def main():
     new_vim_path = download_tox_vim()
     extract_tox_vim(path.join(current_dir, new_vim_path), path.join(current_dir, "vim"))
 
+    remove(new_vim_path)
 
 if __name__ == "__main__":
     main()
