@@ -134,6 +134,7 @@ class GameMonitor(object):
     def help():
         print("Options:")
         print("    > items - sets many itmes to 99")
+        print("    > reset_turn - Sets turn to 1")
         print("    > all - above options are included")
         print("    > find - look for address")
         print("    > hook - print ITH hooks")
@@ -151,7 +152,119 @@ class GameMonitor(object):
 
     @staticmethod
     def generate_items_addrs():
+        # breaking stuff
+        yield 0x00234108
+        yield 0x0023410c
+        yield 0x00234110
+        yield 0x00234114
+        yield 0x00234118
+        yield 0x0023411c
         # Materials
+        yield 0x002345f0
+        yield 0x002345c4
+        yield 0x00234498
+        yield 0x0023459c
+        yield 0x0023465c
+        yield 0x0023465c
+        yield 0x002343a0
+        yield 0x00234658
+        yield 0x0023439c
+        yield 0x00234380
+        yield 0x00234568
+        yield 0x00234508
+        yield 0x00234198
+        yield 0x00234310
+        yield 0x00234610
+        yield 0x00234360
+        yield 0x002342f4
+        yield 0x00234470
+        yield 0x002342e8
+        yield 0x00234654
+        yield 0x002344cc
+        yield 0x00234550
+        yield 0x00234338
+        yield 0x002343a4
+        yield 0x00234384
+        yield 0x00234650
+        yield 0x00234478
+        yield 0x00234488
+        yield 0x00234474
+        yield 0x0023430c
+        yield 0x0023430c
+        yield 0x0023448c
+        yield 0x002345bc
+        yield 0x00234190
+        yield 0x00234558
+        yield 0x00234388
+        yield 0x002342c8
+        yield 0x00234364
+        yield 0x00234368
+        yield 0x00234604
+        yield 0x002344c8
+        yield 0x002345a4
+        yield 0x002345b0
+        yield 0x00234398
+        yield 0x00234394
+        yield 0x00234564
+        yield 0x00234484
+        yield 0x00234504
+        yield 0x002342d8
+        yield 0x00234458
+        yield 0x00234334
+        yield 0x00234350
+        yield 0x002345ac
+        yield 0x002344c0
+        yield 0x002345a0
+        yield 0x00234374
+        yield 0x00234608
+        yield 0x002343b8
+        yield 0x002343b4
+        yield 0x002344ac
+        yield 0x00234330
+        yield 0x0023432c
+        yield 0x00234378
+        yield 0x002344b8
+        yield 0x002344b4
+        yield 0x00234520
+        yield 0x002345b8
+        yield 0x002345a8
+        yield 0x00234308
+        yield 0x002344bc
+        yield 0x00234510
+        yield 0x00234560
+        yield 0x00234450
+        yield 0x00234194
+        yield 0x0023455c
+        yield 0x00234138
+        yield 0x0023be38
+        yield 0x00234148
+        yield 0x00234168
+        yield 0x00234328
+        yield 0x002342e4
+        yield 0x0023460c
+        yield 0x002342ec
+        yield 0x00234390
+        yield 0x002342dc
+        yield 0x00234570
+        yield 0x002344f8
+        yield 0x00234304
+        yield 0x00234554
+        yield 0x00234340
+        yield 0x0023446c
+        yield 0x002342cc
+        yield 0x00234468
+        yield 0x0023419c
+        yield 0x0023435c
+        yield 0x002345fc
+        yield 0x002342c4
+        yield 0x002342d0
+        yield 0x0023450c
+        yield 0x00234460
+        yield 0x0023454c
+        yield 0x00234370
+        yield 0x002344b0
+        yield 0x00234598
+        yield 0x00234454
         yield 0x0023445c
         yield 0x002344d0
         yield 0x002342d4
@@ -178,6 +291,9 @@ class GameMonitor(object):
     ##################################
     def test(self, _):
         self.update(0x002649cc, 1)
+
+    def reset_turn(self, _):
+        self.update(0x0002c8d8, 1)
 
     def money(self, _):
         self.update(0x00232994, 9999999)
