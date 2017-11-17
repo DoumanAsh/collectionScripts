@@ -26,3 +26,31 @@ function set_vc($arch) {
         echo "Cannot find vcvars.bat for your arch '$arch'"
     }
 }
+
+# Allows to set environment variables for compiler
+function Set-Compiler()
+{
+    $name = $args[0]
+    switch ($name) {
+        "gcc" {
+            $env:CC = $(which gcc)
+            $env:CXX = $(which g++)
+        }
+        "clang" {
+            $env:CC = $(which clang)
+            $env:CXX = $(which clang++)
+        }
+        "clang-cl" {
+            $env:CC = $(which clang-cl)
+            $env:CXX = $(which clang-cl)
+        }
+        "cl" {
+            $env:CC = $(which cl)
+            $env:CXX = $(which cl)
+        }
+        default {
+            echo "Unknown compiler: $name"
+        }
+    }
+
+}
