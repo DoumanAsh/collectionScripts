@@ -17,6 +17,8 @@
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 """" General config
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+:set fileformat=unix
+:set fileformats=unix,dos
 :let g:netrw_dirhistmax = 0
 :set noswapfile
 :filetype plugin indent on
@@ -45,8 +47,7 @@ endif
 :set encoding=utf-8
 :set termencoding=utf-8
 :set fileencoding=utf-8
-:set fileencodings=utf8,latin1,koi8r,cp932,cp1251,cp866,ucs-2le,sjis
-:set omnifunc=syntaxcomplete#Complete
+:set fileencodings=utf8,ucs-bom,sjis,latin1,koi8r,cp932,cp1251,cp866,ucs-2le,default
 :set hlsearch
 
 :set cursorline
@@ -59,6 +60,11 @@ endif
 " For insert mode let's make only reverse indent
 :inoremap <S-Tab> <C-D>
 
+" Auto-load tags
+autocmd BufRead *.* :setlocal tags=./tags;/
+
+" Enable jsx on regular js files
+let g:jsx_ext_required = 0
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 """" Console color
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -68,6 +74,11 @@ endif
 "set t_Co=256
 "set t_Co=88
 let g:CSApprox_attr_map = { 'bold' : 'bold', 'italic' : '', 'sp' : '' }
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""" C++ settings
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+:set cino=cino=N-s
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 """" Complete settings
@@ -84,10 +95,10 @@ let g:CSApprox_attr_map = { 'bold' : 'bold', 'italic' : '', 'sp' : '' }
 :autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
 :autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
 :autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
-:autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
 :autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
 
 :set completeopt=longest,menuone
+au BufRead,BufNewFile *.sss set filetype=stylus
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 ":set statusline=%f%m%r%h%w\ %y\ enc:%{&enc}\ ff:%{&ff}\ fenc:%{&fenc}%=(ch:%3b\ hex:%2B)\ col:%2c\ line:%2l/%L\ [%2p%%]
