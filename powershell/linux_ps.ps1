@@ -18,7 +18,7 @@ function pwd {
     Get-Location | select -ExpandProperty Path
 }
 
-$global:OLDPWD = $null
+$global:OLDPWD = Get-Location | select -ExpandProperty Path
 
 function cd([string]$path) {
     $old = $global:OLDPWD
