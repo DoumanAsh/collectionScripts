@@ -1,3 +1,29 @@
+# Handles special toolchains
+function special_toolchains([string]$name) {
+    switch ($name) {
+        "android" {
+            if (Test-Path env:ANDROID_NDK_HOME) {
+                $host_tag = if ([Environment]::Is64BitOperatingSystem) { "windows-x86_64" } else { "windows" }
+                $dir = "$env:ANDROID_NDK_HOME\toolchains\llvm\prebuilt\$host_tag\bin"
+
+                if (Test-Path $dir) {
+                    $env:PATH = "$env:PATH;$dir"
+                    $env:CC = "$dir\clang.exe"
+                    $env:CXX = "$dir\clang++.exe"
+                } else {
+                    echo "Expect to find directory with toolchain in '$dir' but it doesn't exist"
+                }
+
+            } else {
+                echo "env:ANDROID_NDK_HOME is not set, cannot find android toolchain"
+            }
+        }
+        default {
+            throw "Unknown compiler name '$name'. Be sure to add it to PATH"
+        }
+    }
+}
+
 # Allows to set environment variables for compiler
 function set_cc()
 {
@@ -5,7 +31,8 @@ function set_cc()
     $name_path = Get-Command $name -ea SilentlyContinue
 
     if ($name_path -eq $Null) {
-        throw "Unknown compiler name '$name'. Be sure to add it to PATH"
+        special_toolchains($name)
+        return
     }
 
     $env:CC = $name_path.Definition
@@ -28,7 +55,7 @@ function set_cc()
             $env:AR = $(Get-Command arm-none-eabi-ar).Definition
         }
         default {
-            echo "Unknown compiler: $name"
+            throw "Unknown compiler name '$name'. Be sure to add it to PATH"
         }
     }
 
