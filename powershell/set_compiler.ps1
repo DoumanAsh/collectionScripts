@@ -7,7 +7,7 @@ function special_toolchains([string]$name) {
                 $dir = "$env:ANDROID_NDK_HOME\toolchains\llvm\prebuilt\$host_tag\bin"
 
                 if (Test-Path $dir) {
-                    $env:PATH = "$env:PATH;$dir"
+                    $env:PATH = "$dir;$env:PATH"
                     $env:CC = "$dir\clang.exe"
                     $env:CXX = "$dir\clang++.exe"
                 } else {
