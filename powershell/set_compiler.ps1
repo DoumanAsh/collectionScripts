@@ -2,7 +2,7 @@
 function special_toolchains([string]$name) {
     switch ($name) {
         "android" {
-            if (Test-Path env:ANDROID_NDK_HOME) {
+            if (Test-Path env:ANDROID_NDK) {
                 $host_tag = if ([Environment]::Is64BitOperatingSystem) { "windows-x86_64" } else { "windows" }
                 $dir = "$env:ANDROID_NDK_HOME\toolchains\llvm\prebuilt\$host_tag\bin"
 
@@ -15,7 +15,7 @@ function special_toolchains([string]$name) {
                 }
 
             } else {
-                echo "env:ANDROID_NDK_HOME is not set, cannot find android toolchain"
+                echo "env:ANDROID_NDK is not set, cannot find android toolchain"
             }
         }
         default {
