@@ -9,7 +9,7 @@ if (Get-Command "vcpkg" -ErrorAction SilentlyContinue) {
     $vcpkg_dir = split-path -parent (Get-Command "vcpkg" | Select-Object -ExpandProperty Definition)
 
     function cmake_vcpkg() {
-        cmake -G $generator -DCMAKE_TOOLCHAIN_FILE=$vcpkg_dir\scripts\buildsystems\vcpkg.cmake $args
+        cmake -G $generator -DCMAKE_TOOLCHAIN_FILE="$vcpkg_dir\scripts\buildsystems\vcpkg.cmake" $args
     }
 }
 
