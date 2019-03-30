@@ -8,6 +8,7 @@
 "auto-open vimrc in current dir
 :set exrc
 :set secure
+:set hidden
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 """" Packages setup
@@ -23,8 +24,6 @@
 :set noswapfile
 :filetype plugin indent on
 :set tabstop=4 softtabstop=4 shiftwidth=4 expandtab
-:set shell=powershell
-:set shellcmdflag=-command
 :set ignorecase
 :set smartcase
 :set nu
@@ -60,7 +59,7 @@ endif
 " For insert mode let's make only reverse indent
 :inoremap <S-Tab> <C-D>
 
-" Auto-load tags
+" Auto-load rusty tags
 autocmd BufRead *.* :setlocal tags=./tags;/
 
 " Enable jsx on regular js files
@@ -84,7 +83,7 @@ let g:CSApprox_attr_map = { 'bold' : 'bold', 'italic' : '', 'sp' : '' }
 """" Complete settings
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Use smartcase.
-:let g:acp_enableAtStartup = 1
+":let g:acp_enableAtStartup = 1
 
 "Close popup window by space
 :inoremap <expr><Space> pumvisible() ? "\<C-e>" : "\<Space>"
@@ -100,6 +99,55 @@ let g:CSApprox_attr_map = { 'bold' : 'bold', 'italic' : '', 'sp' : '' }
 :set completeopt=longest,menuone
 au BufRead,BufNewFile *.sss set filetype=stylus
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""" Async auto complete
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let g:asyncomplete_auto_popup = 0
+:map <F5> :LspDefinition<ENTER>
+:command GD LspDefinition
+
+function s:completor(opt, ctx)
+  call mylanguage#get_async_completions({candidates, startcol -> asyncomplete#complete(a:opt['name'], a:ctx, startcol, candidates) })
+endfunction
+
+" omni
+au User asyncomplete_setup call asyncomplete#register_source({
+    \ 'name': 'omni',
+    \ 'whitelist': ['*'],
+    \ 'blacklist': ['c', 'cpp', 'html'],
+    \ 'completor': function('s:completor'),
+    \ })
+
+" file system
+au User asyncomplete_setup call asyncomplete#register_source({
+    \ 'name': 'file',
+    \ 'whitelist': ['*'],
+    \ 'priority': 10,
+    \ 'completor': function('s:completor'),
+    \ })
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""" Rust-vim
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let g:rustfmt_autosave = 0
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""" Language Server
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"if executable('rls')
+"    au User lsp_setup call lsp#register_server({
+"        \ 'name': 'rls',
+"        \ 'cmd': {server_info->['rustup', 'run', 'stable', 'rls']},
+"        \ 'whitelist': ['rust'],
+"        \ })
+"endif
+"if executable('clangd')
+"    au User lsp_setup call lsp#register_server({
+"        \ 'name': 'clangd',
+"        \ 'cmd': {server_info->['clangd']},
+"        \ 'whitelist': ['c', 'cpp', 'objc', 'objcpp'],
+"        \ })
+"endif
 
 ":set statusline=%f%m%r%h%w\ %y\ enc:%{&enc}\ ff:%{&ff}\ fenc:%{&fenc}%=(ch:%3b\ hex:%2B)\ col:%2c\ line:%2l/%L\ [%2p%%]
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
