@@ -10,8 +10,13 @@ function vcpkg_upgrade() {
 
     Set-Location $vcpkg_dir
 
-    git pull
-    .\bootstrap-vcpkg.bat -disableMetrics -win64
+    $GIT_OUT=git pull
+
+    if ($GIT_OUT -Match "up to date") {
+        echo "vcpkg is up to date"
+    } else  {
+        .\bootstrap-vcpkg.bat -disableMetrics -win64
+    }
 
     Set-Location $old_pwd
 }
