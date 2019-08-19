@@ -1,28 +1,34 @@
 # Setups VC environment from bat.
-# It runs environment in cmd and extract all variables into  temp file.
-# which then is used to source environment.
-function set_vc($arch) {
+function set_vc_from_bat($arch) {
     $vc_env = "vcvars$arch.bat"
+    echo "Load MSVC environment $vc_env"
     if (Get-Command $vc_env -errorAction SilentlyContinue)
     {
-        $tempFile = [IO.Path]::GetTempFileName()
-
         ## Store the output of cmd.exe. We also ask cmd.exe to output
         ## the environment table after the batch file completes
-        cmd /Q /c " $vc_env  && set > $tempFile " | out-null
-
         ## Go through the environment variables in the temp file.
         ## For each of them, set the variable in our local environment.
-        Get-Content $tempFile | Foreach-Object {
-            if($_ -match "^(.*?)=(.*)$")
-            {
+        cmd /Q /c "$vc_env && set" 2>&1 | Foreach-Object {
+            if ($_ -match "^(.*?)=(.*)$") {
                 Set-Content "env:\$($matches[1])" $matches[2]
             }
         }
 
-        Remove-Item $tempFile
+        echo "Successfully finished"
     }
     else {
         echo "Cannot find vcvars.bat for your arch '$arch'"
+    }
+}
+
+# Setups environment using vswhere
+# Check VsDevCmd.bat -? for available architectures
+function set_vc($arch) {
+    if (Get-Command vswhere) {
+        $installPath = vswhere -products * -version 16.0 -property installationpath
+            Import-Module (Join-Path $installPath "Common7\Tools\vsdevshell\Microsoft.VisualStudio.DevShell.dll")
+            $null = Enter-VsDevShell -VsInstallPath $installPath -DevCmdArguments -arch=$arch
+    } else {
+        echo "vswhere.exe is not available in PATH"
     }
 }
