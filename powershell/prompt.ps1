@@ -6,9 +6,6 @@ function prompt {
     } else {
         $git_dirt = $(git diff-index --name-only --ignore-submodules HEAD --)
 
-        $git_commits_to_push = $(git rev-list head...origin/$git_branch  --left-right --ignore-submodules --count)
-        $git_commits_ahead,$git_commits_behind = $git_commits_to_push.Split('')
-
         if ([string]::IsNullOrEmpty($git_dirt)) {
             $status_color = "$ESC[32m"
         } else {
@@ -17,15 +14,22 @@ function prompt {
 
         $commit_diff_line = ""
 
-        if ([int]$git_commits_ahead -gt 0) {
-            $commit_diff_line = " ^ $git_commits_ahead"
-        }
+        $git_commits_to_push = $(git rev-list head...origin/$git_branch  --left-right --ignore-submodules --count 2> $null)
 
-        if ([int]$git_commits_behind -gt 0) {
-            if ([string]::IsNullOrEmpty($commit_diff_line)) {
-                $commit_diff_line = " ^ -$git_commits_behind"
-            } else {
-                $commit_diff_line = "$commit_diff_line -$git_commits_behind"
+        if ([string]::IsNullOrEmpty($git_commits_to_push)) {
+        } else {
+            $git_commits_ahead,$git_commits_behind = $git_commits_to_push.Split('')
+
+            if ([int]$git_commits_ahead -gt 0) {
+                $commit_diff_line = " ^ $git_commits_ahead"
+            }
+
+            if ([int]$git_commits_behind -gt 0) {
+                if ([string]::IsNullOrEmpty($commit_diff_line)) {
+                    $commit_diff_line = " ^ -$git_commits_behind"
+                } else {
+                    $commit_diff_line = "$commit_diff_line -$git_commits_behind"
+                }
             }
         }
 
