@@ -32,12 +32,11 @@ function cd([string]$path) {
             Set-Location ~
         }
         default {
-            try {
-                Set-Location $path
-            }
-            catch {
+            $res = Set-Location $path -ErrorAction Ignore -PassThru
+
+            if (!$res) {
                 $global:OLDPWD = $old
-                throw
+                echo "$($path): No such file or directory"
             }
         }
     }
