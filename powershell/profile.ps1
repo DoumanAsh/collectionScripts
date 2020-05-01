@@ -4,7 +4,6 @@ if (Test-Path($ChocolateyProfile)) {
     Import-Module "$ChocolateyProfile"
 }
 
-$ESC = [char]27
 $env:LANG="en_US.utf8"
 
 $CollectionDir = "$PSScriptRoot"

@@ -1,3 +1,5 @@
+$ESC = [char]27
+
 # Simple ps prompt with git status
 function prompt {
     $git_branch = $(git rev-parse --abbrev-ref HEAD 2> $null)
