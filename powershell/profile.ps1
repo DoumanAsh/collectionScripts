@@ -16,6 +16,7 @@ if (Test-Path($CollectionDir)) {
     . "$CollectionDir\rust_utils.ps1"
     . "$CollectionDir\cmake.ps1"
     . "$CollectionDir\prompt.ps1"
+    . "$CollectionDir\vcvars_env.ps1"
 
     $env:RUSTUP_TOOLCHAIN = "$(rust_get_default_channel)"
 }
@@ -59,11 +60,7 @@ function grep {
     }
 }
 
-if (Get-Command vswhere -ErrorAction SilentlyContinue) {
-    $installPath = vswhere -products * -version 16.0 -property installationpath
-    Import-Module (Join-Path $installPath "Common7\Tools\Microsoft.VisualStudio.DevShell.dll")
-    $null = Enter-VsDevShell -VsInstallPath $installPath -DevCmdArguments -arch=amd64
-}
+set_vc "amd64"
 
 if (Get-Command "clang-cl" -ErrorAction SilentlyContinue) {
     set_cc clang-cl

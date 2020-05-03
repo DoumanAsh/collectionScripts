@@ -24,10 +24,10 @@ function set_vc_from_bat($arch) {
 # Setups environment using vswhere
 # Check VsDevCmd.bat -? for available architectures
 function set_vc($arch) {
-    if (Get-Command vswhere) {
+    if (Get-Command vswhere -ErrorAction SilentlyContinue) {
         $installPath = vswhere -products * -version 16.0 -property installationpath
-            Import-Module (Join-Path $installPath "Common7\Tools\vsdevshell\Microsoft.VisualStudio.DevShell.dll")
-            $null = Enter-VsDevShell -VsInstallPath $installPath -DevCmdArguments -arch=$arch
+        Import-Module (Join-Path $installPath "Common7\Tools\Microsoft.VisualStudio.DevShell.dll")
+        $null = Enter-VsDevShell -VsInstallPath $installPath -DevCmdArguments -arch="$arch"
     } else {
         echo "vswhere.exe is not available in PATH"
     }
