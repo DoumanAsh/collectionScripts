@@ -39,12 +39,7 @@ Set-PSReadlineOption -Color @{
 
 function unzip() {
     foreach ($arg in $args) {
-        if (Test-Path "$arg") {
-            7z x "$arg"
-        }
-        else {
-            echo (">>>{0}: no such file" -f $arg)
-        }
+        7z x "$arg"
     }
 }
 
@@ -54,8 +49,7 @@ function grep {
 
     if ($count) {
         $input | rg.exe --hidden $args
-    }
-    else {
+    } else {
         rg.exe --hidden $args
     }
 }
