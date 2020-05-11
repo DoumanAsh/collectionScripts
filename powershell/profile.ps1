@@ -57,8 +57,10 @@ function grep {
 set_vc "amd64"
 
 if (Get-Command "clang-cl" -ErrorAction SilentlyContinue) {
+    echo "C++ compiler: $(Get-Command clang-cl | Select-Object -ExpandProperty Definition)"
     set_cc clang-cl
 } elseif (Get-Command "cl" -ErrorAction SilentlyContinue) {
+    echo "C++ compiler: $(Get-Command cl | Select-Object -ExpandProperty Definition)"
     set_cc cl
 }
 
@@ -70,3 +72,5 @@ if (Get-Command "lua53.exe" -ErrorAction SilentlyContinue) {
 if (Get-Command "nvim-qt.exe" -ErrorAction SilentlyContinue) {
     Set-Alias gvim nvim-qt.exe
 }
+
+echo ""
