@@ -2,9 +2,11 @@ $ESC = [char]27
 
 # Simple ps prompt with git status
 function prompt {
+    $current_location = $(Get-Location | select -ExpandProperty Path | % {$_.replace("$env:HOMEDRIVE$env:HOMEPATH", "~")})
+
     $git_branch = $(git rev-parse --abbrev-ref HEAD 2> $null)
     if ([string]::IsNullOrEmpty($git_branch)) {
-        "$ESC[33m$($executionContext.SessionState.Path.CurrentLocation)$ESC[0m$("`n$(Get-Date -Format 'HH:mm') $" * ($nestedPromptLevel + 1)) "
+        "$ESC[33m$($current_location)$ESC[0m$("`n$(Get-Date -Format 'HH:mm') $" * ($nestedPromptLevel + 1)) "
     } else {
         $git_dirt = $(git diff-index --name-only --ignore-submodules HEAD --)
 
@@ -35,6 +37,6 @@ function prompt {
             }
         }
 
-        "$ESC[33m$($executionContext.SessionState.Path.CurrentLocation)$ESC[0m [$status_color$git_branch$commit_diff_line$ESC[0m]$("`n$(Get-Date -Format 'HH:mm') $" * ($nestedPromptLevel + 1)) "
+        "$ESC[33m$($current_location)$ESC[0m [$status_color$git_branch$commit_diff_line$ESC[0m]$("`n$(Get-Date -Format 'HH:mm') $" * ($nestedPromptLevel + 1)) "
     }
 }
