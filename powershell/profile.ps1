@@ -17,6 +17,7 @@ if (Test-Path($CollectionDir)) {
     . "$CollectionDir\cmake.ps1"
     . "$CollectionDir\prompt.ps1"
     . "$CollectionDir\vcvars_env.ps1"
+    . "$CollectionDir\docker.ps1"
 
     $env:RUSTUP_TOOLCHAIN = "$(rust_get_default_channel)"
 }
