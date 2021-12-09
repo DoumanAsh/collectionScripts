@@ -11,5 +11,5 @@ function run_docker {
         return
     }
 
-    docker run --rm --network host --name rust_build -v ${mount}:/mount -it $tag
+    docker run --rm --network host --name $tag -v ${mount}:/mount -it $tag
 }
