@@ -11,5 +11,9 @@ function run_docker {
         return
     }
 
-    docker run --rm --network host --name $tag -v ${mount}:/mount -it $tag
+    $name = $tag.replace('/', "_")
+
+    $cmd = "docker run --rm --network host --name $name -v ${mount}:/mount -it $tag"
+    echo "> $cmd"
+    iex $cmd
 }
