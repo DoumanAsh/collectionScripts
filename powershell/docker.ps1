@@ -11,7 +11,7 @@ function run_docker {
         return
     }
 
-    $name = $tag.replace('/', "_")
+    $name = $tag -replace '/','_' -replace ':','_'
 
     $cmd = "docker run --rm --network host --name $name -v ${mount}:/mount -it $tag"
     echo "> $cmd"
