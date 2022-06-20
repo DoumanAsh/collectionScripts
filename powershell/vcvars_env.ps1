@@ -43,5 +43,5 @@ function set_vc($arch) {
     echo "Found msvc installation: $installPath"
 
     Import-Module (Join-Path $installPath "Common7\Tools\Microsoft.VisualStudio.DevShell.dll")
-    $null = Enter-VsDevShell -VsInstallPath $installPath -DevCmdArguments -arch="$arch"
+    $null = Enter-VsDevShell -SkipAutomaticLocation -VsInstallPath $installPath -Arch $arch -HostArch $arch
 }
