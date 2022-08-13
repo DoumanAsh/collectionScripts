@@ -271,7 +271,17 @@ EOF
 "use this command for when you need to write in russian.
 :command RuMode set langmap=ФИСВУАПРШОЛДЬТЩЗЙКЫЕГМЦЧНЯ;ABCDEFGHIJKLMNOPQRSTUVWXYZ,фисвуапршолдьтщзйкыегмцчня;abcdefghijklmnopqrstuvwxyz
 
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""" UI
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""''
+"Setup mouse
+:set mouse=nvc
+"Scroll code with  mouse
+:map <ScrollWheelUp> <C-Y>
+:map <S-ScrollWheelUp> <C-U>
+:map <ScrollWheelDown> <C-E>
+:map <S-ScrollWheelDown> <C-D>
+
 "Set UI language
 :language en_US
 "Run Explore if no files are passed.
@@ -287,4 +297,6 @@ function! AdjustFontSize(amount)
     endif
 endfunction
 
+:map <C-ScrollWheelUp> :call AdjustFontSize(1)<Enter>
+:map <C-ScrollWheelDown> :call AdjustFontSize(-1)<Enter>
 autocmd UIEnter * call  AdjustFontSize(0)
