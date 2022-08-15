@@ -88,6 +88,12 @@ endfunction
 lua <<EOF
 -- Use an on_attach function to only map the following keys
 -- after the language server attaches to the current buffer
+local cmp = require 'cmp'
+function is_cmp_visible()
+    local cmp = require 'cmp'
+    return cmp.visible()
+end
+
 local on_attach = function(client, bufnr)
   local function buf_set_keymap(...)
     vim.api.nvim_buf_set_keymap(bufnr, ...)
@@ -113,7 +119,7 @@ end
 
 -- Hover automatically
 vim.o.updatetime = 1000
-vim.cmd [[autocmd! CursorHold,CursorHoldI * lua vim.lsp.buf.hover()]]
+vim.cmd [[autocmd! CursorHold,CursorHoldI * lua if not is_cmp_visible() then vim.lsp.buf.hover() end]]
 
 -- Enable some language servers with the additional completion capabilities offered by nvim-cmp
 local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
@@ -174,7 +180,6 @@ lspconfig.rust_analyzer.setup {
 }
 
 -- nvim-cmp setup
-local cmp = require 'cmp'
 cmp.setup {
   mapping = cmp.mapping.preset.insert({
     ['<C-d>'] = cmp.mapping.scroll_docs(-4),
@@ -185,14 +190,14 @@ cmp.setup {
       select = true,
     },
     ['<Tab>'] = cmp.mapping(function(fallback)
-      if cmp.visible() then
+      if is_cmp_visible() then
         cmp.select_next_item()
       else
         fallback()
       end
     end, { 'i', 's' }),
     ['<S-Tab>'] = cmp.mapping(function(fallback)
-      if cmp.visible() then
+      if is_cmp_visible() then
         cmp.select_prev_item()
       else
         fallback()
