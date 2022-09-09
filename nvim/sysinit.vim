@@ -65,6 +65,9 @@ Plug 'hrsh7th/cmp-path', {'branch': 'main'}
 Plug 'hrsh7th/cmp-nvim-lsp-signature-help', {'branch': 'main'}
 Plug 'uga-rosa/cmp-dictionary', {'branch': 'main'}
 Plug 'quangnguyen30192/cmp-nvim-tags', {'branch': 'main'}
+"snippets
+Plug 'hrsh7th/cmp-vsnip'
+Plug 'hrsh7th/vim-vsnip'
 " Initialize plugin system
 " If you add new plugins, be sure to reload and run :PlugInstall
 call plug#end()
@@ -119,8 +122,8 @@ local on_attach = function(client, bufnr)
 end
 
 -- Hover automatically
-vim.o.updatetime = 1000
-vim.cmd [[autocmd! CursorHold,CursorHoldI * lua if not is_cmp_visible() then vim.lsp.buf.hover() end]]
+-- vim.o.updatetime = 1000
+-- vim.cmd [[autocmd! CursorHold,CursorHoldI * lua if not is_cmp_visible() then vim.lsp.buf.hover() end]]
 
 -- Enable some language servers with the additional completion capabilities offered by nvim-cmp
 local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
@@ -185,6 +188,11 @@ lspconfig.rust_analyzer.setup {
 
 -- nvim-cmp setup
 cmp.setup {
+    snippet = {
+      expand = function(args)
+        vim.fn["vsnip#anonymous"](args.body) -- For `vsnip` users.
+      end,
+    },
   mapping = cmp.mapping.preset.insert({
     ['<C-d>'] = cmp.mapping.scroll_docs(-4),
     ['<C-f>'] = cmp.mapping.scroll_docs(4),
@@ -211,10 +219,11 @@ cmp.setup {
   sources = {
     { name = 'nvim_lsp' },
     { name = 'nvim_lsp_signature_help' },
+    { name = 'vsnip' },
     { name = 'tags' },
+    { name = 'buffer' },
     { name = 'path', trigger_characters = { '/' } },
     { name = 'dictionary', keyword_length = 3, max_item_count = 5 },
-    { name = 'buffer' },
   },
   formatting = {
     format = function(entry, vim_item)
