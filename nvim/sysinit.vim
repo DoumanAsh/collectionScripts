@@ -126,7 +126,7 @@ end
 -- vim.cmd [[autocmd! CursorHold,CursorHoldI * lua if not is_cmp_visible() then vim.lsp.buf.hover() end]]
 
 -- Enable some language servers with the additional completion capabilities offered by nvim-cmp
-local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
+local capabilities = require('cmp_nvim_lsp').default_capabilities()
 local lspconfig = require('lspconfig')
 -- Dart LSP
 lspconfig.dartls.setup {
