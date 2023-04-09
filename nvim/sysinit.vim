@@ -159,6 +159,7 @@ lspconfig.rust_analyzer.setup {
         ["rust-analyzer"] = {
             diagnostics = {
                 enable = true,
+                disabled = { "inactive-code" }
             },
             imports = {
                 merge = {
