@@ -53,8 +53,9 @@ autocmd BufRead *.* :setlocal tags=./tags;/
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""''
 call plug#begin('~/.vim/plugged')
 Plug 'rust-lang/rust.vim', {'branch': 'master'}
-Plug 'joshdick/onedark.vim', {'branch': 'master'}
+Plug 'navarasu/onedark.nvim'
 Plug 'dart-lang/dart-vim-plugin', {'branch': 'master'}
+Plug 'ziglang/zig.vim'
 "LSP
 Plug 'neovim/nvim-lspconfig', {'branch': 'master'}
 "Auto-complete
@@ -73,6 +74,27 @@ Plug 'hrsh7th/vim-vsnip'
 call plug#end()
 
 let g:rustfmt_autosave = 0
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""" Color scheme setup
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""''
+let g:onedark_config = {
+  \ 'style': 'dark',
+  \ 'ending_tildes': v:true,
+  \ 'term_colors': v:true,
+  \ 'code_style': {
+    \ 'comments' : 'italic',
+    \ 'keywords' : 'bold',
+  \ },
+  \ 'diagnostics': {
+    \ 'darker': v:true,
+    \ 'background': v:false,
+  \ },
+  \ 'highlights': {
+    \ 'PreProc': {
+      \ 'fg': '$yellow',
+    \ },
+  \ },
+\ }
 :colorscheme onedark
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
