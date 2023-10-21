@@ -7,11 +7,17 @@ Remove-Item -ErrorAction SilentlyContinue alias:\pwd
 
 #get only definition
 function which($name) {
-    Get-Command $name | Select-Object -ExpandProperty Definition
+    try {
+        Get-Command $name -ErrorAction Stop | Select-Object -ExpandProperty Definition
+    } catch [System.Management.Automation.CommandNotFoundException] {
+    }
 }
 #unix like readlink. Gets only full path
 function readlink($name) {
-    Get-Item $name | select -ExpandProperty FullName
+    try {
+        Get-Item $name -ErrorAction Stop | select -ExpandProperty FullName
+    } catch [System.Management.Automation.ItemNotFoundException] {
+    }
 }
 #unix like pwd.
 function pwd {
