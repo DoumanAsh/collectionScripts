@@ -5,7 +5,6 @@ function cmake_gen() {
         $generator = "NMake Makefiles"
     }
 
-
     if (Get-Command "vcpkg" -ErrorAction SilentlyContinue) {
         $vcpkg_dir = split-path -parent (Get-Command "vcpkg" | Select-Object -ExpandProperty Definition)
         $vcpkg_toolchain_path = Join-Path -Path $vcpkg_dir -ChildPath scripts | Join-Path -ChildPath buildsystems | Join-Path -ChildPath vcpkg.cmake

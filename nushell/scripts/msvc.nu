@@ -38,7 +38,7 @@ export def --env set_vc_env_from_bat [arch: string] {
         echo $"Found VS installation: ($vs_studio)"
         # nushell is kinda dumb with how it passes arguments so we have no choice but to avoid white spaces
         cd $'($vs_studio)\Common7\Tools\'
-        let bat = $"VsDevCmd.bat -host_arch=($arch)"
+        let bat = $"VsDevCmd.bat -arch=($arch) -host_arch=($arch)"
         echo $">Load MSVC environment ($arch)..."
         sourcebat $"($bat)"
         cd -

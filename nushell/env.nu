@@ -2,9 +2,15 @@
 #
 # version = "0.90.1"
 
-const root = ($nu.env-path | path dirname);
+echo "##################
+# Initialize shell
+###################
+"
+
+const root = ($nu.env-path | path dirname)
 use $"($root)/scripts/prompt.nu" git_prompt
 use $"($root)/scripts/msvc.nu" set_vc_env_from_bat
+use $"($root)/scripts/cmake.nu" *
 
 $env.PROMPT_COMMAND = { || git_prompt }
 $env.PROMPT_COMMAND_RIGHT = ""
@@ -47,3 +53,6 @@ set_vc_env_from_bat "amd64"
 
 # Aliases
 export alias gvim = nvim-qt
+
+echo "
+###########################"
