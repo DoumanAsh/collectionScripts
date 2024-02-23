@@ -50,6 +50,7 @@ $env.NU_PLUGIN_DIRS = [
 ]
 
 set_vc_env_from_bat "amd64"
+set_cc clang-cl
 
 # Aliases
 export alias gvim = nvim-qt
