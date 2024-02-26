@@ -49,8 +49,17 @@ $env.NU_PLUGIN_DIRS = [
     ($nu.default-config-dir | path join 'plugins') # add <nushell-config-dir>/plugins
 ]
 
-set_vc_env_from_bat "amd64"
-set_cc clang-cl
+if ((sys | get host | get name) == Windows)) {
+    set_vc_env_from_bat "amd64"
+    if (not (which clang-cl | is-empty)) {
+    } else {
+        set_cc cl
+    }
+} else {
+    if (not (which clang | is-empty)) {
+        set_cc clang
+    }
+}
 
 # Aliases
 export alias gvim = nvim-qt
