@@ -49,9 +49,10 @@ $env.NU_PLUGIN_DIRS = [
     ($nu.default-config-dir | path join 'plugins') # add <nushell-config-dir>/plugins
 ]
 
-if ((sys | get host | get name) == Windows)) {
+if ((sys | get host | get name) == Windows) {
     set_vc_env_from_bat "amd64"
     if (not (which clang-cl | is-empty)) {
+        set_cc clang-cl
     } else {
         set_cc cl
     }
