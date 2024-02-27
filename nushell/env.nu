@@ -7,10 +7,13 @@ echo "##################
 ###################
 "
 
+$env.LANG = "en_US.utf8"
+
 const root = ($nu.env-path | path dirname)
 use $"($root)/scripts/prompt.nu" git_prompt
 use $"($root)/scripts/msvc.nu" set_vc_env_from_bat
 use $"($root)/scripts/cmake.nu" *
+use $"($root)/scripts/utils.nu" *
 
 $env.PROMPT_COMMAND = { || git_prompt }
 $env.PROMPT_COMMAND_RIGHT = ""
@@ -61,6 +64,11 @@ if ((sys | get host | get name) == Windows) {
         set_cc clang
     }
 }
+
+# env.Path mods
+env_add_path $"$env.HOME/.cargo/bin"
+env_add_path $"$env.HOME/soft/tools"
+env_add_path "/opt/homebrew/bin"
 
 # Aliases
 export alias gvim = nvim-qt
