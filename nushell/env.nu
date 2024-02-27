@@ -73,10 +73,12 @@ if ($env._OS == Windows) {
 }
 
 # env.Path mods
-env_add_path ($env.HOME | path join .cargo | path join bin)
-env_add_path ($env.HOME | path join soft | path join tools)
-env_add_path ($env.HOME | path join soft | path join google-cloud-sdk | path join bin)
-env_add_path "/opt/homebrew/bin"
+env_add_path ...[
+    ($env.HOME | path join .cargo | path join bin)
+    ($env.HOME | path join soft | path join tools)
+    ($env.HOME | path join soft | path join google-cloud-sdk | path join bin)
+    "/opt/homebrew/bin"
+]
 
 # Aliases
 export alias gvim = nvim-qt
