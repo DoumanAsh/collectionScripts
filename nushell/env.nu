@@ -8,6 +8,9 @@ echo "##################
 "
 
 $env.LANG = "en_US.utf8"
+$env._OS = (sys | get host | get name);
+
+echo $"System: ($env._OS)"
 
 const root = ($nu.env-path | path dirname)
 use $"($root)/scripts/prompt.nu" git_prompt
@@ -52,7 +55,10 @@ $env.NU_PLUGIN_DIRS = [
     ($nu.default-config-dir | path join 'plugins') # add <nushell-config-dir>/plugins
 ]
 
-if ((sys | get host | get name) == Windows) {
+if ($env._OS == Windows) {
+    $env.HOME = $"($env.SystemDrive)($env.HOMEPATH)"
+    $env._PATH = "Path"
+
     set_vc_env_from_bat "amd64"
     if (not (which clang-cl | is-empty)) {
         set_cc clang-cl
@@ -60,15 +66,16 @@ if ((sys | get host | get name) == Windows) {
         set_cc cl
     }
 } else {
+    $env._PATH = "PATH"
     if (not (which clang | is-empty)) {
         set_cc clang
     }
 }
 
 # env.Path mods
-env_add_path $"($env.HOME)/.cargo/bin"
-env_add_path $"($env.HOME)/soft/tools"
-env_add_path $"($env.HOME)/soft/google-cloud-sdk/bin"
+env_add_path ($env.HOME | path join .cargo | path join bin)
+env_add_path ($env.HOME | path join soft | path join tools)
+env_add_path ($env.HOME | path join soft | path join google-cloud-sdk | path join bin)
 env_add_path "/opt/homebrew/bin"
 
 # Aliases
