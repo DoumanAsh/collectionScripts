@@ -66,8 +66,9 @@ if ((sys | get host | get name) == Windows) {
 }
 
 # env.Path mods
-env_add_path $"$env.HOME/.cargo/bin"
-env_add_path $"$env.HOME/soft/tools"
+env_add_path $"($env.HOME)/.cargo/bin"
+env_add_path $"($env.HOME)/soft/tools"
+env_add_path $"($env.HOME)/soft/google-cloud-sdk/bin"
 env_add_path "/opt/homebrew/bin"
 
 # Aliases

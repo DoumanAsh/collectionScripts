@@ -33,7 +33,14 @@ export def git_prompt [] {
             }
         )
 
-        let commits_to_push = (do { git rev-list $"head...origin/($git_branch)"  --left-right --ignore-submodules --count } | complete | $in.stdout | str trim | split row --regex '\s+')
+        let diff_status = do { git rev-list $"head...origin/($git_branch)"  --left-right --ignore-submodules --count } | complete
+        let commits_to_push = (
+            if ($diff_status.exit_code == 0) {
+                $diff_status.stdout | str trim | split row --regex '\s+'
+            } else {
+                ["0", "0"]
+            }
+        )
         let commits_ahead = $commits_to_push | get 0 | into int
         let commits_behind = $commits_to_push | get 1 | into int
 
