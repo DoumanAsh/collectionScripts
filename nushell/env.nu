@@ -16,6 +16,7 @@ const root = ($nu.env-path | path dirname)
 use $"($root)/scripts/prompt.nu" git_prompt
 use $"($root)/scripts/msvc.nu" set_vc_env_from_bat
 use $"($root)/scripts/cmake.nu" *
+use $"($root)/scripts/rust.nu" *
 use $"($root)/scripts/utils.nu" *
 
 $env.PROMPT_COMMAND = { || git_prompt }
@@ -79,6 +80,9 @@ env_add_path ...[
     ($env.HOME | path join soft | path join google-cloud-sdk | path join bin)
     "/opt/homebrew/bin"
 ]
+
+# Make sure default toolchain is always specified via env var
+$env.RUSTUP_TOOLCHAIN = (rust_get_default_channel)
 
 # Aliases
 export alias gvim = nvim-qt
