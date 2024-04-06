@@ -3,7 +3,6 @@ export def rust_get_default_channel [] {
         ""
     } else {
         let result = ( do { rustup default } | complete)
-        echo $"($result)"
         if ($result.exit_code != 0) {
             ""
         } else {
@@ -25,5 +24,5 @@ export def rust_get_default_channel [] {
 #        }
 #    )
 #
-#    echo $"($folder): Entering..."
+#    print $"($folder): Entering..."
 #}

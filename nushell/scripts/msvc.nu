@@ -30,16 +30,16 @@ export def --env set_vc_env_from_bat [arch: string] {
     )
 
     if ( $vswhere | is-empty) {
-        echo ">MSVC environment not installed"
+        print ">MSVC environment not installed"
     } else {
-        echo $"Found vswhere: ($vswhere)"
+        print $"Found vswhere: ($vswhere)"
         let vs_studio = cmd.exe /Q /C $"($vswhere)" "-products" "*" "-latest" "-property" installationpath
 
-        echo $"Found VS installation: ($vs_studio)"
+        print $"Found VS installation: ($vs_studio)"
         # nushell is kinda dumb with how it passes arguments so we have no choice but to avoid white spaces
         cd $'($vs_studio)\Common7\Tools\'
         let bat = $"VsDevCmd.bat -arch=($arch) -host_arch=($arch)"
-        echo $">Load MSVC environment ($arch)..."
+        print $">Load MSVC environment ($arch)..."
         sourcebat $"($bat)"
         cd -
     }

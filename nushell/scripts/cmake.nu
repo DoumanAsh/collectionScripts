@@ -22,7 +22,7 @@ export def --wrapped cmake_gen [...args: string] {
             if ($vcpkg_manifest | path exists) {
                 $'-DCMAKE_TOOLCHAIN_FILE=($vcpkg_manifest)'
             } else {
-                echo $"VCPKG installation is missing manifest: ($vcpkg_manifest)"
+                print $"VCPKG installation is missing manifest: ($vcpkg_manifest)"
                 ""
             }
         }

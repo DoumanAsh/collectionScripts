@@ -2,7 +2,7 @@
 #
 # version = "0.90.1"
 
-echo "##################
+print "##################
 # Initialize shell
 ###################
 "
@@ -10,7 +10,7 @@ echo "##################
 $env.LANG = "en_US.utf8"
 $env._OS = (sys | get host | get name);
 
-echo $"System: ($env._OS)"
+print $"System: ($env._OS)"
 
 const root = ($nu.env-path | path dirname)
 use $"($root)/scripts/prompt.nu" git_prompt
@@ -87,5 +87,5 @@ $env.RUSTUP_TOOLCHAIN = (rust_get_default_channel)
 # Aliases
 export alias gvim = nvim-qt
 
-echo "
+print "
 ###########################"
