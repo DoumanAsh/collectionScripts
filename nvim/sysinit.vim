@@ -29,6 +29,8 @@
 :set hlsearch
 
 :set cursorline
+" Exit terminal on Esc
+:tnoremap <Esc> <C-\><C-n>
 " Indent set on tab in normal and visual mode
 " Do not remap TAB in normal or you'll need to remap C-I
 :nnoremap <C-Tab> >>
