@@ -85,9 +85,9 @@ env_add_path ...[
 $env.RUSTUP_TOOLCHAIN = (rust_get_default_channel)
 
 # Editor
+export alias gvim = nvim-qt
 if (which nvim | is-not-empty) {
     $env.EDITOR = "nvim"
-    export alias gvim = nvim-qt
 } else if (which vim | is-not-empty) {
     $env.EDITOR = "vim"
 }
