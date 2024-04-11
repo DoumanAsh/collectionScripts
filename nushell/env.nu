@@ -57,7 +57,7 @@ $env.NU_PLUGIN_DIRS = [
 ]
 
 if ($env._OS == Windows) {
-    $env.HOME = $"($env.SystemDrive)($env.HOMEPATH)"
+    $env.HOME = $"($env | get SYSTEMDRIVE)($env.HOMEPATH)"
     $env._PATH = "Path"
 
     set_vc_env_from_bat "amd64"
@@ -84,8 +84,13 @@ env_add_path ...[
 # Make sure default toolchain is always specified via env var
 $env.RUSTUP_TOOLCHAIN = (rust_get_default_channel)
 
-# Aliases
-export alias gvim = nvim-qt
+# Editor
+if (which nvim | is-not-empty) {
+    $env.EDITOR = "nvim"
+    export alias gvim = nvim-qt
+} else if (which vim | is-not-empty) {
+    $env.EDITOR = "vim"
+}
 
 print "
 ###########################"

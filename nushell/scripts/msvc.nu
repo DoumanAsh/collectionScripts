@@ -16,8 +16,8 @@ def --env sourcebat [cmd: string] {
 
 export def --env set_vc_env_from_bat [arch: string] {
     let suffix = "Microsoft Visual Studio/Installer/vswhere.exe"
-    let vswhere64 = $"($env.SystemDrive)/Program Files/($suffix)"
-    let vswhere86 = $"($env.SystemDrive)/Program Files \(x86\)/($suffix)"
+    let vswhere64 = $"($env | get SystemDrive)/Program Files/($suffix)"
+    let vswhere86 = $"($env | get SystemDrive)/Program Files \(x86\)/($suffix)"
 
     let vswhere = (
         if ($vswhere64 | path exists) {

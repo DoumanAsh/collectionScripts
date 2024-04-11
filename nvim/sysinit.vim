@@ -29,8 +29,6 @@
 :set hlsearch
 
 :set cursorline
-" Exit terminal on Esc
-:tnoremap <Esc> <C-\><C-n>
 " Indent set on tab in normal and visual mode
 " Do not remap TAB in normal or you'll need to remap C-I
 :nnoremap <C-Tab> >>
@@ -50,6 +48,13 @@ autocmd BufRead *.* :setlocal tags=./tags;/
 " C++ no namespace ident
 :set cino=N-s
 
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""''
+""" Terminal
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""''
+" Exit terminal on Esc
+:tnoremap <Esc> <C-\><C-n>
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""''
+
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 """" Plugins
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""''
@@ -57,7 +62,7 @@ call plug#begin('~/.vim/plugged')
 Plug 'rust-lang/rust.vim', {'branch': 'master'}
 Plug 'navarasu/onedark.nvim'
 Plug 'dart-lang/dart-vim-plugin', {'branch': 'master'}
-Plug 'ziglang/zig.vim'
+"Plug 'ziglang/zig.vim'
 "LSP
 Plug 'neovim/nvim-lspconfig', {'branch': 'master'}
 "Auto-complete
