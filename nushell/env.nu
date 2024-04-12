@@ -79,6 +79,7 @@ env_add_path ...[
     ($env.HOME | path join soft | path join tools)
     ($env.HOME | path join soft | path join google-cloud-sdk | path join bin)
     "/opt/homebrew/bin"
+    "/usr/local/bin"
 ]
 
 # Make sure default toolchain is always specified via env var
