@@ -8,7 +8,7 @@ print "##################
 "
 
 $env.LANG = "en_US.utf8"
-$env._OS = (sys | get host | get name);
+$env._OS = (sys host | get name);
 
 print $"System: ($env._OS)"
 
