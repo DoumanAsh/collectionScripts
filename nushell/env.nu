@@ -78,9 +78,15 @@ env_add_path ...[
     ($env.HOME | path join .cargo | path join bin)
     ($env.HOME | path join soft | path join tools)
     ($env.HOME | path join soft | path join google-cloud-sdk | path join bin)
-    "/opt/homebrew/bin"
     "/usr/local/bin"
 ]
+
+if ($env._OS == "Darwin") {
+    env_add_path ...[
+        "/opt/homebrew/bin"
+        ("/Users" | path join ($env.USER) "Library" "Android" "sdk" "platform-tools")
+    ]
+}
 
 # Make sure default toolchain is always specified via env var
 $env.RUSTUP_TOOLCHAIN = (rust_get_default_channel)
