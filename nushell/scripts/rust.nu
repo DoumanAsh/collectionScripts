@@ -25,7 +25,7 @@ export def rust_clean_repos [
     )
 
     try {
-        ls */Cargo.toml | each {|folder|
+        for folder in (ls */Cargo.toml) {
             print $"($folder.name): Entering..."
             cargo clean --manifest-path $folder.name
         }
