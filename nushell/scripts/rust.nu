@@ -12,17 +12,24 @@ export def rust_get_default_channel [] {
     }
 }
 
-#export def rust_clean_repos [
-#    folder?: string # Folder where to perform cleaning, recursively
-#    --yes (-y) # Automatically confirm cleaning
-#] {
-#    let folder = (
-#        if ($folder == null) {
-#            pwd
-#        } else {
-#            $folder
-#        }
-#    )
-#
-#    print $"($folder): Entering..."
-#}
+export def rust_clean_repos [
+    folder?: string # Folder where to perform cleaning, recursively
+    --yes (-y) # Automatically confirm cleaning
+] {
+    let folder = (
+        if ($folder == null) {
+            pwd
+        } else {
+            $folder
+        }
+    )
+
+    try {
+        ls */Cargo.toml | each {|folder|
+            print $"($folder.name): Entering..."
+            cargo clean --manifest-path $folder.name
+        }
+    } catch {
+        echo "No Cargo.toml found"
+    }
+}
