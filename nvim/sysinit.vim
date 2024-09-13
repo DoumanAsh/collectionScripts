@@ -276,7 +276,6 @@ cmp.setup {
 }
 
 cmp.setup.cmdline(':', {
-  completion = { autocomplete = true },
   sources = cmp.config.sources({
     { name = 'path' },
   }, {
