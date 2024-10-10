@@ -226,7 +226,6 @@ $env.config = {
     }
 
     color_config: $dark_theme # if you want a more interesting theme, you can replace the empty record with `$dark_theme`, `$light_theme` or another custom record
-    use_grid_icons: true
     footer_mode: 25 # always, never, number_of_rows, auto
     float_precision: 2 # the precision for displaying floats in tables
     buffer_editor: null # command that will be used to edit the current line buffer with ctrl+o, if unset fallback to $env.EDITOR and $env.VISUAL
@@ -863,22 +862,23 @@ $env.config = {
             modifier: control_shift
             keycode: char_c
             mode: emacs
-            event: { edit: copyselectionsystem }
+            event: { edit: copyselection }
         }
         {
             name: cut_selection
             modifier: control_shift
             keycode: char_x
             mode: emacs
-            event: { edit: cutselectionsystem }
+            event: { edit: cutselection }
         }
-        {
-            name: paste_system
-            modifier: control_shift
-            keycode: char_v
-            mode: emacs
-            event: { edit: pastesystem }
-        }
+        # Removed in upgrade from 0.96 to 0.98?
+        #{
+        #    name: paste_system
+        #    modifier: control_shift
+        #    keycode: char_v
+        #    mode: emacs
+        #    event: { edit: pastesystem }
+        #}
         {
             name: select_all
             modifier: control_shift
