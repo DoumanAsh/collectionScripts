@@ -216,6 +216,12 @@ lspconfig.rust_analyzer.setup {
     },
 }
 
+---Deno/TS
+lspconfig.denols.setup {
+  on_attach = on_attach,
+  root_dir = lspconfig.util.root_pattern("deno.json", "deno.jsonc"),
+}
+
 -- nvim-cmp setup
 cmp.setup {
     snippet = {
