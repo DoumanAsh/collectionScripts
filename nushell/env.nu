@@ -79,6 +79,7 @@ env_add_path ...[
     ($env.HOME | path join soft | path join tools)
     ($env.HOME | path join soft | path join google-cloud-sdk | path join bin)
     "/usr/local/bin"
+    "/opt/personal"
 ]
 
 if ($env._OS == "Darwin") {
