@@ -89,6 +89,9 @@ if ($env._OS == "Darwin") {
     ]
 }
 
+# Cmake
+$env.CMAKE_EXPORT_COMPILE_COMMANDS = "ON"
+
 # Make sure default toolchain is always specified via env var
 $env.RUSTUP_TOOLCHAIN = (rust_get_default_channel)
 
