@@ -178,7 +178,7 @@ $env.config = {
         exit_code: false # assume the external command prints an error message
         # Core dump errors are always printed, and SIGPIPE never triggers an error.
         # The setting below controls message printing for termination by all other signals.
-        termination_signal: true
+        termination_signal: false
     }
 
     # datetime_format determines what a datetime rendered in the shell would look like.
