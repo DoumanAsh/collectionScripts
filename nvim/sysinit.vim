@@ -188,6 +188,7 @@ lspconfig.rust_analyzer.setup {
         ["rust-analyzer"] = {
             diagnostics = {
                 enable = true,
+                refreshSupport = false,
                 disabled = { "inactive-code" }
             },
             imports = {
@@ -220,6 +221,16 @@ lspconfig.rust_analyzer.setup {
 lspconfig.denols.setup {
   on_attach = on_attach,
   root_dir = lspconfig.util.root_pattern("deno.json", "deno.jsonc"),
+}
+
+---nushell
+lspconfig.nushell.setup {
+    cmd = { 'nu', '--lsp' },
+    filetypes = { 'nu' },
+    root_dir = function(fname)
+      return vim.fs.dirname(vim.fs.find('.git', { path = fname, upward = true })[1])
+    end,
+    single_file_support = true,
 }
 
 -- nvim-cmp setup
