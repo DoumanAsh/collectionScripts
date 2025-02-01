@@ -12,7 +12,7 @@ $env._OS = (sys host | get name);
 
 print $"System: ($env._OS)"
 
-const root = ($nu.env-path | path dirname)
+const root = path self .
 use $"($root)/scripts/prompt.nu" git_prompt
 use $"($root)/scripts/msvc.nu" set_vc_env_from_bat
 use $"($root)/scripts/cmake.nu" *
