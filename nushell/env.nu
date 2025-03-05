@@ -81,6 +81,7 @@ env_add_path ...[
     ($env.HOME | path join soft | path join google-cloud-sdk | path join bin)
     "/usr/local/bin"
     "/opt/personal"
+    "/opt/podman/bin"
 ]
 
 if ($env._OS == "Darwin") {
