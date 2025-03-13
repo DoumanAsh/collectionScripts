@@ -341,6 +341,25 @@ lspconfig.yamlls.setup {
   },
 }
 
+---TOML validation
+--- Install from https://github.com/tamasfe/taplo/releases/latest (go for FULL version)
+lspconfig.taplo.setup {
+  on_attach = on_attach,
+  single_file_support = true,
+  silent = true,
+  settings = {
+      eventBetterToml = {
+          schema = {
+              enabled = true,
+              catalogs = {
+                  -- This index is much smaller than default one and contains all you need for Rust
+                  "https://taplo.tamasfe.dev/schema_index.json"
+              }
+          }
+      }
+  }
+}
+
 -- nvim-cmp setup
 cmp.setup {
     snippet = {
