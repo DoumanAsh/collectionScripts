@@ -29,6 +29,7 @@
 :set hlsearch
 
 :set cursorline
+:set synmaxcol=240
 " Indent set on tab in normal and visual mode
 " Do not remap TAB in normal or you'll need to remap C-I
 :nnoremap <C-Tab> >>
@@ -313,6 +314,31 @@ lspconfig.nushell.setup {
       return vim.fs.dirname(vim.fs.find('.git', { path = fname, upward = true })[1])
     end,
     single_file_support = true,
+}
+
+---Yaml
+--- Install node with npm and then:
+--- npm install -g yaml-language-server
+lspconfig.yamlls.setup {
+  on_attach = on_attach,
+  single_file_support = true,
+  silent = true,
+  settings = {
+      yaml = {
+          format = {
+              enable = false
+          },
+          schemas = {
+              ["https://json.schemastore.org/github-workflow.json"] = "/.github/workflows/*",
+              ["https://raw.githubusercontent.com/compose-spec/compose-spec/master/schema/compose-spec.json"] = "compose.y*ml",
+          },
+      },
+      redhat = {
+          telemetry = {
+              enabled = false
+          }
+      },
+  },
 }
 
 -- nvim-cmp setup
