@@ -360,6 +360,11 @@ lspconfig.taplo.setup {
   }
 }
 
+---Terraform LSP
+lspconfig.terraformls.setup {
+  on_attach = on_attach,
+}
+
 -- nvim-cmp setup
 cmp.setup {
     snippet = {
