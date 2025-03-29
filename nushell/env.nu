@@ -12,7 +12,9 @@ $env.LC_ALL = "en_US.UTF-8"
 $env.LC_CTYPE = "en_US.UTF-8"
 $env._OS = (sys host | get name);
 
-print $"System: ($env._OS)"
+print $"System: (sys host | get long_os_version)"
+print $"Memory: (sys mem | get available | into string | split row -r '\s+' | get 0)/(sys mem | get total)"
+print $"Uptime: (sys host | get uptime)"
 
 const root = path self .
 use $"($root)/scripts/prompt.nu" git_prompt
