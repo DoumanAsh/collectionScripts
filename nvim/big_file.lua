@@ -18,11 +18,15 @@ local function disable_heavy_features()
     -- Big improvement with syntax highlighting on
     vim.opt_local.foldmethod = "manual"
     -- Should be turned off in serious cases, but not critical with fold adjustment
-    vim.cmd "syntax clear"
+    vim.cmd ":syntax clear"
     vim.opt_local.syntax = "OFF"
 
-    -- Disable autocomplete
-    require('cmp').setup.buffer {
+    -- filetype turn off
+    vim.cmd ":filetype off"
+
+    -- Disable autocomplete since nvim-cmp is garbage on big files
+    local cmp = require('cmp')
+    cmp.setup {
         enabled = false
     }
 
