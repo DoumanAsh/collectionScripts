@@ -21,6 +21,11 @@ local function disable_heavy_features()
     vim.cmd "syntax clear"
     vim.opt_local.syntax = "OFF"
 
+    -- Disable autocomplete
+    require('cmp').setup.buffer {
+        enabled = false
+    }
+
     -- You're most likely editing something weird rather than legit code so do not allow lsp
     vim.api.nvim_create_autocmd({ "LspAttach" }, {
       buffer = buf,
