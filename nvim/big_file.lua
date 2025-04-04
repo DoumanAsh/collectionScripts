@@ -3,7 +3,7 @@
 local MIN_FILI_SIZE_MB = 2
 local AUGROUP = vim.api.nvim_create_augroup("bigfile", {})
 
-local function disable_heavy_features()
+local function disable_heavy_features(buf)
     vim.opt_local.swapfile = false
     vim.opt_local.wrap = false
 
@@ -46,7 +46,7 @@ end
 local function get_buf_size(bufnr)
   bufnr = bufnr or vim.api.nvim_get_current_buf()
   local ok, stats = pcall(function()
-    return vim.loop.fs_stat(vim.api.nvim_buf_get_name(bufnr))
+    return vim.uv.fs_stat(vim.api.nvim_buf_get_name(bufnr))
   end)
   if not (ok and stats) then
     return
@@ -73,15 +73,16 @@ local function on_bufread_pre(bufnr)
 
   -- Schedule disabling deferred features
   vim.api.nvim_create_autocmd({ "BufReadPost" }, {
-    callback = disable_heavy_features,
+    callback = function()
+        disable_heavy_features(bufnr)
+    end,
     buffer = bufnr,
   })
 end
 
 vim.api.nvim_create_autocmd("BufReadPre", {
-  pattern = type(pattern) ~= "function" and pattern or "*",
   group = AUGROUP,
   callback = function(args)
-    on_bufread_pre(args.buf, config)
+    on_bufread_pre(args.buf)
   end,
 })
