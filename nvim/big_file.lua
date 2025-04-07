@@ -10,9 +10,6 @@ local function disable_heavy_features(buf)
     -- Disable all auto cmd on write to avoid potentially processing enormous file
     vim.cmd "noautocmd write"
 
-    -- Undo? More like LAG
-    vim.opt_local.undolevels = -1
-    vim.opt_local.undoreload = 0
     vim.opt_local.hlsearch= false
 
     -- Big improvement with syntax highlighting on
