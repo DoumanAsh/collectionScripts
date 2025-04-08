@@ -16,7 +16,7 @@ end)
 -- It prefers the title that was set via `tab:set_title()`
 -- or `wezterm cli set-tab-title`, but falls back to the
 -- title of the active pane in that tab.
-function tab_title(tab_info)
+local function tab_title(tab_info)
   local title = tab_info.tab_title
   -- if the tab title is explicitly set, take that
   if title and #title > 0 then
@@ -27,7 +27,7 @@ function tab_title(tab_info)
   return tab_info.active_pane.title
 end
 
-function get_max_cols(window)
+local function get_max_cols(window)
   local tab = window:active_tab()
   local cols = tab:get_size().cols
   return cols
@@ -65,6 +65,12 @@ wezterm.on(
 )
 
 local config = wezterm.config_builder()
+
+if config.front_end ~= "Software" then
+    config.animation_fps = 30
+end
+
+config.hide_tab_bar_if_only_one_tab = true
 config.font_size = 14.0
 config.color_scheme = 'One Half Black (Gogh)'
 config.tab_max_width = 9999
