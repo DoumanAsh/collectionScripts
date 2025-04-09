@@ -67,10 +67,18 @@ wezterm.on(
 local config = wezterm.config_builder()
 
 if config.front_end ~= "Software" then
-    config.animation_fps = 30
+    config.max_fps = 120
+    config.animation_fps = 60
+    config.front_end = 'WebGpu'
+    config.webgpu_power_preference = 'HighPerformance'
 end
 
+config.cursor_blink_ease_in = 'EaseOut'
+config.cursor_blink_ease_out = 'EaseOut'
+config.default_cursor_style = 'BlinkingBlock'
+config.cursor_blink_rate = 650
 config.hide_tab_bar_if_only_one_tab = true
+
 config.font_size = 14.0
 config.color_scheme = 'One Half Black (Gogh)'
 config.tab_max_width = 9999
@@ -79,4 +87,18 @@ config.window_frame = {
   -- Default to 10.0 on Windows but 12.0 on other systems
   font_size = 16.0,
 }
+
+-- Fancy tab bar has better UI but it has weird shrinking behavior on 2+ tabs
+-- Find way to work it around or use ugly retro bar
+-- config.use_fancy_tab_bar = false
+config.tab_max_width = 25
+config.show_tab_index_in_tab_bar = false
+config.switch_to_last_active_tab_when_closing_tab = true
+config.window_padding = {
+    left = 0,
+    right = 0,
+    top = 10,
+    bottom = 7.5,
+}
+
 return config
