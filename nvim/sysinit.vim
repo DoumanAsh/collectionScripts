@@ -31,7 +31,7 @@ let s:CWD = expand('<sfile>:p:h')
 
 :syntax on
 :set encoding=utf-8
-:set termencoding=utf-8
+":set termencoding=utf-8
 :set fileencoding=utf-8
 :set fileencodings=utf8,ucs-bom,sjis,latin1,koi8r,cp932,cp1251,cp866,ucs-2le,default
 :set hlsearch
