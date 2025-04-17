@@ -120,7 +120,7 @@ lspconfig.zls.setup {
 require("typescript-tools").setup {
   on_attach = on_attach,
   ---Do not run by default to avoid errors in projects without typescript server
-  autostart = false,
+  single_file_support = false,
   settings = {
     -- spawn additional tsserver instance to calculate diagnostics on it
     separate_diagnostic_server = true,
