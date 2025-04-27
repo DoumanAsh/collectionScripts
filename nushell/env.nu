@@ -85,6 +85,7 @@ env_add_path ...[
     "/usr/local/bin"
     "/opt/personal"
     "/opt/podman/bin"
+    "/opt/nvim/bin"
 ]
 
 if ($env._OS == "Darwin") {

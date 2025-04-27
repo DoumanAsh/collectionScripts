@@ -168,7 +168,10 @@ endfunction
 :map <S-ScrollWheelDown> <C-D>
 
 "Set UI language
-:language en_US
+if exists("g:GuiLoaded")
+    :language en_US
+endif
+
 "Run Explore if no files are passed.
 if argc() == 0 && !exists("s:std_in")
     autocmd vimenter * Explore
