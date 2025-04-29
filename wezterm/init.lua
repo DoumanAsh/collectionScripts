@@ -105,7 +105,7 @@ config.mouse_bindings = {
     {
       event = { Up = { streak = 1, button = "Left"} },
       mods = "NONE",
-      action = wezterm.action.CompleteSelection 'Clipboard'
+      action = wezterm.action.CompleteSelection 'ClipboardAndPrimarySelection'
     },
     -- Ctrl-click will open the link under the mouse cursor
     {
