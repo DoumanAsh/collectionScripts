@@ -67,7 +67,7 @@ if ($env._OS == Windows) {
     set_vc_env_from_bat "amd64"
     if (not (which clang-cl | is-empty)) {
         set_cc clang-cl
-    } else {
+    } else if (not (which clang-cl | is-empty)) {
         set_cc cl
     }
 } else {
