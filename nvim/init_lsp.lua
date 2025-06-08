@@ -58,6 +58,11 @@ lspconfig.pyright.setup {
     capabilities = capabilities,
     on_attach = on_attach,
     single_file_support = true,
+    filetypes = { "python" },
+    -- installing pyright globally is pain because python is dumb on linux and pyright doesn't have package unfortunately
+    -- so when you need LSP, just install venv in your project
+    root_dir = lspconfig.util.root_pattern(".venv"),
+    cmd = { "bash", "-c", "source .venv/bin/activate && .venv/bin/pyright-langserver --stdio" },
     settings = {
         python = {
             autoSearchPaths = true,
