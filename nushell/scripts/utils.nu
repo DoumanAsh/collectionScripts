@@ -10,7 +10,7 @@ export def --env env_add_path [...dests: string] {
     let path = $env | get $path_key
     load-env {
         $path_key: (
-            $path | prepend ($dests | filter { ($in | path exists) and $in not-in $path })
+            $path | prepend ($dests | where { ($in | path exists) and $in not-in $path })
         )
     }
 }

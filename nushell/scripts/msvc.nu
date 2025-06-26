@@ -8,9 +8,9 @@ def --env sourcebat [cmd: string] {
         }
     }
 
-    $result.stdout | lines | filter { |in| not ($in | str starts-with '*') }
-                   | str trim | filter { not ($in | is-empty) } | split column '=' | update column2 { str trim -c '"' }
-                   | filter { $in.column1 != 'PWD' and $in.column1 != 'CURRENT_FILE' and $in.column1 != 'FILE_PWD' }
+    $result.stdout | lines | where { |in| not ($in | str starts-with '*') }
+                   | str trim | where { not ($in | is-empty) } | split column '=' | update column2 { str trim -c '"' }
+                   | where { $in.column1 != 'PWD' and $in.column1 != 'CURRENT_FILE' and $in.column1 != 'FILE_PWD' }
                    | transpose -r -d | load-env
 }
 
