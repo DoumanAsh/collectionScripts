@@ -102,12 +102,12 @@ $env.CMAKE_EXPORT_COMPILE_COMMANDS = "ON"
 $env.RUSTUP_TOOLCHAIN = (rust_get_default_channel)
 
 # Editor
-export alias gvim = nvim-qt
 if (which nvim | is-not-empty) {
     $env.EDITOR = "nvim"
 } else if (which vim | is-not-empty) {
     $env.EDITOR = "vim"
 }
+export alias gvim = neovide
 
 print "
 ###########################"
