@@ -167,24 +167,22 @@ endfunction
 :map <ScrollWheelDown> <C-E>
 :map <S-ScrollWheelDown> <C-D>
 
-"Set UI language
-if exists("g:GuiLoaded")
+"Setup GUI
+if exists("g:GuiLoaded") || exists("g:neovide")
+    :execute "source " . expand(s:CWD) . "/gui.lua"
     :language en_US
+    "Maximize window as much as possible
+    :set lines=999 columns=999
+    :let g:neovide_position_animation_length = 0
+    :let g:neovide_cursor_animation_length = 0.00
+    :let g:neovide_cursor_trail_size = 0
+    :let g:neovide_cursor_animate_in_insert_mode = v:false
+    :let g:neovide_cursor_animate_command_line = v:false
+    :let g:neovide_scroll_animation_far_lines = 0
+    :let g:neovide_scroll_animation_length = 0.00
 endif
 
 "Run Explore if no files are passed.
 if argc() == 0 && !exists("s:std_in")
     autocmd vimenter * Explore
 endif
-"Set font
-let s:fontsize = 12
-function! AdjustFontSize(amount)
-    let s:fontsize = s:fontsize+a:amount
-    if exists("g:GuiLoaded")
-        :execute "GuiFont! Consolas:h" . s:fontsize
-    endif
-endfunction
-
-:map <C-ScrollWheelUp> :call AdjustFontSize(1)<Enter>
-:map <C-ScrollWheelDown> :call AdjustFontSize(-1)<Enter>
-autocmd UIEnter * call  AdjustFontSize(0)
