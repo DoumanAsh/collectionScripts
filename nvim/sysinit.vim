@@ -170,7 +170,12 @@ endfunction
 "Setup GUI
 if exists("g:GuiLoaded") || exists("g:neovide")
     :execute "source " . expand(s:CWD) . "/gui.lua"
-    :language en_US
+    if has("unix")
+        " Use concrete language locale on Linux
+        :language en_US.utf8
+    else
+        :language en_US
+    endif
     "Maximize window as much as possible
     :set lines=999 columns=999
     :let g:neovide_position_animation_length = 0
