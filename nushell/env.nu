@@ -61,7 +61,7 @@ $env.NU_PLUGIN_DIRS = [
 ]
 
 if ($env._OS == Windows) {
-    $env.HOME = $"($env | get SYSTEMDRIVE)($env.HOMEPATH)"
+    $env.HOME = $"($env | get SystemDrive)($env.HOMEPATH)"
     $env._PATH = "Path"
 
     set_vc_env_from_bat "amd64"
