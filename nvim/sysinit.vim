@@ -170,7 +170,7 @@ endfunction
 "Setup GUI
 if exists("g:GuiLoaded") || exists("g:neovide")
     :execute "source " . expand(s:CWD) . "/gui.lua"
-    if has("unix")
+    if has("linux")
         " Use concrete language locale on Linux
         :language en_US.utf8
     else
