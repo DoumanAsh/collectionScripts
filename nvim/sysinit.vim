@@ -190,5 +190,5 @@ endif
 
 "Run Explore if no files are passed.
 if argc() == 0 && !exists("s:std_in")
-    autocmd vimenter * Explore
+    autocmd vimenter * Explore $HOME
 endif
