@@ -1,4 +1,5 @@
 local status, cmp = pcall(require, 'cmp')
+local is_win32 = package.config:sub(1,1) == "\\"
 
 local function is_cmp_visible()
     return cmp.visible()
@@ -53,6 +54,7 @@ lspconfig.clangd.setup {
         "--completion-style=detailed", -- granularity of code completion suggestions: bundled, detailed
     }
 }
+
 -- Python LSP
 lspconfig.pyright.setup {
     capabilities = capabilities,
@@ -61,8 +63,9 @@ lspconfig.pyright.setup {
     filetypes = { "python" },
     -- installing pyright globally is pain because python is dumb on linux and pyright doesn't have package unfortunately
     -- so when you need LSP, just install venv in your project
+    -- Note that on windows .venv puts everything under Scripts folder while unix systems get proper bin
     root_dir = lspconfig.util.root_pattern(".venv"),
-    cmd = { "bash", "-c", "source .venv/bin/activate && .venv/bin/pyright-langserver --stdio" },
+    cmd = { "nu", "-c", "overlay use .venv/" .. (is_win32 and 'Scripts' or 'bin') .. "/activate.nu; pyright-langserver --stdio" },
     settings = {
         python = {
             autoSearchPaths = true,
