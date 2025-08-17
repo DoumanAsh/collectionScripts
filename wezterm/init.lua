@@ -133,6 +133,7 @@ config.keys = {
     { key = '9', mods = 'ALT', action = wezterm.action.ActivateTab(-1) },
     { key = '=', mods = 'ALT', action = wezterm.action.IncreaseFontSize },
     { key = 't', mods = 'ALT', action = wezterm.action.SpawnTab 'CurrentPaneDomain' },
+    { key = 'v', mods = 'CTRL', action = wezterm.action.PasteFrom 'Clipboard' },
 }
 
 return config
