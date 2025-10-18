@@ -1,20 +1,15 @@
 export def git_prompt [] {
-    let reset_color = ansi reset
-    let path_color = ansi yellow
-
-    let home =  $nu.home-path
-
     # Perform tilde substitution on dir
     # To determine if the prefix of the path matches the home dir, we split the current path into
     # segments, and compare those with the segments of the home dir. In cases where the current dir
     # is a parent of the home dir (e.g. `/home`, homedir is `/home/user`), this comparison will
-    # also evaluate to true. Inside the condition, we attempt to str replace `$home` with `~`.
+    # also evaluate to true. Inside the condition, we attempt to str replace `$nu.home-path` with `~`.
     # Inside the condition, either:
     # 1. The home prefix will be replaced
     # 2. The current dir is a parent of the home dir, so it will be uneffected by the str replace
     let dir = (
-        if ($env.PWD | path split | zip ($home | path split) | all { $in.0 == $in.1 }) {
-            ($env.PWD | str replace $home "~")
+        if ($env.PWD | path split | zip ($nu.home-path | path split) | all { $in.0 == $in.1 }) {
+            ($env.PWD | str replace $nu.home-path "~")
         } else {
             $env.PWD
         }
@@ -56,9 +51,8 @@ export def git_prompt [] {
             }
         )
 
-        $git_prompt = $" [($git_color)($git_branch)($git_diff)($reset_color)]"
+        $git_prompt = $" [($git_color)($git_branch)($git_diff)(ansi reset)]"
     }
 
-    let path_segment = $"($path_color)($dir)"
-    $"($path_color)($dir)($reset_color)($git_prompt)\n(date now | format date '%H:%M') "
+    $"(ansi yellow)($dir)(ansi reset)($git_prompt)\n(date now | format date '%H:%M') "
 }

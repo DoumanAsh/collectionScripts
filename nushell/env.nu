@@ -47,18 +47,6 @@ $env.ENV_CONVERSIONS = {
     }
 }
 
-# Directories to search for scripts when calling source or use
-# The default for this is $nu.default-config-dir/scripts
-$env.NU_LIB_DIRS = [
-    ($nu.default-config-dir | path join 'scripts') # add <nushell-config-dir>/scripts
-]
-
-# Directories to search for plugin binaries when calling register
-# The default for this is $nu.default-config-dir/plugins
-$env.NU_PLUGIN_DIRS = [
-    ($nu.default-config-dir | path join 'plugins') # add <nushell-config-dir>/plugins
-]
-
 if ($env._OS == Windows) {
     use $"($root)/scripts/msvc.nu" set_vc_env_from_bat
 
