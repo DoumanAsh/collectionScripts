@@ -18,7 +18,6 @@ print $"Uptime: (sys host | get uptime)"
 
 const root = path self .
 use $"($root)/scripts/prompt.nu" git_prompt
-use $"($root)/scripts/msvc.nu" set_vc_env_from_bat
 use $"($root)/scripts/cmake.nu" *
 use $"($root)/scripts/rust.nu" *
 use $"($root)/scripts/utils.nu" *
@@ -61,6 +60,8 @@ $env.NU_PLUGIN_DIRS = [
 ]
 
 if ($env._OS == Windows) {
+    use $"($root)/scripts/msvc.nu" set_vc_env_from_bat
+
     $env.HOME = $"($env.SystemDrive)($env.HOMEPATH)"
     $env._PATH = "Path"
 
