@@ -36,6 +36,7 @@ let s:CWD = expand('<sfile>:p:h')
 :set fileencodings=utf8,ucs-bom,sjis,latin1,koi8r,cp932,cp1251,cp866,ucs-2le,default
 :set hlsearch
 
+" Under bar command height
 :set cursorline
 :set synmaxcol=240
 " Indent set on tab in normal and visual mode

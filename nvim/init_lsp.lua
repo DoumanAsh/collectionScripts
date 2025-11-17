@@ -35,14 +35,16 @@ if status then
 
 -- Enable some language servers with the additional completion capabilities offered by nvim-cmp
 local capabilities = require('cmp_nvim_lsp').default_capabilities()
-local lspconfig = require('lspconfig')
+local lsp_config_util = require 'lspconfig.util'
 -- Dart LSP
-lspconfig.dartls.setup {
+vim.lsp.config('dartls', {
     capabilities = capabilities,
     on_attach = on_attach,
-}
+})
+vim.lsp.enable('dartls')
+
 -- C++ LSP
-lspconfig.clangd.setup {
+vim.lsp.config('clangd', {
     capabilities = capabilities,
     on_attach = on_attach,
     filetypes = { "c", "cpp" },
@@ -53,10 +55,11 @@ lspconfig.clangd.setup {
         "--background-index",          -- index project code in the background and persist index on disk
         "--completion-style=detailed", -- granularity of code completion suggestions: bundled, detailed
     }
-}
+})
+vim.lsp.enable('clangd')
 
 -- Python LSP
-lspconfig.pyright.setup {
+vim.lsp.config('pyright', {
     capabilities = capabilities,
     on_attach = on_attach,
     single_file_support = true,
@@ -64,7 +67,7 @@ lspconfig.pyright.setup {
     -- installing pyright globally is pain because python is dumb on linux and pyright doesn't have package unfortunately
     -- so when you need LSP, just install venv in your project
     -- Note that on windows .venv puts everything under Scripts folder while unix systems get proper bin
-    root_dir = lspconfig.util.root_pattern(".venv"),
+    root_dir = lsp_config_util.root_pattern(".venv"),
     cmd = { "nu", "-c", "overlay use .venv/" .. (is_win32 and 'Scripts' or 'bin') .. "/activate.nu; pyright-langserver --stdio" },
     settings = {
         python = {
@@ -72,9 +75,11 @@ lspconfig.pyright.setup {
             useLibraryCodeForTypes = true,
         }
     }
-}
+})
+vim.lsp.enable('pyright')
+
 -- Rust LSP
-lspconfig.rust_analyzer.setup {
+vim.lsp.config('rust_analyzer', {
     capabilities = capabilities,
     on_attach = on_attach,
     settings = {
@@ -108,10 +113,11 @@ lspconfig.rust_analyzer.setup {
             },
         }
     },
-}
+})
+vim.lsp.enable('rust_analyzer')
 
 --- Zig LSP
-lspconfig.zls.setup {
+vim.lsp.config('zls', {
   -- There are two ways to set config options:
   --   - edit your `zls.json` that applies to any editor that uses ZLS
   --   - set in-editor config options with the `settings` field below.
@@ -122,7 +128,8 @@ lspconfig.zls.setup {
     zls = {
     }
   }
-}
+})
+vim.lsp.enable('zls')
 
 ---General TS
 require("typescript-tools").setup {
@@ -175,27 +182,19 @@ require("typescript-tools").setup {
   },
 }
 
----Deno/TS
-lspconfig.denols.setup {
-  on_attach = on_attach,
-  root_dir = lspconfig.util.root_pattern("deno.json", "deno.jsonc"),
-  single_file_support = false,
-}
-
 ---nushell
-lspconfig.nushell.setup {
+vim.lsp.config('nushell', {
     cmd = { 'nu', '--lsp' },
     filetypes = { 'nu' },
-    root_dir = function(fname)
-      return vim.fs.dirname(vim.fs.find('.git', { path = fname, upward = true })[1])
-    end,
+    root_dir = lsp_config_util.root_pattern(".git"),
     single_file_support = true,
-}
+})
+vim.lsp.enable('nushell')
 
 ---Yaml
 --- Install node with npm and then:
 --- npm install -g yaml-language-server
-lspconfig.yamlls.setup {
+vim.lsp.config('yamlls', {
   on_attach = on_attach,
   single_file_support = true,
   silent = true,
@@ -215,11 +214,12 @@ lspconfig.yamlls.setup {
           }
       },
   },
-}
+})
+vim.lsp.enable('yamlls')
 
 ---Lua
 -- Refer to https://github.com/neovim/nvim-lspconfig/blob/master/doc/configs.md#lua_ls
-lspconfig.lua_ls.setup {
+vim.lsp.config('lua_ls', {
   on_attach = on_attach,
   silent = true,
   single_file_support = true,
@@ -252,11 +252,12 @@ lspconfig.lua_ls.setup {
   settings = {
     Lua = {}
   }
-}
+})
+vim.lsp.enable('lua_ls')
 
 ---TOML validation
 --- Install from https://github.com/tamasfe/taplo/releases/latest (go for FULL version)
-lspconfig.taplo.setup {
+vim.lsp.config('taplo', {
   on_attach = on_attach,
   single_file_support = true,
   silent = true,
@@ -271,12 +272,14 @@ lspconfig.taplo.setup {
           }
       }
   }
-}
+})
+vim.lsp.enable('taplo')
 
 ---Terraform LSP
-lspconfig.terraformls.setup {
+vim.lsp.config('terraformls', {
   on_attach = on_attach,
-}
+})
+vim.lsp.enable('terraformls')
 
 -- nvim-cmp setup
 cmp.setup {
