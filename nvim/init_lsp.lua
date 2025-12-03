@@ -41,7 +41,9 @@ vim.lsp.config('dartls', {
     capabilities = capabilities,
     on_attach = on_attach,
 })
-vim.lsp.enable('dartls')
+if vim.fn.executable('dart') == 1 then
+    vim.lsp.enable('dartls')
+end
 
 -- C++ LSP
 vim.lsp.config('clangd', {
@@ -63,6 +65,7 @@ vim.lsp.config('pyright', {
     capabilities = capabilities,
     on_attach = on_attach,
     single_file_support = true,
+    root_markers = { "pyproject.toml" },
     filetypes = { "python" },
     -- installing pyright globally is pain because python is dumb on linux and pyright doesn't have package unfortunately
     -- so when you need LSP, just install venv in your project
@@ -129,7 +132,9 @@ vim.lsp.config('zls', {
     }
   }
 })
-vim.lsp.enable('zls')
+if vim.fn.executable('zls') == 1 then
+    vim.lsp.enable('zls')
+end
 
 ---General TS
 require("typescript-tools").setup {
