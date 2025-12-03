@@ -58,7 +58,9 @@ vim.lsp.config('clangd', {
         "--completion-style=detailed", -- granularity of code completion suggestions: bundled, detailed
     }
 })
-vim.lsp.enable('clangd')
+if vim.fn.executable('clangd') == 1 then
+    vim.lsp.enable('clangd')
+end
 
 -- Python LSP
 vim.lsp.config('pyright', {
@@ -119,7 +121,9 @@ vim.lsp.config('rust_analyzer', {
         }
     },
 })
-vim.lsp.enable('rust_analyzer')
+if vim.fn.executable('rust-analyzer') == 1 then
+    vim.lsp.enable('rust_analyzer')
+end
 
 --- Zig LSP
 vim.lsp.config('zls', {
@@ -196,7 +200,9 @@ vim.lsp.config('nushell', {
     root_dir = lsp_config_util.root_pattern(".git"),
     single_file_support = true,
 })
-vim.lsp.enable('nushell')
+if vim.fn.executable('nu') == 1 then
+    vim.lsp.enable('nushell')
+end
 
 ---Yaml
 --- Install node with npm and then:
@@ -233,7 +239,7 @@ vim.lsp.config('lua_ls', {
   on_init = function(client)
     if client.workspace_folders then
       local path = client.workspace_folders[1].name
-      if path ~= vim.fn.stdpath('config') and (vim.loop.fs_stat(path..'/.luarc.json') or vim.loop.fs_stat(path..'/.luarc.jsonc')) then
+      if path ~= vim.fn.stdpath('config') and (vim.uv.fs_stat(path..'/.luarc.json') or vim.uv.fs_stat(path..'/.luarc.jsonc')) then
         return
       end
     end
@@ -280,13 +286,17 @@ vim.lsp.config('taplo', {
       }
   }
 })
-vim.lsp.enable('taplo')
+if vim.fn.executable('taplo') == 1 then
+    vim.lsp.enable('taplo')
+end
 
 ---Terraform LSP
 vim.lsp.config('terraformls', {
   on_attach = on_attach,
 })
-vim.lsp.enable('terraformls')
+if vim.fn.executable('terraform-ls') == 1 then
+    vim.lsp.enable('terraformls')
+end
 
 -- nvim-cmp setup
 cmp.setup {
