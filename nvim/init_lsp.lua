@@ -71,7 +71,7 @@ vim.lsp.config('pyright', {
     -- so when you need LSP, just install venv in your project
     -- Note that on windows .venv puts everything under Scripts folder while unix systems get proper bin
     root_dir = lsp_config_util.root_pattern(".venv"),
-    cmd = { "nu", "-c", "overlay use .venv/" .. (is_win32 and 'Scripts' or 'bin') .. "/activate.nu; pyright-langserver --stdio" },
+    cmd = { "uv", "run", "pyright-langserver", "--stdio" },
     settings = {
         python = {
             autoSearchPaths = true,
@@ -79,7 +79,9 @@ vim.lsp.config('pyright', {
         }
     }
 })
-vim.lsp.enable('pyright')
+if vim.fn.executable('uv') == 1 then
+    vim.lsp.enable('pyright')
+end
 
 -- Rust LSP
 vim.lsp.config('rust_analyzer', {
