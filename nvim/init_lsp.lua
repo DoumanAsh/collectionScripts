@@ -35,7 +35,7 @@ if status then
 
 -- Enable some language servers with the additional completion capabilities offered by nvim-cmp
 local capabilities = require('cmp_nvim_lsp').default_capabilities()
-local lsp_config_util = require 'lspconfig.util'
+
 -- Dart LSP
 vim.lsp.config('dartls', {
     capabilities = capabilities,
@@ -72,7 +72,7 @@ vim.lsp.config('pyright', {
     -- installing pyright globally is pain because python is dumb on linux and pyright doesn't have package unfortunately
     -- so when you need LSP, just install venv in your project
     -- Note that on windows .venv puts everything under Scripts folder while unix systems get proper bin
-    root_dir = lsp_config_util.root_pattern(".venv"),
+    root_dir = vim.fs.root(0, {'.venv'}),
     cmd = { "uv", "run", "pyright-langserver", "--stdio" },
     settings = {
         python = {
@@ -197,7 +197,7 @@ require("typescript-tools").setup {
 vim.lsp.config('nushell', {
     cmd = { 'nu', '--lsp' },
     filetypes = { 'nu' },
-    root_dir = lsp_config_util.root_pattern(".git"),
+    root_dir = vim.fs.root(0, {'.git'}),
     single_file_support = true,
 })
 if vim.fn.executable('nu') == 1 then
