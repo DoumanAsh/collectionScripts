@@ -298,6 +298,17 @@ if vim.fn.executable('terraform-ls') == 1 then
     vim.lsp.enable('terraformls')
 end
 
+---Nil LSP
+vim.lsp.config('nil_ls', {
+  on_attach = on_attach,
+  cmd = { 'nil' },
+  filetypes = { 'nix' },
+  root_markers = { 'flake.nix', '.git' }
+})
+if vim.fn.executable('nil') == 1 then
+    vim.lsp.enable('nil_ls')
+end
+
 -- nvim-cmp setup
 cmp.setup {
     snippet = {
