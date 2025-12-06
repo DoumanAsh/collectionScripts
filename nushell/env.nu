@@ -97,7 +97,15 @@ if (which nvim | is-not-empty) {
 } else if (which vim | is-not-empty) {
     $env.EDITOR = "vim"
 }
-export alias gvim = neovide
+
+# Conditionally select graphical vim since you cannot export alias in if block
+def gvim [...rest] {
+    if (which neovide | is-not-empty) {
+        neovide ...$rest
+    } else if (which nvim-qt | is-not-empty) {
+        nvim-qt ...$rest
+    }
+}
 
 print "
 ###########################"
