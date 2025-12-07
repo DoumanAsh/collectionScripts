@@ -103,7 +103,9 @@ def gvim [...rest] {
     if (which neovide | is-not-empty) {
         neovide ...$rest
     } else if (which nvim-qt | is-not-empty) {
-        nvim-qt ...$rest
+        with-env { "NVIM_QT": "1" } {
+            nvim-qt ...$rest
+        }
     }
 }
 

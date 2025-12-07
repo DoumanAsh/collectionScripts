@@ -170,7 +170,7 @@ endfunction
 :map <S-ScrollWheelDown> <C-D>
 
 "Setup GUI
-if exists("g:GuiLoaded") || exists("g:neovide")
+if exists("g:GuiLoaded") || exists("g:neovide") || !empty($NVIM_QT)
     :execute "source " . expand(s:CWD) . "/gui.lua"
     if has("linux")
         " Use concrete language locale on Linux
