@@ -232,9 +232,16 @@ vim.lsp.enable('yamlls')
 
 ---Lua
 -- Refer to https://github.com/neovim/nvim-lspconfig/blob/master/doc/configs.md#lua_ls
+local lua_cmd
+if is_win32 then
+    lua_cmd = { 'lua-language-server' }
+else
+    lua_cmd = { 'lua-language-server', '--logpath=/tmp/lua-ls-logs', '--metapath=/tmp/lua-ls-meta' }
+end
 vim.lsp.config('lua_ls', {
   on_attach = on_attach,
   silent = true,
+  cmd = lua_cmd,
   single_file_support = true,
   on_init = function(client)
     if client.workspace_folders then
