@@ -16,11 +16,11 @@ print $"System: (sys host | get long_os_version)"
 print $"Memory: (sys mem | get available | into string | split row -r '\s+' | get 0)/(sys mem | get total)"
 print $"Uptime: (sys host | get uptime)"
 
-const root = path self .
-use $"($root)/scripts/prompt.nu" git_prompt
-use $"($root)/scripts/cmake.nu" *
-use $"($root)/scripts/rust.nu" *
-use $"($root)/scripts/utils.nu" *
+const env_root = path self .
+use $"($env_root)/scripts/prompt.nu" git_prompt
+use $"($env_root)/scripts/cmake.nu" *
+use $"($env_root)/scripts/rust.nu" *
+use $"($env_root)/scripts/utils.nu" *
 
 $env.PROMPT_COMMAND = { || git_prompt }
 $env.PROMPT_COMMAND_RIGHT = ""
@@ -48,7 +48,7 @@ $env.ENV_CONVERSIONS = {
 }
 
 if ($env._OS == Windows) {
-    use $"($root)/scripts/msvc.nu" set_vc_env_from_bat
+    use $"($env_root)/scripts/msvc.nu" set_vc_env_from_bat
 
     $env.HOME = $"($env.SystemDrive)($env.HOMEPATH)"
     $env._PATH = "Path"
