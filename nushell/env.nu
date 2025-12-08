@@ -103,7 +103,8 @@ def gvim [...rest] {
 
 
 if (which fastfetch | is-not-empty) {
-    fastfetch --logo $"($env_root)/PRTS-ai.png" -C $"($env_root)/fastfetch.jsonc"
+    clear
+    fastfetch --logo-type kitty-direct --logo $"($env_root)/PRTS-ai.png" -C $"($env_root)/fastfetch.jsonc"
 } else {
 
 print "##################
