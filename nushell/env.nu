@@ -2,19 +2,11 @@
 #
 # version = "0.90.1"
 
-print "##################
-# Initialize shell
-###################
-"
-
 $env.LANG = "en_US.UTF-8"
 $env.LC_ALL = "en_US.UTF-8"
 $env.LC_CTYPE = "en_US.UTF-8"
 $env._OS = (sys host | get name);
 
-print $"System: (sys host | get long_os_version)"
-print $"Memory: (sys mem | get available | into string | split row -r '\s+' | get 0)/(sys mem | get total)"
-print $"Uptime: (sys host | get uptime)"
 
 const env_root = path self .
 use $"($env_root)/scripts/prompt.nu" git_prompt
@@ -109,5 +101,20 @@ def gvim [...rest] {
     }
 }
 
+
+if (which fastfetch | is-not-empty) {
+    fastfetch --logo $"($env_root)/PRTS-ai.png" -C $"($env_root)/fastfetch.jsonc"
+} else {
+
+print "##################
+# Initialize shell
+###################
+"
+print $"System: (sys host | get long_os_version)"
+print $"Memory: (sys mem | get available | into string | split row -r '\s+' | get 0)/(sys mem | get total)"
+print $"Uptime: (sys host | get uptime)"
+
+
 print "
 ###########################"
+}
