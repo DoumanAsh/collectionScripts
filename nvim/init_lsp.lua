@@ -63,17 +63,14 @@ if vim.fn.executable('clangd') == 1 then
 end
 
 -- Python LSP
-vim.lsp.config('pyright', {
+vim.lsp.config('pylsp', {
     capabilities = capabilities,
     on_attach = on_attach,
     single_file_support = true,
     root_markers = { "pyproject.toml" },
     filetypes = { "python" },
-    -- installing pyright globally is pain because python is dumb on linux and pyright doesn't have package unfortunately
-    -- so when you need LSP, just install venv in your project
-    -- Note that on windows .venv puts everything under Scripts folder while unix systems get proper bin
     root_dir = vim.fs.root(0, {'.venv'}),
-    cmd = { "uv", "run", "pyright-langserver", "--stdio" },
+    cmd = { "uv", "run", "pylsp" },
     settings = {
         python = {
             autoSearchPaths = true,
@@ -82,7 +79,7 @@ vim.lsp.config('pyright', {
     }
 })
 if vim.fn.executable('uv') == 1 then
-    vim.lsp.enable('pyright')
+    vim.lsp.enable('pylsp')
 end
 
 -- Rust LSP
