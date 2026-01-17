@@ -90,6 +90,11 @@ if (which nvim | is-not-empty) {
     $env.EDITOR = "vim"
 }
 
+# Java
+if (which java | is-not-empty) {
+    $env.JAVA_HOME = $"(which java | get path | path expand | path dirname -n 2 | get 0)"
+}
+
 # Conditionally select graphical vim since you cannot export alias in if block
 def gvim [...rest] {
     if (which neovide | is-not-empty) {
