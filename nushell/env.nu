@@ -63,6 +63,7 @@ env_add_path ...[
     ($env.HOME | path join .cargo | path join bin)
     ($env.HOME | path join soft | path join tools)
     ($env.HOME | path join soft | path join google-cloud-sdk | path join bin)
+    ($env.HOME | path join .local | path join share | path join coursier | path join bin)
     "/usr/local/bin"
     "/opt/personal"
     "/opt/podman/bin"
