@@ -8,9 +8,11 @@ def --env sourcebat [cmd: string] {
         }
     }
 
+    # check split column --help to identify order of column names
+    # nushell can change randomly it
     $result.stdout | lines | where { |in| not ($in | str starts-with '*') }
-                   | str trim | where { not ($in | is-empty) } | split column '=' | update column2 { str trim -c '"' }
-                   | where { $in.column1 != 'PWD' and $in.column1 != 'CURRENT_FILE' and $in.column1 != 'FILE_PWD' }
+                   | str trim | where { not ($in | is-empty) } | split column '=' | update column1 { str trim -c '"' }
+                   | where { $in.column0 != 'PWD' and $in.column0 != 'CURRENT_FILE' and $in.column0 != 'FILE_PWD' }
                    | transpose -r -d | load-env
 }
 
