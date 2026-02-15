@@ -1,0 +1,8 @@
+gui:
+  tabWidth: 4
+  language: en
+  timeFormat: 2015/02/25 15:04
+  shortTimeFormat: 15:04
+update:
+  method: never
+notARepository: quit
