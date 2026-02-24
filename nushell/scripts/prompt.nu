@@ -28,7 +28,7 @@ export def git_prompt [] {
             }
         )
 
-        let diff_status = do { git rev-list $"head...origin/($git_branch)"  --left-right --ignore-submodules --count } | complete
+        let diff_status = do { git rev-list $"HEAD...origin/($git_branch)"  --left-right --ignore-submodules --count } | complete
         let commits_to_push = (
             if ($diff_status.exit_code == 0) {
                 $diff_status.stdout | str trim | split row --regex '\s+'
