@@ -37,11 +37,12 @@ if status then
 local capabilities = require('cmp_nvim_lsp').default_capabilities()
 
 -- Dart LSP
-vim.lsp.config('dartls', {
-    capabilities = capabilities,
-    on_attach = on_attach,
-})
 if vim.fn.executable('dart') == 1 then
+    vim.lsp.config('dartls', {
+        capabilities = capabilities,
+        on_attach = on_attach,
+    })
+
     vim.lsp.enable('dartls')
 end
 
@@ -123,19 +124,19 @@ if vim.fn.executable('rust-analyzer') == 1 then
 end
 
 --- Zig LSP
-vim.lsp.config('zls', {
-  -- There are two ways to set config options:
-  --   - edit your `zls.json` that applies to any editor that uses ZLS
-  --   - set in-editor config options with the `settings` field below.
-  --
-  -- Further information on how to configure ZLS:
-  -- https://zigtools.org/zls/configure/
-  settings = {
-    zls = {
-    }
-  }
-})
 if vim.fn.executable('zls') == 1 then
+    vim.lsp.config('zls', {
+      -- There are two ways to set config options:
+      --   - edit your `zls.json` that applies to any editor that uses ZLS
+      --   - set in-editor config options with the `settings` field below.
+      --
+      -- Further information on how to configure ZLS:
+      -- https://zigtools.org/zls/configure/
+      settings = {
+        zls = {
+        }
+      }
+    })
     vim.lsp.enable('zls')
 end
 
@@ -295,11 +296,19 @@ if vim.fn.executable('taplo') == 1 then
 end
 
 ---Terraform LSP
-vim.lsp.config('terraformls', {
-  on_attach = on_attach,
-})
 if vim.fn.executable('terraform-ls') == 1 then
+    vim.lsp.config('terraformls', {
+        on_attach = on_attach,
+    })
     vim.lsp.enable('terraformls')
+end
+
+---Opentofu LSP
+if vim.fn.executable('tofu-ls') == 1 then
+    vim.lsp.config('tofu_ls', {
+      on_attach = on_attach,
+    })
+    vim.lsp.enable('tofu_ls')
 end
 
 ---Nil LSP
