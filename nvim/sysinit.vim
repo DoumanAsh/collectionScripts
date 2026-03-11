@@ -111,6 +111,7 @@ let g:rustfmt_autosave = 0
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""''
 let g:onedark_config = {
   \ 'style': 'dark',
+  \ 'transparent': v:true,
   \ 'ending_tildes': v:true,
   \ 'term_colors': v:true,
   \ 'code_style': {
