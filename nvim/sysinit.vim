@@ -181,13 +181,6 @@ if exists("g:GuiLoaded") || exists("g:neovide") || !empty($NVIM_QT)
     endif
     "Maximize window as much as possible
     :set lines=999 columns=999
-    :let g:neovide_position_animation_length = 0
-    :let g:neovide_cursor_animation_length = 0.00
-    :let g:neovide_cursor_trail_size = 0
-    :let g:neovide_cursor_animate_in_insert_mode = v:false
-    :let g:neovide_cursor_animate_command_line = v:false
-    :let g:neovide_scroll_animation_far_lines = 0
-    :let g:neovide_scroll_animation_length = 0.00
 endif
 
 "Run Explore if no files are passed.
