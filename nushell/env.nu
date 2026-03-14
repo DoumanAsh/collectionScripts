@@ -110,11 +110,7 @@ def gvim [...rest] {
 
 if (which fastfetch | is-not-empty) {
     clear
-    if ($env.TERM == "foot") {
-        fastfetch --logo-type sixel --logo $"($env_root)/PRTS-ai.png" -C $"($env_root)/fastfetch.jsonc"
-    } else {
-        fastfetch --logo-type kitty-direct --logo $"($env_root)/PRTS-ai.png" -C $"($env_root)/fastfetch.jsonc"
-    }
+    fastfetch --logo-type sixel --logo $"($env_root)/PRTS-ai.png" -C $"($env_root)/fastfetch.jsonc"
 } else {
 
 print "##################
