@@ -76,6 +76,15 @@ vim.lsp.config('pylsp', {
         python = {
             autoSearchPaths = true,
             useLibraryCodeForTypes = true,
+        },
+        pylsp = {
+            plugins = {
+                ruff = {
+                    enabled = true,
+                    formatEnabled = true,
+                    lineLength = 120,
+                }
+            }
         }
     }
 })
