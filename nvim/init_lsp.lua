@@ -47,88 +47,91 @@ if vim.fn.executable('dart') == 1 then
 end
 
 -- C++ LSP
-vim.lsp.config('clangd', {
-    capabilities = capabilities,
-    on_attach = on_attach,
-    filetypes = { "c", "cpp" },
-    single_file_support = true,
-    cmd = {
-        "clangd",
-        "--clang-tidy",                -- enable clang-tidy diagnostics
-        "--background-index",          -- index project code in the background and persist index on disk
-        "--completion-style=detailed", -- granularity of code completion suggestions: bundled, detailed
-    }
-})
 if vim.fn.executable('clangd') == 1 then
+    vim.lsp.config('clangd', {
+        capabilities = capabilities,
+        on_attach = on_attach,
+        filetypes = { "c", "cpp" },
+        single_file_support = true,
+        cmd = {
+            "clangd",
+            "--clang-tidy",                -- enable clang-tidy diagnostics
+            "--background-index",          -- index project code in the background and persist index on disk
+            "--completion-style=detailed", -- granularity of code completion suggestions: bundled, detailed
+        }
+    })
+
     vim.lsp.enable('clangd')
 end
 
 -- Python LSP
-vim.lsp.config('pylsp', {
-    capabilities = capabilities,
-    on_attach = on_attach,
-    single_file_support = true,
-    root_markers = { "pyproject.toml" },
-    filetypes = { "python" },
-    root_dir = vim.fs.root(0, {'.venv'}),
-    cmd = { "uv", "run", "pylsp" },
-    settings = {
-        python = {
-            autoSearchPaths = true,
-            useLibraryCodeForTypes = true,
-        },
-        pylsp = {
-            plugins = {
-                ruff = {
-                    enabled = true,
-                    formatEnabled = true,
-                    lineLength = 120,
+if vim.fn.executable('uv') == 1 then
+    vim.lsp.config('pylsp', {
+        capabilities = capabilities,
+        on_attach = on_attach,
+        single_file_support = true,
+        root_markers = { "pyproject.toml" },
+        filetypes = { "python" },
+        root_dir = vim.fs.root(0, {'.venv'}),
+        cmd = { "uvx", "--from", "python-lsp-server",  "pylsp" },
+        settings = {
+            python = {
+                autoSearchPaths = true,
+                useLibraryCodeForTypes = true,
+            },
+            pylsp = {
+                plugins = {
+                    ruff = {
+                        enabled = true,
+                        formatEnabled = true,
+                        lineLength = 120,
+                    }
                 }
             }
         }
-    }
-})
-if vim.fn.executable('uv') == 1 then
+    })
+
     vim.lsp.enable('pylsp')
 end
 
 -- Rust LSP
-vim.lsp.config('rust_analyzer', {
-    capabilities = capabilities,
-    on_attach = on_attach,
-    settings = {
-        ["rust-analyzer"] = {
-            diagnostics = {
-                enable = true,
-                refreshSupport = false,
-                disabled = { "inactive-code" }
-            },
-            imports = {
-                merge = {
-                    glob = false,
-                },
-            },
-            cachePriming = {
-                numThreads = 1,
-                enable = false,
-            },
-            completion = {
-                autoimport = {
-                    enable = false
-                },
-            },
-            checkOnSave = {
-                enable = false
-            },
-            cargo = {
-                buildScripts = {
-                    enable = false
-                },
-            },
-        }
-    },
-})
 if vim.fn.executable('rust-analyzer') == 1 then
+    vim.lsp.config('rust_analyzer', {
+        capabilities = capabilities,
+        on_attach = on_attach,
+        settings = {
+            ["rust-analyzer"] = {
+                diagnostics = {
+                    enable = true,
+                    refreshSupport = false,
+                    disabled = { "inactive-code" }
+                },
+                imports = {
+                    merge = {
+                        glob = false,
+                    },
+                },
+                cachePriming = {
+                    numThreads = 1,
+                    enable = false,
+                },
+                completion = {
+                    autoimport = {
+                        enable = false
+                    },
+                },
+                checkOnSave = {
+                    enable = false
+                },
+                cargo = {
+                    buildScripts = {
+                        enable = false
+                    },
+                },
+            }
+        },
+    })
+
     vim.lsp.enable('rust_analyzer')
 end
 
@@ -201,13 +204,14 @@ require("typescript-tools").setup {
 }
 
 ---nushell
-vim.lsp.config('nushell', {
-    cmd = { 'nu', '--lsp' },
-    filetypes = { 'nu' },
-    root_dir = vim.fs.root(0, {'.git'}),
-    single_file_support = true,
-})
 if vim.fn.executable('nu') == 1 then
+    vim.lsp.config('nushell', {
+        cmd = { 'nu', '--lsp' },
+        filetypes = { 'nu' },
+        root_dir = vim.fs.root(0, {'.git'}),
+        single_file_support = true,
+    })
+
     vim.lsp.enable('nushell')
 end
 
@@ -284,23 +288,24 @@ vim.lsp.enable('lua_ls')
 
 ---TOML validation
 --- Install from https://github.com/tamasfe/taplo/releases/latest (go for FULL version)
-vim.lsp.config('taplo', {
-  on_attach = on_attach,
-  single_file_support = true,
-  silent = true,
-  settings = {
-      eventBetterToml = {
-          schema = {
-              enabled = true,
-              catalogs = {
-                  -- This index is much smaller than default one and contains all you need for Rust
-                  "https://taplo.tamasfe.dev/schema_index.json"
+if vim.fn.executable('taplo') == 1 then
+    vim.lsp.config('taplo', {
+      on_attach = on_attach,
+      single_file_support = true,
+      silent = true,
+      settings = {
+          eventBetterToml = {
+              schema = {
+                  enabled = true,
+                  catalogs = {
+                      -- This index is much smaller than default one and contains all you need for Rust
+                      "https://taplo.tamasfe.dev/schema_index.json"
+                  }
               }
           }
       }
-  }
-})
-if vim.fn.executable('taplo') == 1 then
+    })
+
     vim.lsp.enable('taplo')
 end
 
@@ -321,13 +326,14 @@ if vim.fn.executable('tofu-ls') == 1 then
 end
 
 ---Nil LSP
-vim.lsp.config('nil_ls', {
-  on_attach = on_attach,
-  cmd = { 'nil' },
-  filetypes = { 'nix' },
-  root_markers = { 'flake.nix', '.git' }
-})
 if vim.fn.executable('nil') == 1 then
+    vim.lsp.config('nil_ls', {
+      on_attach = on_attach,
+      cmd = { 'nil' },
+      filetypes = { 'nix' },
+      root_markers = { 'flake.nix', '.git' }
+    })
+
     vim.lsp.enable('nil_ls')
 end
 
