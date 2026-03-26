@@ -96,9 +96,51 @@ end
 
 -- Rust LSP
 if vim.fn.executable('rust-analyzer') == 1 then
+    local default_rust_analyzer_cfg = vim.lsp.config['rust_analyzer']
+
     vim.lsp.config('rust_analyzer', {
         capabilities = capabilities,
         on_attach = on_attach,
+        before_init = function(init_params, config)
+            -- Access root
+            local root_dir = nil
+            if init_params.workspaceFolders and #init_params.workspaceFolders > 0 then
+                root_dir = vim.uri_to_fname(init_params.workspaceFolders[1].uri)
+            elseif params.rootUri then
+                root_dir = vim.uri_to_fname(init_params.rootUri)
+            elseif params.rootPath then
+                root_dir = init_params.rootPath
+            end
+
+            -- Check for presence of my own local config
+            local addon_config = vim.fs.joinpath(root_dir, '.rust-analyzer.json')
+            local addon_config_fs = io.open(addon_config, "r")
+            if addon_config_fs then
+                vim.lsp.log.info("Found project's rust-analyzer config")
+                local addon_config_content = addon_config_fs:read("*a")
+                addon_config_fs:close()
+                local ok, addon_config_content_table = pcall(vim.json.decode, addon_config_content, {
+                    luanil = { object = true, array = true },  -- use lua nils, why the fuck would I want vim's NULL?
+                    skip_comments = true,
+                })
+
+                if ok then
+                    -- Good, merge config
+                    vim.lsp.log.info("Merge local rust-analyzer.json with default")
+                    -- First check if we have root `rust-analyzer` otherwise assume we have direct settings
+                    local addon_config_rust_analyzer = addon_config_content_table['rust-analyzer']
+                    if addon_config_rust_analyzer then
+                        config.settings['rust-analyzer'] = vim.tbl_deep_extend('force', config.settings['rust-analyzer'], addon_config_rust_analyzer)
+                    else
+                        config.settings['rust-analyzer'] = vim.tbl_deep_extend('force', config.settings['rust-analyzer'], addon_config_content_table)
+                    end
+                else
+                    vim.lsp.log.warn(addon_config .. ": is not valid json: " .. addon_config_content_table)
+                end
+            end
+
+            default_rust_analyzer_cfg.before_init(init_params, config)
+        end,
         settings = {
             ["rust-analyzer"] = {
                 diagnostics = {
