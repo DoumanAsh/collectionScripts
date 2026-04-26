@@ -477,14 +477,12 @@ vim.api.nvim_create_autocmd({ "CursorHold" }, {
   group = "lsp_diagnostics_hold",
 })
 
---- Adjust defaults to disable virtual text as it is pure garbage without ability to wrap
-vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
-    vim.lsp.diagnostic.on_publish_diagnostics, {
-      virtual_text = false,
-      signs = true,
-      update_in_insert = false,
-      underline = true,
-    }
-)
+vim.diagnostic.config({
+    virtual_text = false,
+    signs = true,
+    update_in_insert = false,
+    underline = true,
+    wrap = true,
+})
 
 end
