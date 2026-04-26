@@ -67,33 +67,9 @@ autocmd BufRead *.* :setlocal tags=./tags;/
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""''
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"""" Plugins
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""''
-call plug#begin('~/.vim/plugged')
-"Dependencies
-Plug 'nvim-lua/plenary.nvim', {'branch': 'master'}
-"Lang specific
-Plug 'rust-lang/rust.vim', {'branch': 'master'}
-Plug 'navarasu/onedark.nvim'
-Plug 'dart-lang/dart-vim-plugin', {'branch': 'master'}
-Plug 'ziglang/zig.vim'
-Plug 'pmizio/typescript-tools.nvim', {'branch': 'master' }
-"LSP
-Plug 'neovim/nvim-lspconfig', {'branch': 'master'}
-"Auto-complete
-Plug 'hrsh7th/nvim-cmp', {'branch': 'main'}
-Plug 'hrsh7th/cmp-nvim-lsp', {'branch': 'main'}
-Plug 'hrsh7th/cmp-buffer', {'branch': 'main'}
-Plug 'hrsh7th/cmp-path', {'branch': 'main'}
-Plug 'hrsh7th/cmp-nvim-lsp-signature-help', {'branch': 'main'}
-Plug 'uga-rosa/cmp-dictionary', {'branch': 'main'}
-Plug 'quangnguyen30192/cmp-nvim-tags', {'branch': 'main'}
-"snippets
-Plug 'hrsh7th/cmp-vsnip'
-Plug 'hrsh7th/vim-vsnip'
-" Initialize plugin system
-" If you add new plugins, be sure to reload and run :PlugInstall
-call plug#end()
+""" Pack
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+:execute "source " . expand(s:CWD) . "/pack.lua"
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 """" Zig
