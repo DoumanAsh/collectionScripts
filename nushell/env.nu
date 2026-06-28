@@ -70,6 +70,8 @@ env_add_path ...[
     "/opt/nvim/bin"
     "/opt/lua-language-server/bin"
     "/opt/zig/"
+    "/opt/go/bin"
+    "/opt/bin"
 ]
 
 if ($env._OS == "Darwin") {
