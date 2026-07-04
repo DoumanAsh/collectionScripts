@@ -64,8 +64,16 @@ if vim.fn.executable('clangd') == 1 then
     vim.lsp.enable('clangd')
 end
 
--- Python LSP
-if vim.fn.executable('uv') == 1 then
+-- Python lsp
+if vim.fn.executable('pyrefly') == 1 then
+    vim.lsp.config('pyrefly', {
+        capabilities = capabilities,
+        on_attach = on_attach,
+        single_file_support = true,
+        filetypes = { "python" },
+    })
+    vim.lsp.enable('pyrefly')
+elseif vim.fn.executable('uv') == 1 then
     vim.lsp.config('pylsp', {
         capabilities = capabilities,
         on_attach = on_attach,
