@@ -5,6 +5,9 @@ local function is_cmp_visible()
     return cmp.visible()
 end
 
+vim.api.nvim_create_user_command('LspInfo', ":checkhealth vim.lsp", {
+    desc = "Check LSP health"
+})
 -- Use an on_attach function to only map the following keys
 -- after the language server attaches to the current buffer
 local on_attach = function(client, bufnr)
