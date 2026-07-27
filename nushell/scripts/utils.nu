@@ -29,7 +29,7 @@ export def --env load_env_from_env_export [env_export?: string] {
 
     $env_export | lines
                 | str replace -r '^export *' ''
-                | split column '=' name value
+                | split column -n 2 '=' name value
                 | where { ('value' in $in) and ($in | select value | is-not-empty) }
                 | where { $in.name != 'PATH' }
                 | reduce -f {} {|it, acc| $acc | upsert $it.name $it.value | str trim -c '"' }
