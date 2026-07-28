@@ -13,6 +13,7 @@ use $"($env_root)/scripts/prompt.nu" git_prompt
 use $"($env_root)/scripts/cmake.nu" *
 use $"($env_root)/scripts/rust.nu" *
 use $"($env_root)/scripts/utils.nu" *
+use $"($env_root)/scripts/kube.nu" *
 
 $env.PROMPT_COMMAND = { || git_prompt }
 $env.PROMPT_COMMAND_RIGHT = ""
