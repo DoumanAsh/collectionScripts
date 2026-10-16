@@ -14,8 +14,13 @@ export def rust_get_default_channel [] {
 
 export def rust_clean_repos [
     folder?: string # Folder where to perform cleaning, recursively
-    --yes (-y) # Automatically confirm cleaning
+    --help (-h),      # Show help message
 ] {
+    if $help {
+      help rust_clean_repos
+      return
+    }
+
     let folder = (
         if ($folder == null) {
             pwd
