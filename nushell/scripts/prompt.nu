@@ -1,19 +1,10 @@
 export def git_prompt [] {
-    # Perform tilde substitution on dir
-    # To determine if the prefix of the path matches the home dir, we split the current path into
-    # segments, and compare those with the segments of the home dir. In cases where the current dir
-    # is a parent of the home dir (e.g. `/home`, homedir is `/home/user`), this comparison will
-    # also evaluate to true. Inside the condition, we attempt to str replace `$nu.home-dir` with `~`.
-    # Inside the condition, either:
-    # 1. The home prefix will be replaced
-    # 2. The current dir is a parent of the home dir, so it will be uneffected by the str replace
-    let dir = (
-        if ($env.PWD | path split | zip ($nu.home-dir | path split) | all { $in.0 == $in.1 }) {
-            ($env.PWD | str replace $nu.home-dir "~")
-        } else {
-            $env.PWD
-        }
-    )
+    let dir = match (do -i { $env.PWD | path relative-to $nu.home-dir }) {
+        # NULL will indicate error, so consider to check whether nushell changes home-dir or something
+        null => $env.PWD,
+        '' => '~',
+        $rel => ([~ $rel] | path join)
+    }
 
     # Prepare git prompt
     mut git_prompt = "";
